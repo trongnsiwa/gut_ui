@@ -18,11 +18,21 @@
   select,
   select[multiple],
   textarea {
-    @apply rounded-lg border-gray-300 w-full shadow-sm  focus:border-brand focus:ring-brand;
+    @apply text-gray-700 rounded-lg border-gray-300 w-full shadow-sm  focus:border-brand focus:ring-brand;
   }
 
   input[type='checkbox'],
   input[type='radio'] {
-    @apply rounded border-gray-300 text-brand-dark focus:ring-brand;
+    @apply rounded border-gray-300 text-brand focus:ring-brand-light;
+  }
+}
+
+@layer components {
+  .error-message {
+    @apply mt-2 text-xs font-normal text-red-500;
+  }
+
+  .error-input {
+    @apply border border-red-500 ring-1 ring-red-500;
   }
 }

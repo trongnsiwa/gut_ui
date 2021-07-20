@@ -10,12 +10,33 @@ module.exports = {
           dark: '#206FA8',
         },
       },
+      animation: {
+        open: 'open 0.5s forwards',
+        close: 'close 0.5s forwards',
+      },
+      keyframes: {
+        open: {
+          '0%': { transform: 'translate(-50%, -50%) scale(0)' },
+          '50%': { transform: 'translate(-50%, -50%) scale(1.2)' },
+          '70%': { transform: 'translate(-50%, -50%) scale(0.95)' },
+          '95%': { transform: 'translate(-50%, -50%) scale(1.1)' },
+          '100%': { transform: 'translate(-50%, -50%) scale(1)' },
+        },
+        close: {
+          '100%': { transform: 'translate(-50%, -50%) scale(0)' },
+          '50%': { transform: 'translate(-50%, -50%) scale(1.2)' },
+          '30%': { transform: 'translate(-50%, -50%) scale(0.95)' },
+          '5%': { transform: 'translate(-50%, -50%) scale(1.1)' },
+          '0%': { transform: 'translate(-50%, -50%) scale(1)' },
+        },
+      },
     },
   },
   variants: {
     extend: {
       backgroundColor: ['active'],
     },
+    animation: ['motion-safe'],
   },
   plugins: [require('@tailwindcss/forms')],
 };

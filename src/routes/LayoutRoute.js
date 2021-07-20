@@ -1,25 +1,27 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import Header from '../components/Header';
+import Loader from '../components/Loader';
 
-const LoginLayout = ({ children }) => (
+const Layout = ({ children }) => (
   <div>
     <Header />
     <main>{children}</main>
+    <Loader />
   </div>
 );
 
-const LoginLayoutRoute = ({ component: Component, ...rest }) => {
+const LayoutRoute = ({ component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
       render={(props) => (
-        <LoginLayout>
+        <Layout>
           <Component {...props} />
-        </LoginLayout>
+        </Layout>
       )}
     />
   );
 };
 
-export default LoginLayoutRoute;
+export default LayoutRoute;
