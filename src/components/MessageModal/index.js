@@ -36,10 +36,10 @@ const MessageModal = ({ message, action, isSuccess, setSuccess, isOpen, setIsOpe
                   className='w-16 h-16 flex items-center mx-auto'
                 />
               )}
-              <h2 className='text-xl font-bold py-4'>{isSuccess ? 'Success!' : 'Fail!'}</h2>
-              <p className='text-sm text-gray-500 px-8'>{message}</p>
+              <h2 className='text-3xl font-bold py-4'>{isSuccess ? 'Success!' : 'Fail!'}</h2>
+              <p className='text-base text-gray-500 px-8'>{message}</p>
             </div>
-            <div class='p-3 mt-2 text-center space-x-4 md:block'>
+            <div class='p-3 text-center space-x-4 md:block'>
               <button
                 class='bg-gray-500 border border-gray-500 px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-full hover:shadow-lg hover:bg-gray-600'
                 onClick={closeModal}

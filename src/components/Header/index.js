@@ -3,17 +3,22 @@ import { Menu, Popover, Transition } from '@headlessui/react';
 import React, { Fragment } from 'react';
 import logo from '../../assets/logo.png';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import './Header.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../actions/AuthAction';
+import { showLoader } from '../../actions/LoaderAction';
 
 const Header = () => {
   const { user: currentUser } = useSelector((state) => state.authReducer);
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const logOut = () => {
+    dispatch(showLoader);
+
     dispatch(logout());
+    history.push('/');
   };
 
   return (
@@ -37,7 +42,7 @@ const Header = () => {
 
               <div className='hidden md:flex items-center justify-end md:flex-1 lg:w-0'>
                 {currentUser ? (
-                  <div className='className=' w-56 text-right fixed>
+                  <div className='w-56 text-right fixed'>
                     <Menu as='div' className='relative inline-block text-left'>
                       <div>
                         <Menu.Button>

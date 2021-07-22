@@ -9,6 +9,13 @@ export const get = (url) => {
   });
 };
 
+export const getWithParams = (url, params) => {
+  return axios.get(endpoint + url, {
+    headers: authHeader(),
+    params: params,
+  });
+};
+
 export const post = (url, body) => {
   return axios.post(endpoint + url, body, {
     headers: authHeader(),
@@ -21,8 +28,8 @@ export const put = (url, body) => {
   });
 };
 
-export const del = (url, body) => {
-  return axios.delete(endpoint + url, body, {
+export const del = (url) => {
+  return axios.delete(endpoint + url, {
     headers: authHeader(),
   });
 };

@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn-dash-main {
+    @apply w-full flex justify-between items-center py-3 px-6 text-gray-600 cursor-pointer hover:bg-gray-100 hover:text-brand-dark focus:outline-none;
+  }
+
+  .btn-dash-child {
+    @apply py-2 pl-16 block text-sm font-medium text-gray-600 hover:bg-brand-light hover:text-white;
+  }
+}

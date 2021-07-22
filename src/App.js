@@ -8,12 +8,20 @@ import Home from './pages/Home';
 import LayoutRoute from './routes/LayoutRoute';
 import PrivateLayoutRoute from './routes/PrivateLayoutRoute';
 import { Role } from './constants/Role';
-import Admin from './pages/Admin';
 import Signup from './pages/Signup';
+import AdminDashBoard from './pages/AdminDashBoard';
+import NotFound from './pages/NotFound';
+import Category from './pages/Category';
+import Loader from './components/Loader';
+import CategoryDetail from './pages/CategoryDetail';
+import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from 'react-toastify';
 
 function App() {
   const { user: currentUser } = useSelector((state) => state.authReducer);
   const dispatch = useDispatch();
+
+  toast.configure();
 
   useEffect(() => {
     history.listen((location) => {
@@ -22,14 +30,39 @@ function App() {
   }, [dispatch]);
 
   return (
-    <Router history={history}>
-      <Switch>
-        <PrivateLayoutRoute path='/admin' currentUser={currentUser} roles={[Role.ADMIN]} component={Admin} />
-        <LayoutRoute exact path={'/'} component={Home} />
-        <LayoutRoute path='/signin' component={Signin} />
-        <LayoutRoute path='/signup' component={Signup} />
-      </Switch>
-    </Router>
+    <>
+      <Router history={history}>
+        <Switch>
+          <PrivateLayoutRoute
+            exact
+            path='/admin'
+            currentUser={currentUser}
+            roles={[Role.ADMIN]}
+            component={AdminDashBoard}
+          />
+          <PrivateLayoutRoute
+            exact
+            path='/admin/category'
+            currentUser={currentUser}
+            roles={[Role.ADMIN]}
+            component={Category}
+          />
+          <PrivateLayoutRoute
+            exact
+            path='/admin/category/:id'
+            currentUser={currentUser}
+            roles={[Role.ADMIN]}
+            component={CategoryDetail}
+          />
+          <LayoutRoute exact path={'/'} component={Home} />
+          <LayoutRoute exact path='/signin' component={Signin} />
+          <LayoutRoute exace path='/signup' component={Signup} />
+          <LayoutRoute component={NotFound} />
+        </Switch>
+      </Router>
+      <Loader />
+      <ToastContainer />
+    </>
   );
 }
 

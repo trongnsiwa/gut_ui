@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { hideLoader, showLoader } from '../actions/LoaderAction';
 import { login } from '../actions/AuthAction';
 import ERRORS from '../constants/Errors';
+import { showError } from '../helpers/showToast';
 
 const Signin = (props) => {
   const loginImage = 'https://ik.imagekit.io/tnyyngwxvx9/Background/fc7d5755f69adc1fd50cb48f8e7a578e_7h0gsh0ns.jpg';
@@ -41,7 +42,11 @@ const Signin = (props) => {
         props.history.push(from);
         window.location.reload();
       })
-      .catch(() => {
+      .catch((error) => {
+        if (error && !error.response) {
+          showError('Error: Network Error');
+        }
+
         dispatch(hideLoader());
       });
 

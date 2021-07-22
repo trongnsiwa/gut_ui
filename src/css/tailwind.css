@@ -35,4 +35,28 @@
   .error-input {
     @apply border border-red-500 ring-1 ring-red-500;
   }
+
+  .btn-paging {
+    @apply font-semibold bg-transparent hover:text-brand-dark text-gray-900;
+  }
+
+  .custom-table {
+    @apply border-collapse table-auto w-full whitespace-nowrap bg-white relative;
+  }
+
+  .table-header {
+    @apply py-2 px-3 sticky top-0 border-b border-gray-200 bg-brand-light;
+  }
+
+  .table-header-label {
+    @apply text-white inline-flex justify-between items-center;
+  }
+
+  .table-row-custom {
+    @apply border-dashed border-b border-gray-200;
+  }
+
+  .table-row-content {
+    @apply text-gray-700 p-3 flex items-center;
+  }
 }

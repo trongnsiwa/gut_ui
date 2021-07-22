@@ -1,4 +1,3 @@
-// AUTH
 const ERRORS = {
   ERR_LOGIN_FAIL: 'Your registed email address and password do not match. Please check and enter again.',
   ERR_USER_CREATED_FAIL: "We're sorry, but something went wrong. Please try again.",
@@ -13,6 +12,12 @@ const ERRORS = {
   ERR_LASTNAME_SIZE: 'Last name must be no more than 50 characters long',
   ERR_PASSWORD_NOT_MATCH: 'Passwords do not match.',
   ERR_TERMS_AND_CONDITION_NOT_CHECK: 'Please check to accept Terms and Conditions.',
+  ERR_CATEGORY_PARENT_NOT_FOUND: 'Category parent {} is not found.',
+  ERR_CATEGORY_NOT_FOUND: 'Category {} is not found.',
+  ERR_CATEGORY_DELETED_FAIL: 'Fail to delete category {}. Please try again.',
+  ERR_CATEGORY_STILL_IN_PARENT:
+    'There are some categories still owned by {}. Please delete all of them before delete {}.',
+  ERR_CATEGORY_PARENT_DELETED_FAIL: 'Fail to delete category parent {}. Please try again.',
 };
 
 export default ERRORS;
