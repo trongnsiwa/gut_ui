@@ -8,6 +8,7 @@ module.exports = {
           light: '#4CB1D1',
           DEFAULT: '#44A5CA',
           dark: '#206FA8',
+          darker: '#17496d',
         },
       },
       animation: {
@@ -30,6 +31,10 @@ module.exports = {
           '0%': { transform: 'translate(-50%, -50%) scale(1)' },
         },
       },
+    },
+    fontFamily: {
+      robo: ['Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'sans-serif'],
+      montse: ['Montserrat', 'Roboto', 'sans-serif'],
     },
   },
   variants: {

@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import './SubMenu.css';
 
 const SubMenu = ({ item }) => {
@@ -42,19 +42,29 @@ const SubMenu = ({ item }) => {
           </span>
         </button>
       ) : (
-        <Link to={item.link} className='btn-dash-main'>
+        <NavLink
+          exact
+          to={item.link}
+          activeStyle={{ color: 'white', backgroundColor: '#44A5CA' }}
+          className='btn-dash-main'
+        >
           <span className='flex items-center mx-4'>
             {item.icon}
             <span className='font-medium pl-2'>{item.title}</span>
           </span>
-        </Link>
+        </NavLink>
       )}
 
       {subNav &&
+        item.subNav &&
         item.subNav.map((item, index) => {
           return (
             <div className='bg-gray-100' key={index}>
-              <NavLink activeStyle={{ color: '#44A5CA' }} className={`btn-dash-child flex`} to={item.link}>
+              <NavLink
+                activeStyle={{ color: 'white', backgroundColor: '#44A5CA' }}
+                className={`btn-dash-child flex hover:text-white`}
+                to={item.link}
+              >
                 {item.icon}
                 <span className='pl-2'>{item.title}</span>
               </NavLink>

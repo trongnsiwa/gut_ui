@@ -4,6 +4,10 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './css/tailwind.css';
+import 'tippy.js/dist/tippy.css';
+import 'tippy.js/themes/light-border.css';
+import 'react-calendar/dist/Calendar.css';
+import 'swiper/swiper-bundle.css';
 import { Provider } from 'react-redux';
 import store from './store/store';
 

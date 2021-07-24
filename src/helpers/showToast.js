@@ -29,7 +29,7 @@ export const showError = (message) => {
 };
 
 export const showSuccessMessage = (res, id, dispatch) => {
-  console.log(res.data);
+  console.log(res.data.data);
   var message = SUCCESS[res.data.successCode];
   if (message) {
     message = format(message, id);
@@ -53,5 +53,5 @@ export const showErrorMessage = (error, id, dispatch) => {
   }
 
   showError(message.toString());
-  dispatch(hideLoader);
+  dispatch(hideLoader());
 };

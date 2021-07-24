@@ -1,18 +1,12 @@
-import { del, get, getWithParams } from '../helpers/httpHelper';
+import { del, get, getWithParams, put, post } from '../helpers/httpHelper';
 
 const API_URL = '/category';
 
-export const getParentCategories = (num, size, sortBy) => {
-  const params = {
-    num,
-    size,
-    sortBy,
-  };
-
-  return getWithParams(API_URL + '/parent/page', params);
+export const getAllParentCategories = () => {
+  return get(API_URL + '/parent');
 };
 
-export const getChildCategories = (num, size, sortBy) => {
+export const getParentCategories = (num, size, sortBy) => {
   const params = {
     num,
     size,
@@ -22,33 +16,22 @@ export const getChildCategories = (num, size, sortBy) => {
   return getWithParams(API_URL + '/page', params);
 };
 
-export const countParentCategories = () => {
-  return get(API_URL + '/parent/count');
-};
-
-export const countChildCategories = () => {
-  return get(API_URL + '/count');
-};
-
-export const countParentCategoriesWithConditions = (name) => {
-  return getWithParams(API_URL + '/parent/count-condition', {
-    name,
-  });
-};
-
-export const countChildCategoriesWithConditions = (name) => {
-  return getWithParams(API_URL + '/count-condition', {
-    name,
-  });
-};
-
-export const searchByName = (num, size, sortBy, name, parent) => {
+export const searchByName = (num, size, sortBy, name) => {
   return getWithParams(API_URL + '/search', {
     num,
     size,
     sortBy,
     name,
-    parent,
+  });
+};
+
+export const countParents = () => {
+  return get(API_URL + '/count');
+};
+
+export const countParentsByName = (name) => {
+  return getWithParams(API_URL + '/count-name', {
+    name,
   });
 };
 
@@ -66,4 +49,39 @@ export const deleteCategoryParent = (id) => {
 
 export const deleteChildCategory = (id) => {
   return del(API_URL + '/delete/' + id);
+};
+
+export const updateParentCategory = (id, name) => {
+  return put(API_URL + '/parent', {
+    id,
+    name,
+  });
+};
+
+export const updateCategoryWithParentId = (id, name, parentId) => {
+  return put(API_URL, {
+    id,
+    name,
+    parentId,
+  });
+};
+
+export const updateCategoryNonParentId = (id, name) => {
+  return put(API_URL, {
+    id,
+    name,
+  });
+};
+
+export const createCategoryParent = (name) => {
+  return post(API_URL + '/parent', {
+    name,
+  });
+};
+
+export const createCategory = (name, parentId) => {
+  return post(API_URL, {
+    name,
+    parentId,
+  });
 };

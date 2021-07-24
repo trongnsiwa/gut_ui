@@ -17,6 +17,7 @@
   input[type='tel'],
   select,
   select[multiple],
+  input[type='textarea'],
   textarea {
     @apply text-gray-700 rounded-lg border-gray-300 w-full shadow-sm  focus:border-brand focus:ring-brand;
   }

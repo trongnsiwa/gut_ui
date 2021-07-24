@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { showLoader } from '../../actions/LoaderAction';
 import { showErrorMessage, showSuccessMessage } from '../../helpers/showToast';
 import { deleteCategoryParent, deleteChildCategory } from '../../services/category.service';
+import { deleteColor } from '../../services/color.service';
 
 const TableAction = (props) => {
   const btnRef = useRef();
@@ -39,11 +40,28 @@ const TableAction = (props) => {
         );
       }
     }
+
+    if ('COLOR' === props.table) {
+      deleteColor(id).then(
+        (res) => {
+          showSuccessMessage(res, id, dispatch);
+          if (props.list && props.setList) {
+            props.setList(props.list.filter((item) => item.id !== id));
+          }
+        },
+        (error) => {
+          showErrorMessage(error, id, dispatch);
+        }
+      );
+    }
   };
 
   return (
     <>
-      <Link to={`${props.url}/${props.itemId}${props.parent && '?parent=true'}`} className='table-row-content'>
+      <Link
+        to={!props.parent ? `${props.url}/${props.itemId}` : `${props.url}/${props.itemId}?parent=true`}
+        className='table-row-content'
+      >
         <svg
           xmlns='http://www.w3.org/2000/svg'
           className='h-6 w-6 text-green-700'
@@ -59,6 +77,24 @@ const TableAction = (props) => {
           />
         </svg>
       </Link>
+      {props.table === 'PRODUCT' && (
+        <Link to={`${props.url}/${props.itemId}/image`} className='table-row-content'>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            className='h-6 w-6 text-indigo-700'
+            fill='none'
+            viewBox='0 0 24 24'
+            stroke='currentColor'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth={2}
+              d='M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'
+            />
+          </svg>
+        </Link>
+      )}
       <Popover>
         <Popover.Button ref={btnRef} className='table-row-content'>
           <svg

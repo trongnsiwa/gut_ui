@@ -23,7 +23,13 @@ export const post = (url, body) => {
 };
 
 export const put = (url, body) => {
-  return axios.post(endpoint + url, body, {
+  return axios.put(endpoint + url, body, {
+    headers: authHeader(),
+  });
+};
+
+export const patch = (url, body) => {
+  return axios.patch(endpoint + url, body, {
     headers: authHeader(),
   });
 };

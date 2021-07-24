@@ -3,9 +3,9 @@ import { Route } from 'react-router-dom';
 import Header from '../components/Header';
 
 const Layout = ({ children }) => (
-  <div>
+  <div className='font-montse'>
     <Header />
-    <main>{children}</main>
+    <main style={{ paddingTop: '80px' }}>{children}</main>
   </div>
 );
 

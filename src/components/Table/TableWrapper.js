@@ -15,7 +15,7 @@ const TableWrapper = ({
   setSeachedName,
 }) => {
   return (
-    <>
+    <div className='2xl:container 2xl:w-3/4 mx-auto'>
       <div className='flex flex-col text-right mb-4 mt-10'>
         <div className='text-sm font-light text-gray-500'>TABLE</div>
         <div className='text-sm font-bold text-brand-dark'>
@@ -168,7 +168,7 @@ const TableWrapper = ({
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 
