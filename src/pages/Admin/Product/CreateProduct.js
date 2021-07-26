@@ -152,6 +152,11 @@ const CreateProduct = () => {
         console.log(res.data.data);
         showSuccessMessage(res, name, dispatch);
         reset();
+        setSales({
+          sale: false,
+          saleFromDate: new Date(),
+          saleToDate: new Date(),
+        });
       })
       .catch((error) => {
         var code =

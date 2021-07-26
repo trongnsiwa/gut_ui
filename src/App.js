@@ -5,7 +5,7 @@ import Signin from './pages/Signin';
 import { history } from './helpers/history';
 import { clearMessage } from './actions/MessageAction';
 import Home from './pages/Home';
-import LayoutRoute from './routes/LayoutRoute';
+import { LoginLayoutRoute, LayoutRoute } from './routes/LayoutRoute';
 import PrivateLayoutRoute from './routes/PrivateLayoutRoute';
 import { Role } from './constants/Role';
 import Signup from './pages/Signup';
@@ -24,6 +24,7 @@ import ProductDetail from './pages/Admin/Product/ProductDetail';
 import CreateProduct from './pages/Admin/Product/CreateProduct';
 import ImageUpload from './pages/Admin/Product/ImageUpload';
 import UserCategory from './pages/NormalUser/UserCategory';
+import ItemDetail from './pages/NormalUser/ItemDetail';
 
 function App() {
   const { user: currentUser } = useSelector((state) => state.authReducer);
@@ -112,10 +113,11 @@ function App() {
             component={ImageUpload}
           />
           <LayoutRoute exact path={'/'} component={Home} />
-          <LayoutRoute exact path='/signin' component={Signin} />
-          <LayoutRoute exact path='/signup' component={Signup} />
+          <LoginLayoutRoute exact path='/signin' component={Signin} />
+          <LoginLayoutRoute exact path='/signup' component={Signup} />
           <LayoutRoute exact path='/category/:parent/:slug' component={UserCategory} />
           <LayoutRoute exact path='/category/:parent' component={UserCategory} />
+          <LayoutRoute exact path='/product/:id' component={ItemDetail} />
           <LayoutRoute component={NotFound} />
         </Switch>
       </Router>

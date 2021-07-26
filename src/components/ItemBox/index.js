@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { formatCash } from '../../helpers/formatCash';
 import useViewport from '../../helpers/useViewport';
 
-const ItemBox = ({ item }) => {
+const ItemBox = ({ item, parent, category }) => {
   const [currentImage, setCurrentImage] = useState(item?.images[0]);
 
   const { width } = useViewport();
@@ -18,7 +18,17 @@ const ItemBox = ({ item }) => {
   return (
     <li className='w-full float-left mb-6 relative text-left md:border-b-0 md:text-center hover:opacity-80 p-3'>
       <div className='m-0 relative'>
-        <Link to={`/product/${item.id}`}>
+        <Link
+          to={{
+            pathname: `/product/${item.id}`,
+            state: {
+              parentId: parent?.id,
+              parentName: parent?.name,
+              categoryId: category?.id,
+              categoryName: category?.name,
+            },
+          }}
+        >
           <div className='mb-3 w-full'>
             <img className='w-full h-auto align-top' src={currentImage?.imageUrl} alt={currentImage?.title} />
           </div>
@@ -60,7 +70,7 @@ const ItemBox = ({ item }) => {
           </div>
           <div>
             <p
-              className='text-center mb-3 text-base md:text-xl font-bold tracking-wide'
+              className='text-center mb-3  text-sm md:text-xl font-bold tracking-wide'
               style={{ color: `${item.salePrice ? '#fe0000' : ''}` }}
             >
               {item.salePrice ? formatCash(item.salePrice) : formatCash(item.price)}

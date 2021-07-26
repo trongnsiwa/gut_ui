@@ -61,25 +61,23 @@ const Home = () => {
 
   return (
     <>
-      <div className='m-auto overflow-hidden w-full xl:max-w-6xl'>
-        <div className='w-full mx-auto hover:opacity-80' style={{ marginBottom: '1px' }}>
-          <img
-            src='https://ik.imagekit.io/tnyyngwxvx9/Background/goods_06_326104_yTL_XIkGH.jpg?updatedAt=1627141831698'
-            alt=''
-            className='mx-auto'
-          />
-        </div>
-        <div className='w-1/2 float-left hover:opacity-80' style={{ paddingRight: '1px' }}>
-          <img
-            src='https://ik.imagekit.io/tnyyngwxvx9/Background/210722_m_mv_02_pc_D_p1k442U.jpg?updatedAt=1627141830651'
-            alt=''
-          />
-        </div>
-        <div className=' w-1/2 float-left hover:opacity-80' style={{ paddingLeft: '1px' }}>
-          <img
-            src='https://ik.imagekit.io/tnyyngwxvx9/Background/210722_m_mv_03_pc_kOBrl-6Me.jpg?updatedAt=1627141823992'
-            alt=''
-          />
+      <div className='w-full'>
+        <div
+          class='flex flex-col md:flex-row items-center object-cover h-screen bg-cover bg-center 2xl:px-40'
+          style={{
+            backgroundImage: `url('https://ik.imagekit.io/tnyyngwxvx9/ant-rozetsky-PH8dIIP0ljY-unsplash_MApZWo1fs.jpg?updatedAt=1627316554139')`,
+          }}
+        >
+          <div class='flex flex-col w-full justify-center items-start p-4 md:p-8'>
+            <h1 class='text-4xl md:text-7xl py-2 text-white tracking-loose font-bold'>WELCOME TO GUT</h1>
+            <h2 class='text-3xl md:text-5xl leading-relaxed md:leading-snug mb-2 text-white p-2 bg-brand-light'>
+              GOOD CHOICE GOOD FASHION
+            </h2>
+            <p class='text-lg md:text-xl my-4 text-white font-semibold'>Explore your favourite fashion for men.</p>
+            <button class='text-white rounded shadow hover:shadow-lg py-4 px-10 border border-white bg-gradient-to-r from-transparent  hover:from-brand-dark hover:to-brand'>
+              Explore Now
+            </button>
+          </div>
         </div>
       </div>
       <section className='m-auto w-full max-w-md text-center my-20 relative'>
@@ -119,7 +117,7 @@ const Home = () => {
               style={{ paddingBottom: '50px', borderBottom: '1px solid #E3E3E3' }}
             >
               <div className='mt-22 mb-20'>
-                <h2 className='text-center text-xl md:text-3xl tracking-wide font-bold'>SALE NOW</h2>
+                <h2 className='text-center text-xl md:text-3xl tracking-wide font-bold text-brand-darker'>SALE NOW</h2>
               </div>
               <div className='pb-10 px-10 table w-full'>
                 <div className='w-full align-middle table md:w-auto md:pr-5 md:table-cell'>
@@ -184,7 +182,9 @@ const Home = () => {
               style={{ paddingBottom: '50px', borderBottom: '1px solid #E3E3E3' }}
             >
               <div className='mt-22 mb-20'>
-                <h2 className='text-center text-xl md:text-3xl tracking-wide font-bold'>NEW PRODUCTS</h2>
+                <h2 className='text-center text-xl md:text-3xl tracking-wide font-bold text-brand-darker'>
+                  NEW PRODUCTS
+                </h2>
               </div>
               <div className='pb-10 px-10 table w-full'>
                 <div className='mt-5 md:mt-0 md:table-cell md:w-2/3 align-top'>

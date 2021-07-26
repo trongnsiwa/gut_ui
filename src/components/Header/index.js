@@ -11,6 +11,7 @@ import { hideLoader, showLoader } from '../../actions/LoaderAction';
 import { getAllParentCategories } from '../../services/category.service';
 import { Role } from '../../constants/Role';
 import { lowerCaseString } from '../../helpers/String';
+import { useRef } from 'react';
 
 const Header = () => {
   const { user: currentUser } = useSelector((state) => state.authReducer);
@@ -20,6 +21,7 @@ const Header = () => {
 
   const [parentCategories, setParentCategories] = useState(null);
   const [selectedParent, setSelectedParent] = useState(null);
+  const buttonRef = useRef();
 
   useEffect(() => {
     dispatch(showLoader);
@@ -50,7 +52,7 @@ const Header = () => {
   return (
     <Popover
       className='fixed bg-white top-0 w-full'
-      style={{ boxShadow: '0px 0px 5px rgb(0 0 0 / 40%)', zIndex: '99999' }}
+      style={{ boxShadow: '0px 0px 5px rgb(0 0 0 / 40%)', zIndex: '50' }}
     >
       {({ open }) => (
         <>
@@ -77,6 +79,7 @@ const Header = () => {
                           className={`${
                             open ? 'text gray-900' : 'text-gray-500'
                           } group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none`}
+                          ref={buttonRef}
                         >
                           <span className='text-lg font-semibold text-gray-700'>CATEGORY</span>
                           <ChevronDownIcon
@@ -141,6 +144,7 @@ const Header = () => {
                                           },
                                         }}
                                         className='text-sm text-gray-600  cursor-pointer hover:underline'
+                                        onClick={() => buttonRef.current?.click()}
                                       >
                                         {sub.name}
                                       </Link>
@@ -329,7 +333,16 @@ const Header = () => {
                                         key={`${sub.id}_small`}
                                         className='p-4 text-sm'
                                       >
-                                        {sub.name}
+                                        <Link
+                                          to={{
+                                            pathname: `/category/${lowerCaseString(sub.name)}`,
+                                            state: {
+                                              id: sub.id,
+                                            },
+                                          }}
+                                        >
+                                          {sub.name}
+                                        </Link>
                                       </li>
                                     ))}
                                   </ul>

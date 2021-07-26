@@ -204,10 +204,7 @@ const Signup = (props) => {
                 </p>
               </div>
               <div className='hidden mt-12 lg:block w-1/3 justify-end'>
-                <img
-                  src='https://ik.imagekit.io/tnyyngwxvx9/16544__1__siukLYR5y.jpg?updatedAt=1626751961595'
-                  alt=''
-                ></img>
+                <img src='https://ik.imagekit.io/tnyyngwxvx9/global_BFA2pdZ1Y.svg?updatedAt=1627317161801' alt=''></img>
               </div>
             </div>
           </div>

@@ -1,15 +1,24 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
+import Footer from '../components/Footer';
 import Header from '../components/Header';
 
 const Layout = ({ children }) => (
-  <div className='font-montse'>
+  <div className='font-montse h-screen'>
+    <Header />
+    <main style={{ paddingTop: '80px' }}>{children}</main>
+    <Footer />
+  </div>
+);
+
+const LoginLayout = ({ children }) => (
+  <div className='font-montse h-screen'>
     <Header />
     <main style={{ paddingTop: '80px' }}>{children}</main>
   </div>
 );
 
-const LayoutRoute = ({ component: Component, ...rest }) => {
+export const LayoutRoute = ({ component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
@@ -22,4 +31,15 @@ const LayoutRoute = ({ component: Component, ...rest }) => {
   );
 };
 
-export default LayoutRoute;
+export const LoginLayoutRoute = ({ component: Component, ...rest }) => {
+  return (
+    <Route
+      {...rest}
+      render={(props) => (
+        <LoginLayout>
+          <Component {...props} />
+        </LoginLayout>
+      )}
+    />
+  );
+};

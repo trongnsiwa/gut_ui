@@ -66,7 +66,8 @@ const Product = () => {
         }
       );
     } else {
-      searchProductsByName(pageNum, pageSize, sortBy, searchedName).then((res) => {
+      setPageNum(1);
+      searchProductsByName(1, pageSize, sortBy, searchedName).then((res) => {
         setProducts(res.data.data);
         dispatch(hideLoader);
       });

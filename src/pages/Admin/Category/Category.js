@@ -63,7 +63,8 @@ const Category = () => {
         }
       );
     } else {
-      searchByName(pageNum, pageSize, sortBy, searchedName).then((res) => {
+      setPageNum(1);
+      searchByName(1, pageSize, sortBy, searchedName).then((res) => {
         setParentCategories(null);
         setSearchedCategories(res.data.data);
         dispatch(hideLoader);
