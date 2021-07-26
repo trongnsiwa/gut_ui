@@ -7,6 +7,7 @@ import { showLoader } from '../../actions/LoaderAction';
 import { showErrorMessage, showSuccessMessage } from '../../helpers/showToast';
 import { deleteCategoryParent, deleteChildCategory } from '../../services/category.service';
 import { deleteColor } from '../../services/color.service';
+import { deleteProduct } from '../../services/product.service';
 
 const TableAction = (props) => {
   const btnRef = useRef();
@@ -39,6 +40,17 @@ const TableAction = (props) => {
           }
         );
       }
+    }
+
+    if ('PRODUCT' === props.table) {
+      deleteProduct(id).then(
+        (res) => {
+          showSuccessMessage(res, id, dispatch);
+        },
+        (error) => {
+          showErrorMessage(error, id, dispatch);
+        }
+      );
     }
 
     if ('COLOR' === props.table) {

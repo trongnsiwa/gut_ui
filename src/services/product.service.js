@@ -12,12 +12,12 @@ export const getProducts = (num, size, sortBy) => {
   return getWithParams(API_URL + '/page', params);
 };
 
-export const getProductsByCategory = (category, num, size, sortBy) => {
+export const getProductsByCategory = (category, num, size, sort) => {
   const params = {
     category,
     num,
     size,
-    sortBy,
+    sort,
   };
 
   return getWithParams(API_URL + '/category/page', params);
@@ -32,12 +32,12 @@ export const searchProductsByName = (num, size, sortBy, name) => {
   });
 };
 
-export const searchProductsByCategoryAndName = (category, num, size, sortBy, name) => {
+export const searchProductsByCategoryAndName = (category, num, size, sort, name) => {
   return getWithParams(API_URL + '/category/search', {
     category,
     num,
     size,
-    sortBy,
+    sort,
     name,
   });
 };

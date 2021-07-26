@@ -80,8 +80,8 @@ const Signin = (props) => {
         flex flex-col'
               >
                 <div className='text-left mt-12 mb-3 px-6 sm:px-10 lg:px-0 xl:mb-6 xl:px-10'>
-                  <h1 className='text-3xl text-brand-dark xl:text-4xl font-bold leading-tight'>Welcome to GUT</h1>
-                  <h2 className='italic text-2xl xl:text-3xl font-medium'>Good Choice Good Fashion</h2>
+                  <h1 className='text-3xl text-brand-dark xl:text-4xl font-bold leading-6'>Welcome to GUT</h1>
+                  <h2 className='italic text-xl xl:text-2xl font-medium'>Good Choice Good Fashion</h2>
                 </div>
 
                 <div className='bg-white py-8 px-6 sm:px-10 lg:px-0 xl:px-10 items-center justify-center'>

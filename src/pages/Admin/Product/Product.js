@@ -1,11 +1,16 @@
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { hideLoader, showLoader } from '../../actions/LoaderAction';
-import TableAction from '../../components/Table/TableAction';
-import TableWrapper from '../../components/Table/TableWrapper';
-import { pageSizes, sorts } from '../../data/productData';
-import { countProducts, countProductsByName, getProducts, searchProductsByName } from '../../services/product.service';
+import { hideLoader, showLoader } from '../../../actions/LoaderAction';
+import TableAction from '../../../components/Table/TableAction';
+import TableWrapper from '../../../components/Table/TableWrapper';
+import { pageSizes, sorts } from '../../../data/productData';
+import {
+  countProducts,
+  countProductsByName,
+  getProducts,
+  searchProductsByName,
+} from '../../../services/product.service';
 
 const headers = (
   <>
@@ -50,6 +55,7 @@ const Product = () => {
         (res) => {
           setProducts(res.data.data);
           dispatch(hideLoader);
+          console.log(res.data.data);
         },
         (error) => {
           const message =
@@ -101,21 +107,28 @@ const Product = () => {
           rows={
             products
               ? products.map((item, i) => (
-                  <tr className='text-left z-9 hover:bg-gray-100' key={item.id}>
-                    <td className='table-row-custom'>
-                      <span className='table-row-content'>{item.id}</span>
+                  <tr className={`text-left z-9 hover:bg-gray-100 ${item.deleted ? 'strikeout' : ''}`} key={item.id}>
+                    <td
+                      className={`table-row-custom 
+                   `}
+                    >
+                      <span className={`table-row-content ${item.salePrice ? 'text-red-600' : ''}`}>{item.id}</span>
                     </td>
                     <td className='table-row-custom'>
-                      <span className='table-row-content'>{item.name}</span>
+                      <span className={`table-row-content ${item.salePrice ? 'text-red-600' : ''}`}>{item.name}</span>
                     </td>
                     <td className='table-row-custom'>
-                      <span className='table-row-content'>{item.price}</span>
+                      <span className={`table-row-content ${item.salePrice ? 'text-red-600' : ''}`}>{item.price}</span>
                     </td>
                     <td className='table-row-custom'>
-                      <span className='table-row-content'>{item.categoryName}</span>
+                      <span className={`table-row-content ${item.salePrice ? 'text-red-600' : ''}`}>
+                        {item.categoryName}
+                      </span>
                     </td>
                     <td className='table-row-custom'>
-                      <span className='table-row-content'>{item.brandName}</span>
+                      <span className={`table-row-content ${item.salePrice ? 'text-red-600' : ''}`}>
+                        {item.brandName}
+                      </span>
                     </td>
                     <td className='table-row-custom flex justify-around'>
                       <TableAction

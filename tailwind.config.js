@@ -9,6 +9,7 @@ module.exports = {
           DEFAULT: '#44A5CA',
           dark: '#206FA8',
           darker: '#17496d',
+          sale: '#fe0000',
         },
       },
       animation: {
@@ -36,6 +37,10 @@ module.exports = {
       robo: ['Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'sans-serif'],
       montse: ['Montserrat', 'Roboto', 'sans-serif'],
     },
+    container: (theme) => ({
+      center: true,
+      padding: '1rem',
+    }),
   },
   variants: {
     extend: {

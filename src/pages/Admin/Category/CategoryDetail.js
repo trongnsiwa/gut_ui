@@ -8,14 +8,14 @@ import {
   updateCategoryNonParentId,
   updateCategoryWithParentId,
   updateParentCategory,
-} from '../../services/category.service';
+} from '../../../services/category.service';
 import * as Yup from 'yup';
-import ERRORS from '../../constants/Errors';
+import ERRORS from '../../../constants/Errors';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { showLoader } from '../../actions/LoaderAction';
-import TableAction from '../../components/Table/TableAction';
-import { showErrorMessage, showSuccessMessage } from '../../helpers/showToast';
+import { showLoader } from '../../../actions/LoaderAction';
+import TableAction from '../../../components/Table/TableAction';
+import { showErrorMessage, showSuccessMessage } from '../../../helpers/showToast';
 
 const CategoryDetail = (props) => {
   const { id } = props.match.params;

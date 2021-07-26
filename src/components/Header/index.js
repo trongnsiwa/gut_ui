@@ -10,6 +10,7 @@ import { logout } from '../../actions/AuthAction';
 import { hideLoader, showLoader } from '../../actions/LoaderAction';
 import { getAllParentCategories } from '../../services/category.service';
 import { Role } from '../../constants/Role';
+import { lowerCaseString } from '../../helpers/String';
 
 const Header = () => {
   const { user: currentUser } = useSelector((state) => state.authReducer);
@@ -131,9 +132,12 @@ const Header = () => {
                                     <div className='flex w-full items-center p-5 h-12' key={sub.id}>
                                       <Link
                                         to={{
-                                          pathname: `/category/${sub.name}`,
+                                          pathname: `/category/${lowerCaseString(
+                                            selectedParent.name
+                                          )}/${lowerCaseString(sub.name)}`,
                                           state: {
                                             id: sub.id,
+                                            parentId: selectedParent.id,
                                           },
                                         }}
                                         className='text-sm text-gray-600  cursor-pointer hover:underline'
@@ -154,7 +158,7 @@ const Header = () => {
 
               <div className='hidden md:flex items-center justify-end md:flex-1 lg:w-0'>
                 {currentUser ? (
-                  <div className='w-56 text-right fixed'>
+                  <div className='text-right'>
                     <Menu as='div' className='relative inline-block text-left'>
                       <div>
                         <Menu.Button>
@@ -168,7 +172,7 @@ const Header = () => {
                               }
                               alt=''
                             />
-                            <p className='pl-4 text-sm font-semibold text-gray-800'>{currentUser.fullname}</p>
+                            <p className='pl-4 text-sm font-semibold text-gray-600'>{currentUser.fullname}</p>
                           </div>
                         </Menu.Button>
                       </div>
@@ -233,6 +237,22 @@ const Header = () => {
                     </Link>
                   </>
                 )}
+                <div className='text-gray-600 ml-3'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    className='h-8 w-8 cursor-pointer'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    stroke='currentColor'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      strokeWidth={2}
+                      d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'
+                    />
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
@@ -323,24 +343,45 @@ const Header = () => {
                   <div>
                     {currentUser ? (
                       <>
-                        <Link to='/profile'>
-                          <div className='flex -space-x-1 overflow-hidden justify-start items-center'>
-                            <img
-                              className='inline-block h-8 w-8 rounded-full ring-2 ring-white'
-                              src={
-                                currentUser.avatar
-                                  ? currentUser.avatar
-                                  : 'https://ik.imagekit.io/tnyyngwxvx9/default_28FGC8ZwZ.png'
-                              }
-                              alt=''
-                            />
-                            <p className='pl-4 text-sm font-semibold text-gray-600 font-sans'>{currentUser.fullname}</p>
+                        <div className='flex justify-between w-full'>
+                          <Link to='/profile'>
+                            <div className='flex -space-x-1 overflow-hidden justify-start items-center'>
+                              <img
+                                className='inline-block h-8 w-8 rounded-full ring-2 ring-white'
+                                src={
+                                  currentUser.avatar
+                                    ? currentUser.avatar
+                                    : 'https://ik.imagekit.io/tnyyngwxvx9/default_28FGC8ZwZ.png'
+                                }
+                                alt=''
+                              />
+                              <p className='pl-4 text-sm font-semibold text-gray-600 font-sans'>
+                                {currentUser.fullname}
+                              </p>
+                            </div>
+                          </Link>
+                          <div className='text-gray-700'>
+                            <svg
+                              xmlns='http://www.w3.org/2000/svg'
+                              className='h-8 w-8 cursor-pointer'
+                              fill='none'
+                              viewBox='0 0 24 24'
+                              stroke='currentColor'
+                            >
+                              <path
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                strokeWidth={2}
+                                d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'
+                              />
+                            </svg>
                           </div>
-                        </Link>
+                        </div>
 
                         <a
                           href='/'
                           className='w-full flex items-center justify-center px-4 py-2 mt-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700'
+                          onClick={logOut}
                         >
                           <svg
                             xmlns='http://www.w3.org/2000/svg'

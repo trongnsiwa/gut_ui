@@ -1,16 +1,16 @@
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { hideLoader, showLoader } from '../../actions/LoaderAction';
-import TableAction from '../../components/Table/TableAction';
-import TableWrapper from '../../components/Table/TableWrapper';
-import { pageSizes, sortByName } from '../../data/categoryData';
-import { addColor, countColors, countColorsByName, getColors, searchByName } from '../../services/color.service';
+import { hideLoader, showLoader } from '../../../actions/LoaderAction';
+import TableAction from '../../../components/Table/TableAction';
+import TableWrapper from '../../../components/Table/TableWrapper';
+import { pageSizes, sortByName } from '../../../data/categoryData';
+import { addColor, countColors, countColorsByName, getColors, searchByName } from '../../../services/color.service';
 import * as Yup from 'yup';
-import ERRORS from '../../constants/Errors';
+import ERRORS from '../../../constants/Errors';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
-import { showErrorMessage, showSuccessMessage } from '../../helpers/showToast';
+import { showErrorMessage, showSuccessMessage } from '../../../helpers/showToast';
 import Tippy from '@tippyjs/react';
 import { SketchPicker } from 'react-color';
 

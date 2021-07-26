@@ -2,19 +2,19 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
-import ERRORS from '../../constants/Errors';
+import ERRORS from '../../../constants/Errors';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { showLoader } from '../../actions/LoaderAction';
-import { showError, showErrorMessage, showSuccessMessage } from '../../helpers/showToast';
+import { showLoader } from '../../../actions/LoaderAction';
+import { showError, showErrorMessage, showSuccessMessage } from '../../../helpers/showToast';
 import Calendar from 'react-calendar';
 import Tippy from '@tippyjs/react';
 import dayjs from 'dayjs';
-import { addProduct } from '../../services/product.service';
-import { getALlColors } from '../../services/color.service';
-import { getALlSizes } from '../../services/size.service';
+import { addProduct } from '../../../services/product.service';
+import { getALlColors } from '../../../services/color.service';
+import { getALlSizes } from '../../../services/size.service';
 import Select from 'react-select';
-import { format } from '../../helpers/String';
+import { format } from '../../../helpers/String';
 
 const CreateProduct = () => {
   const [colors, setColors] = useState(null);

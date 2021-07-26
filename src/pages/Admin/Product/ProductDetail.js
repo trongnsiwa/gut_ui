@@ -2,19 +2,19 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
-import ERRORS from '../../constants/Errors';
+import ERRORS from '../../../constants/Errors';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { hideLoader, showLoader } from '../../actions/LoaderAction';
-import { showError, showErrorMessage, showSuccessMessage } from '../../helpers/showToast';
+import { hideLoader, showLoader } from '../../../actions/LoaderAction';
+import { showError, showErrorMessage, showSuccessMessage } from '../../../helpers/showToast';
 import Calendar from 'react-calendar';
 import Tippy from '@tippyjs/react';
 import dayjs from 'dayjs';
-import { getProductDetail, updateProduct } from '../../services/product.service';
-import { getALlColors } from '../../services/color.service';
-import { getALlSizes } from '../../services/size.service';
+import { getProductDetail, updateProduct } from '../../../services/product.service';
+import { getALlColors } from '../../../services/color.service';
+import { getALlSizes } from '../../../services/size.service';
 import Select from 'react-select';
-import { format } from '../../helpers/String';
+import { format } from '../../../helpers/String';
 
 const ProductDetail = (props) => {
   const { id } = props.match.params;
@@ -38,12 +38,18 @@ const ProductDetail = (props) => {
   useEffect(() => {
     dispatch(showLoader());
 
-    getProductDetail(id).then((res) => {
-      console.log(res.data.data);
-      setDetails(res.data.data);
-      dispatch(hideLoader());
-    });
-  }, [dispatch, id]);
+    getProductDetail(id)
+      .then((res) => {
+        console.log(res.data.data);
+        setDetails(res.data.data);
+        dispatch(hideLoader());
+      })
+      .catch((err) => {
+        showError(format(ERRORS.ERR_PRODUCT_LOADED_FAIL, id));
+        dispatch(hideLoader());
+        props.history.push('/admin/product');
+      });
+  }, [dispatch, id, props.history]);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -113,17 +119,20 @@ const ProductDetail = (props) => {
       priceSale = null;
     }
 
-    const productColorSizes = colorSizes.map((item) => {
-      return {
-        colorId: item.colorId,
-        sizes: [...item.sizes].map((size) => {
-          return {
-            sizeId: size.sizeId,
-            quantity: size.quantity,
-          };
-        }),
-      };
-    });
+    var productColorSizes = [];
+    if (colorSizes.length > 0) {
+      productColorSizes = colorSizes.map((item) => {
+        return {
+          colorId: item.colorId,
+          sizes: [...item.sizes].map((size) => {
+            return {
+              sizeId: size.sizeId,
+              quantity: size.quantity,
+            };
+          }),
+        };
+      });
+    }
 
     dispatch(showLoader());
 

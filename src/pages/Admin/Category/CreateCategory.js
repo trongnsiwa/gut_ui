@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
-import { showLoader } from '../../actions/LoaderAction';
-import ERRORS from '../../constants/Errors';
-import { showErrorMessage, showSuccessMessage } from '../../helpers/showToast';
-import { createCategory, createCategoryParent } from '../../services/category.service';
+import { showLoader } from '../../../actions/LoaderAction';
+import ERRORS from '../../../constants/Errors';
+import { showErrorMessage, showSuccessMessage } from '../../../helpers/showToast';
+import { createCategory, createCategoryParent } from '../../../services/category.service';
 
 const CreateCategory = () => {
   const [isParent, setIsParent] = useState(false);

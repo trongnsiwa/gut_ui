@@ -9,20 +9,21 @@ import LayoutRoute from './routes/LayoutRoute';
 import PrivateLayoutRoute from './routes/PrivateLayoutRoute';
 import { Role } from './constants/Role';
 import Signup from './pages/Signup';
-import AdminDashBoard from './pages/AdminDashBoard';
+import AdminDashBoard from './pages/Admin/AdminDashBoard';
 import NotFound from './pages/NotFound';
-import Category from './pages/Category/Category';
+import Category from './pages/Admin/Category/Category';
 import Loader from './components/Loader';
-import CategoryDetail from './pages/Category/CategoryDetail';
+import CategoryDetail from './pages/Admin/Category/CategoryDetail';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast, ToastContainer } from 'react-toastify';
-import CreateCategory from './pages/Category/CreateCategory';
-import Color from './pages/Color/Color';
-import ColorDetail from './pages/Color/ColorDetail';
-import Product from './pages/Product/Product';
-import ProductDetail from './pages/Product/ProductDetail';
-import CreateProduct from './pages/Product/CreateProduct';
-import ImageUpload from './pages/Product/ImageUpload';
+import CreateCategory from './pages/Admin/Category/CreateCategory';
+import Color from './pages/Admin/Color/Color';
+import ColorDetail from './pages/Admin/Color/ColorDetail';
+import Product from './pages/Admin/Product/Product';
+import ProductDetail from './pages/Admin/Product/ProductDetail';
+import CreateProduct from './pages/Admin/Product/CreateProduct';
+import ImageUpload from './pages/Admin/Product/ImageUpload';
+import UserCategory from './pages/NormalUser/UserCategory';
 
 function App() {
   const { user: currentUser } = useSelector((state) => state.authReducer);
@@ -112,7 +113,9 @@ function App() {
           />
           <LayoutRoute exact path={'/'} component={Home} />
           <LayoutRoute exact path='/signin' component={Signin} />
-          <LayoutRoute exace path='/signup' component={Signup} />
+          <LayoutRoute exact path='/signup' component={Signup} />
+          <LayoutRoute exact path='/category/:parent/:slug' component={UserCategory} />
+          <LayoutRoute exact path='/category/:parent' component={UserCategory} />
           <LayoutRoute component={NotFound} />
         </Switch>
       </Router>

@@ -2,11 +2,16 @@ import { Transition } from '@headlessui/react';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { hideLoader, showLoader } from '../../actions/LoaderAction';
-import TableAction from '../../components/Table/TableAction';
-import TableWrapper from '../../components/Table/TableWrapper';
-import { pageSizes, sortByName } from '../../data/categoryData';
-import { countParents, countParentsByName, getParentCategories, searchByName } from '../../services/category.service';
+import { hideLoader, showLoader } from '../../../actions/LoaderAction';
+import TableAction from '../../../components/Table/TableAction';
+import TableWrapper from '../../../components/Table/TableWrapper';
+import { pageSizes, sortByName } from '../../../data/categoryData';
+import {
+  countParents,
+  countParentsByName,
+  getParentCategories,
+  searchByName,
+} from '../../../services/category.service';
 
 const headers = (
   <>

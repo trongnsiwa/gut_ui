@@ -17,6 +17,17 @@ export const sorts = [
   },
 ];
 
+export const sortsForUser = [
+  {
+    value: 'CHEAPEST',
+    label: 'Order of cheapest price',
+  },
+  {
+    value: 'HIGHEST',
+    label: 'Order of highest price',
+  },
+];
+
 export const pageSizes = [
   {
     value: '5',

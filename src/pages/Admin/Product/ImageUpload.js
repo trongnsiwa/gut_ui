@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { hideLoader, showLoader } from '../../actions/LoaderAction';
-import { getProductDetail, replaceImages } from '../../services/product.service';
+import { hideLoader, showLoader } from '../../../actions/LoaderAction';
+import { getProductDetail, replaceImages } from '../../../services/product.service';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, Thumbs } from 'swiper';
 import Tippy from '@tippyjs/react';
-import { showError, showErrorMessage, showSuccess, showSuccessMessage } from '../../helpers/showToast';
+import { showError, showErrorMessage, showSuccess, showSuccessMessage } from '../../../helpers/showToast';
 import axios from 'axios';
 import Select from 'react-select';
 

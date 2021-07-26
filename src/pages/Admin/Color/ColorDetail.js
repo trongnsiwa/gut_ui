@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
-import ERRORS from '../../constants/Errors';
+import ERRORS from '../../../constants/Errors';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { showLoader } from '../../actions/LoaderAction';
-import { showErrorMessage, showSuccessMessage } from '../../helpers/showToast';
-import { getColor, updateColor } from '../../services/color.service';
+import { showLoader } from '../../../actions/LoaderAction';
+import { showErrorMessage, showSuccessMessage } from '../../../helpers/showToast';
+import { getColor, updateColor } from '../../../services/color.service';
 
 const ColorDetail = (props) => {
   const { id } = props.match.params;
