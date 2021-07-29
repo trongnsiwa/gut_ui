@@ -1,20 +1,23 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import * as Yup from 'yup';
-import ERRORS from '../../../constants/Errors';
 import { useForm } from 'react-hook-form';
+import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { showLoader } from '../../../actions/LoaderAction';
-import { showError, showErrorMessage, showSuccessMessage } from '../../../helpers/showToast';
 import Calendar from 'react-calendar';
+import Select from 'react-select';
 import Tippy from '@tippyjs/react';
 import dayjs from 'dayjs';
+
+import ERRORS from '../../../constants/Errors';
+
+import { showError, showErrorMessage, showSuccessMessage } from '../../../helpers/showToast';
+
+import { showLoader } from '../../../actions/LoaderAction';
 import { addProduct } from '../../../services/product.service';
 import { getALlColors } from '../../../services/color.service';
 import { getALlSizes } from '../../../services/size.service';
-import Select from 'react-select';
-import { format } from '../../../helpers/String';
+
+import { format } from '../../../helpers/formatString';
 
 const CreateProduct = () => {
   const [colors, setColors] = useState(null);
@@ -82,7 +85,6 @@ const CreateProduct = () => {
     priceSale,
     saleFromDate,
     saleToDate,
-    deleted,
     categoryId,
     brandId,
   }) => {
@@ -131,7 +133,7 @@ const CreateProduct = () => {
       return;
     }
 
-    dispatch(showLoader());
+    dispatch(showLoader);
 
     addProduct(
       name,
@@ -149,7 +151,6 @@ const CreateProduct = () => {
       brandId
     )
       .then((res) => {
-        console.log(res.data.data);
         showSuccessMessage(res, name, dispatch);
         reset();
         setSales({
@@ -197,7 +198,6 @@ const CreateProduct = () => {
         };
         listSizeOptions.push(option);
       });
-      // console.log(listSizeOptions);
       setSizes(listSizeOptions);
     });
   }, []);
@@ -243,6 +243,7 @@ const CreateProduct = () => {
     }
 
     setAllowChangeColor(true);
+
     setColorSize({
       colorId: -1,
       colorName: '',
@@ -273,7 +274,7 @@ const CreateProduct = () => {
         <hr className='mx-4 mb-4 border-dashed border-1 border-brand-light' />
 
         <div className='mb-12 xl:flex xl:flex-row'>
-          <div className='my-6 mx-4 xl:container xl:w-1/2 bg-white p-6 shadow-lg border-brand rounded-lg'>
+          <div className='my-6 mx-4 xl:w-1/2 bg-white p-6 shadow-lg border-brand rounded-lg'>
             <p className='text-base font-thin text-right text-gray-400'>
               Required fields <span className='text-brand-dark'>*</span>
             </p>
@@ -323,7 +324,7 @@ const CreateProduct = () => {
               <div className='flex items-center col-span-2 w-full'>
                 <div>
                   <textarea
-                    className={errors.shortDesc && 'error-input'}
+                    className={`resize-none ${errors.shortDesc && 'error-input'}`}
                     type='textarea'
                     rows={3}
                     cols={50}
@@ -347,6 +348,7 @@ const CreateProduct = () => {
                     cols={50}
                     name='longDesc'
                     id='longDesc'
+                    className='resize-none'
                     {...register('longDesc')}
                   />
                 </div>
@@ -554,7 +556,7 @@ const CreateProduct = () => {
             </form>
           </div>
 
-          <div className='h-screen lg:overflow-y-auto my-6 mx-4 xl:container xl:w-1/2 bg-white p-6 shadow-lg border-brand rounded-lg'>
+          <div className='h-screen lg:overflow-y-auto my-6 mx-4 xl:w-1/2 bg-white p-6 shadow-lg border-brand rounded-lg'>
             <p className='text-xl font-bold mb-3 text-brand-dark flex flex-row items-center'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'

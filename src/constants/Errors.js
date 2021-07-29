@@ -13,6 +13,7 @@ const ERRORS = {
   ERR_PASSWORD_NOT_MATCH: 'Passwords do not match.',
   ERR_TERMS_AND_CONDITION_NOT_CHECK: 'Please check to accept Terms and Conditions.',
   ERR_CATEGORY_PARENT_NOT_FOUND: 'Category parent {} is not found.',
+  ERR_PARENT_ID_NOT_NULL: 'Parent Id must not be null.',
   ERR_CATEGORY_NOT_FOUND: 'Category {} is not found.',
   ERR_CATEGORY_DELETED_FAIL: 'Fail to delete category {}. Please try again.',
   ERR_CATEGORY_STILL_IN_PARENT:

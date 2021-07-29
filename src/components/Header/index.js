@@ -1,46 +1,45 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Menu, Popover, Transition } from '@headlessui/react';
-import React, { Fragment, useEffect, useState } from 'react';
-import logo from '../../assets/logo.png';
-import { ChevronDownIcon, ChevronRightIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
-import { Link, useHistory } from 'react-router-dom';
-import './Header.css';
+import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, useHistory } from 'react-router-dom';
+import { Menu, Popover, Transition } from '@headlessui/react';
+import { ChevronDownIcon, ChevronRightIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
+
+import logo from '../../assets/logo.png';
+
 import { logout } from '../../actions/AuthAction';
-import { hideLoader, showLoader } from '../../actions/LoaderAction';
+import { showLoader } from '../../actions/LoaderAction';
+
 import { getAllParentCategories } from '../../services/category.service';
+
 import { Role } from '../../constants/Role';
-import { lowerCaseString } from '../../helpers/String';
-import { useRef } from 'react';
+
+import { lowerCaseString } from '../../helpers/formatString';
 
 const Header = () => {
   const { user: currentUser } = useSelector((state) => state.authReducer);
-
   const dispatch = useDispatch();
   const history = useHistory();
 
   const [parentCategories, setParentCategories] = useState(null);
   const [selectedParent, setSelectedParent] = useState(null);
+
   const buttonRef = useRef();
+  const buttonSmallRef = useRef();
 
   useEffect(() => {
-    dispatch(showLoader);
-
     getAllParentCategories().then(
       (res) => {
         setParentCategories(res.data.data);
-        console.log(res.data.data);
-        dispatch(hideLoader);
       },
       (error) => {
         const message =
           (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
 
         console.log(message);
-        dispatch(hideLoader);
       }
     );
-  }, [dispatch]);
+  }, []);
 
   const logOut = () => {
     dispatch(showLoader);
@@ -283,7 +282,7 @@ const Header = () => {
                       <img className='h-14 my-2 w-auto' src={logo} alt='GUT' />
                     </div>
                     <div>
-                      <Popover.Button className='btn-menu'>
+                      <Popover.Button className='btn-menu' ref={buttonSmallRef}>
                         <span className='sr-only'>Close menu</span>
                         <XIcon className='h-6 w-6' aria-hidden='true' />
                       </Popover.Button>
@@ -328,22 +327,26 @@ const Header = () => {
                                 <dd className='z-0'>
                                   <ul className='grid grid-cols-2 list-none p-0 cursor-pointer'>
                                     {parent.subCategories.map((sub) => (
-                                      <li
-                                        style={{ borderBottom: '1px solid #dadada', borderRight: '1px solid #dadada' }}
+                                      <Link
+                                        to={{
+                                          pathname: `/category/${lowerCaseString(sub.name)}`,
+                                          state: {
+                                            id: sub.id,
+                                          },
+                                        }}
                                         key={`${sub.id}_small`}
-                                        className='p-4 text-sm'
+                                        onClick={() => buttonSmallRef.current?.click()}
                                       >
-                                        <Link
-                                          to={{
-                                            pathname: `/category/${lowerCaseString(sub.name)}`,
-                                            state: {
-                                              id: sub.id,
-                                            },
+                                        <li
+                                          style={{
+                                            borderBottom: '1px solid #dadada',
+                                            borderRight: '1px solid #dadada',
                                           }}
+                                          className='p-4 text-sm'
                                         >
                                           {sub.name}
-                                        </Link>
-                                      </li>
+                                        </li>
+                                      </Link>
                                     ))}
                                   </ul>
                                 </dd>

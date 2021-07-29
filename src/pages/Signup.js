@@ -1,25 +1,25 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { yupResolver } from '@hookform/resolvers/yup';
-import React from 'react';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useForm } from 'react-hook-form';
 import { Link, Redirect } from 'react-router-dom';
 import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
 import { hideLoader, showLoader } from '../actions/LoaderAction';
-import ERRORS from '../constants/Errors';
 import * as Actions from '../actions/AuthAction';
+
+import ERRORS from '../constants/Errors';
+
 import MessageModal from '../components/MessageModal';
 
-const Signup = (props) => {
-  const signupImage =
-    'https://ik.imagekit.io/tnyyngwxvx9/patrick-tomasso-QMDap1TAu0g-unsplash_XafnH-_YX.jpg?updatedAt=1626750231215';
-
+const Signup = () => {
   const [success, setSuccess] = useState(false);
   const [open, setOpen] = useState(false);
 
   const { isLoggedIn } = useSelector((state) => state.authReducer);
   const { message } = useSelector((state) => state.messageReducer);
+
   const dispatch = useDispatch();
 
   const validationSchema = Yup.object().shape({
@@ -50,19 +50,22 @@ const Signup = (props) => {
     resolver: yupResolver(validationSchema),
   });
 
-  const onSubmitHandler = ({ email, password, confirm, firstname, lastname }) => {
-    dispatch(showLoader());
+  const handleRegister = ({ email, password, confirm, firstname, lastname }) => {
+    dispatch(showLoader);
 
     dispatch(Actions.register(email, password, confirm, firstname, lastname))
       .then(() => {
         setOpen(true);
         setSuccess(true);
+
         reset();
-        dispatch(hideLoader());
+
+        dispatch(hideLoader);
       })
       .catch(() => {
         setSuccess(false);
-        dispatch(hideLoader());
+
+        dispatch(hideLoader);
       });
   };
 
@@ -73,22 +76,20 @@ const Signup = (props) => {
   return (
     <>
       <div
-        className='mx-auto w-full h-screen bg-cover bg-center'
+        className='w-full h-screen bg-cover bg-center'
         style={{
-          backgroundImage: `url('${signupImage}')`,
+          backgroundImage: `url('https://ik.imagekit.io/tnyyngwxvx9/patrick-tomasso-QMDap1TAu0g-unsplash_XafnH-_YX.jpg?updatedAt=1626750231215')`,
         }}
       >
         <div className='mx-auto py-8 w-11/12 sm:w-3/4 xl:w-2/3'>
-          <div className='bg-white py-8 px-6 sm:px-10 items-center justify-start shadow-lg rounded-lg border border-gray-400'>
+          <div className='bg-white py-8 px-6 sm:px-10 items-center justify-start shadow-lg rounded-lg'>
             <div className='flex w-full justify-between'>
               <div className='w-full lg:w-2/3'>
                 <div className='flex items-center justify-between mb-8'>
-                  <p className='text-2xl font-bold text-gray-700 text-left'>Register new members</p>
-                  <p className='text-base font-thin text-right text-gray-400 lg:mr-16'>
-                    Required fields <span className='text-brand-dark'>*</span>
-                  </p>
+                  <p className='text-2xl font-bold text-gray-700'>Register new members</p>
+                  <p className='text-sm font-thin text-gray-400 lg:mr-16'>Required fields *</p>
                 </div>
-                <form className='mb-0 space-y-6 lg:mr-16' onSubmit={handleSubmit(onSubmitHandler)}>
+                <form className='mb-0 space-y-6 lg:mr-16' onSubmit={handleSubmit(handleRegister)}>
                   {message && !success && <p className='error-message text-sm'>{message}</p>}
                   <div>
                     <label htmlFor='email' className='block text-sm font-medium text-gray-700'>
@@ -196,7 +197,7 @@ const Signup = (props) => {
                   </button>
                 </form>
 
-                <p className='text-left mt-8 font-semibold text-gray-700'>
+                <p className='mt-8 text-sm font-semibold text-gray-700'>
                   Already registed?{' '}
                   <Link to='/signin' className='text-brand hover:text-brand-dark font-semibold'>
                     Sign In
@@ -208,7 +209,6 @@ const Signup = (props) => {
               </div>
             </div>
           </div>
-          <div></div>
         </div>
       </div>
       {success && (

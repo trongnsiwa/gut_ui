@@ -1,11 +1,15 @@
-import { Transition } from '@headlessui/react';
-import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Transition } from '@headlessui/react';
+import _ from 'lodash';
+
 import { hideLoader, showLoader } from '../../../actions/LoaderAction';
+
 import TableAction from '../../../components/Table/TableAction';
 import TableWrapper from '../../../components/Table/TableWrapper';
+
 import { pageSizes, sortByName } from '../../../data/categoryData';
+
 import {
   countParents,
   countParentsByName,
@@ -63,8 +67,7 @@ const Category = () => {
         }
       );
     } else {
-      setPageNum(1);
-      searchByName(1, pageSize, sortBy, searchedName).then((res) => {
+      searchByName(pageNum, pageSize, sortBy, searchedName).then((res) => {
         setParentCategories(null);
         setSearchedCategories(res.data.data);
         dispatch(hideLoader);
@@ -108,7 +111,7 @@ const Category = () => {
               ? parentCategories.map((item, i) => (
                   <React.Fragment key={i}>
                     <tr
-                      className={`text-left z-9 hover:bg-gray-100 cursor-pointer ${
+                      className={`text-left z-1 hover:bg-gray-100 cursor-pointer ${
                         selectedParent === item.id ? 'bg-gray-100' : ''
                       }`}
                       key={item.id + '_parent'}
@@ -159,8 +162,8 @@ const Category = () => {
                       item.subCategories.map((sub) => (
                         <Transition
                           as='tr'
-                          className={`text-left transform hover:bg-gray-100 ${
-                            selectedParent === item.id ? 'shadow-lg  rounded-lg z-9 mt-0' : 'z-0 mb-48'
+                          className={`text-left hover:bg-gray-100 ${
+                            selectedParent === item.id ? 'shadow-lg  rounded-lg mt-0' : 'mb-48'
                           }`}
                           key={sub.id + '_sub'}
                           show={selectedParent === item.id}
@@ -186,7 +189,7 @@ const Category = () => {
                               itemId={sub.id}
                               table='CATEGORY'
                               parent={false}
-                              list={item.subCategories}
+                              list={parentCategories}
                               setList={setParentCategories}
                             />
                           </td>
@@ -212,6 +215,7 @@ const Category = () => {
                         itemId={item.id}
                         table='CATEGORY'
                         parent={item.parentId === null}
+                        isSearch={searchedName && searchByName !== ''}
                         list={searchedCategories}
                         setList={setSearchedCategories}
                       />

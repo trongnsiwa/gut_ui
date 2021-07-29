@@ -1,6 +1,6 @@
 @tailwind base;
-@tailwind utilities;
 @tailwind components;
+@tailwind utilities;
 
 @layer base {
   input[type='text'],
@@ -29,6 +29,10 @@
 }
 
 @layer components {
+  .btn-menu {
+    @apply bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:ring-2 focus:ring-inset focus:ring-brand;
+  }
+
   .error-message {
     @apply mt-2 text-xs font-normal text-red-500;
   }
@@ -46,7 +50,7 @@
   }
 
   .table-header {
-    @apply py-2 px-3 sticky top-0 border-b border-gray-200 bg-brand-light;
+    @apply py-2 px-3 sticky top-0 border-b border-gray-200 bg-brand-light z-50;
   }
 
   .table-header-label {
@@ -59,5 +63,13 @@
 
   .table-row-content {
     @apply text-gray-700 p-3 flex items-center;
+  }
+
+  .btn-dash-main {
+    @apply w-full flex justify-between items-center py-3 px-6 text-gray-600 cursor-pointer hover:bg-gray-100 hover:text-brand-dark focus:outline-none;
+  }
+
+  .btn-dash-child {
+    @apply py-2 pl-16 block text-sm font-medium text-gray-600 hover:bg-brand-light hover:text-white;
   }
 }

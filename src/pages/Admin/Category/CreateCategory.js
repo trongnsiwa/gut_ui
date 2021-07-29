@@ -1,12 +1,14 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import React from 'react';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
 import { showLoader } from '../../../actions/LoaderAction';
+
 import ERRORS from '../../../constants/Errors';
-import { showErrorMessage, showSuccessMessage } from '../../../helpers/showToast';
+
+import { showError, showErrorMessage, showSuccessMessage } from '../../../helpers/showToast';
 import { createCategory, createCategoryParent } from '../../../services/category.service';
 
 const CreateCategory = () => {
@@ -28,8 +30,8 @@ const CreateCategory = () => {
     resolver: yupResolver(validationSchema),
   });
 
-  const onSubmitHandler = ({ name, parent, parentId }) => {
-    dispatch(showLoader());
+  const handleCreateNew = ({ name, parent, parentId }) => {
+    dispatch(showLoader);
 
     if (parent) {
       createCategoryParent(name)
@@ -41,6 +43,11 @@ const CreateCategory = () => {
           showErrorMessage(error, name, dispatch);
         });
     } else {
+      if (!parentId) {
+        showError(ERRORS.ERR_PARENT_ID_NOT_NULL);
+        return;
+      }
+
       createCategory(name, parentId)
         .then((res) => {
           showSuccessMessage(res, name, dispatch);
@@ -76,7 +83,7 @@ const CreateCategory = () => {
         <div className='mt-6 mx-4'>
           <form
             className='mb-0 grid-cols-2 inline-grid gap-0 space-y-6 lg:mr-16'
-            onSubmit={handleSubmit(onSubmitHandler)}
+            onSubmit={handleSubmit(handleCreateNew)}
           >
             <div className='flex items-center'>
               <label htmlFor='name' className='block text-sm font-medium text-gray-700 '>
@@ -97,7 +104,7 @@ const CreateCategory = () => {
             </div>
             <div className='flex items-center'>
               <label htmlFor='parent' className='block text-sm font-medium text-gray-700 '>
-                Is parent? <span className='text-red-500'>*</span>
+                Is parent?
               </label>
             </div>
             <div className='flex items-center'>

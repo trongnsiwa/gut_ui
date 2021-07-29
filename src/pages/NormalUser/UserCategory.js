@@ -1,3 +1,6 @@
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { Link, useHistory } from 'react-router-dom';
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -7,13 +10,12 @@ import {
   ScaleIcon,
   SparklesIcon,
 } from '@heroicons/react/outline';
-import React, { useEffect } from 'react';
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { hideLoader, showLoader } from '../../actions/LoaderAction';
+import _ from 'lodash';
+
 import { sortsForUser } from '../../data/productData';
-import { capitalizeFirstLetter, lowerCaseString } from '../../helpers/String';
+
+import { capitalizeFirstLetter, lowerCaseString } from '../../helpers/formatString';
+
 import { getAllParentCategories } from '../../services/category.service';
 import {
   countProductsByCategory,
@@ -21,11 +23,13 @@ import {
   getProductsByCategory,
   searchProductsByCategoryAndName,
 } from '../../services/product.service';
-import _ from 'lodash';
-import ItemBox from '../../components/ItemBox';
-import Spinner from '../../components/Spinner';
 import { getALlColors } from '../../services/color.service';
 import { getALlSizes } from '../../services/size.service';
+
+import ItemBox from '../../components/ItemBox';
+import Spinner from '../../components/Spinner';
+
+import { Role } from '../../constants/Role';
 
 const UserCategory = (props) => {
   const { slug, parent } = props.match.params;
@@ -37,155 +41,132 @@ const UserCategory = (props) => {
   const [colors, setColors] = useState(null);
   const [sizes, setSizes] = useState(null);
 
-  const [totalPage, setTotalPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [pageNum, setPageNum] = useState(1);
   const [pageSize, setPageSize] = useState(8);
   const [sortBy, setSortBy] = useState('CHEAPEST');
   const [searchedName, setSearchedName] = useState('');
 
-  const [results, setResults] = useState(null);
+  const [totalResults, setTotalResults] = useState(null);
   const [pageNumbers, setPageNumbers] = useState(0);
   const [currentPageNumbers, setCurrentPageNumbers] = useState();
 
-  const dispatch = useDispatch();
+  const { user: currentUser } = useSelector((state) => state.authReducer);
+  const history = useHistory();
+
+  if (currentUser && currentUser.roles?.includes(Role.ADMIN)) {
+    history.push('/admin');
+    window.location.reload();
+  }
 
   useEffect(() => {
-    dispatch(showLoader);
-
     getAllParentCategories().then(
       (res) => {
         setParentCategories(res.data.data);
-        console.log(res.data.data);
-        dispatch(hideLoader);
       },
       (error) => {
         const message =
           (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
 
         console.log(message);
-        dispatch(hideLoader);
       }
     );
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
-    if (!colors) {
-      dispatch(showLoader);
+    getALlColors().then(
+      (res) => {
+        setColors(res.data.data);
+      },
+      (error) => {
+        const message =
+          (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
 
-      getALlColors().then(
-        (res) => {
-          setColors(res.data.data);
-          dispatch(hideLoader);
-        },
-        (error) => {
-          const message =
-            (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-          console.log(message);
-          dispatch(hideLoader);
-        }
-      );
-    }
-  }, [colors, dispatch]);
+        console.log(message);
+      }
+    );
+  }, []);
 
   useEffect(() => {
-    if (!sizes) {
-      dispatch(showLoader);
+    getALlSizes().then(
+      (res) => {
+        setSizes(res.data.data);
+      },
+      (error) => {
+        const message =
+          (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
 
-      getALlSizes().then(
-        (res) => {
-          setSizes(res.data.data);
-          console.log(res.data.data);
-          dispatch(hideLoader);
-        },
-        (error) => {
-          const message =
-            (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-          console.log(message);
-          dispatch(hideLoader);
-        }
-      );
-    }
-  }, [dispatch, sizes]);
+        console.log(message);
+      }
+    );
+  }, []);
 
   useEffect(() => {
-    dispatch(showLoader);
-
     if (!searchedName || searchedName === '') {
       getProductsByCategory(id ? id : parentId, pageNum, pageSize, sortBy).then(
         (res) => {
           setProducts(res.data.data);
-          dispatch(hideLoader);
-          console.log(res.data.data);
         },
         (error) => {
           const message =
             (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
 
           console.log(message);
-          dispatch(hideLoader);
         }
       );
     } else {
-      setPageNum(1);
-      searchProductsByCategoryAndName(id ? id : parentId, 1, pageSize, sortBy, searchedName).then((res) => {
+      searchProductsByCategoryAndName(id ? id : parentId, pageNum, pageSize, sortBy, searchedName).then((res) => {
         setProducts(res.data.data);
-        dispatch(hideLoader);
       });
     }
-  }, [dispatch, id, pageNum, pageSize, parentId, searchedName, sortBy]);
+  }, [id, pageNum, pageSize, parentId, searchedName, sortBy]);
 
   useEffect(() => {
     if (pageSize) {
       if (!searchedName || searchedName === '') {
         countProductsByCategory(id ? id : parentId).then((res) => {
           const pages = _.ceil(res.data.data / pageSize);
-          setTotalPage(pages >= 1 ? pages : 1);
+          setTotalPages(pages >= 1 ? pages : 1);
         });
       } else {
         countProductsByCategoryAndName(id ? id : parentId, searchedName).then((res) => {
           const pages = _.ceil(res.data.data / pageSize);
-          setTotalPage(pages >= 1 ? pages : 1);
+          setTotalPages(pages >= 1 ? pages : 1);
         });
       }
     }
   }, [id, pageSize, parentId, searchedName]);
 
   useEffect(() => {
-    if (!results) {
-      if (!searchedName || searchedName === '') {
-        countProductsByCategory(id ? id : parentId).then((res) => {
-          setResults(res.data.data);
-        });
-      } else {
-        countProductsByCategoryAndName(id ? id : parentId, searchedName).then((res) => {
-          setTotalPage(res.data.data);
-        });
-      }
+    if (!searchedName || searchedName === '') {
+      countProductsByCategory(id ? id : parentId).then((res) => {
+        setTotalResults(res.data.data);
+      });
+    } else {
+      countProductsByCategoryAndName(id ? id : parentId, searchedName).then((res) => {
+        setTotalResults(res.data.data);
+      });
     }
-  }, [id, parentId, results, searchedName]);
+  }, [id, parentId, searchedName]);
 
   useEffect(() => {
-    if (totalPage) {
+    if (totalPages) {
       const pageNumbers = [];
-      for (let i = 1; i <= totalPage; i++) {
+      for (let i = 1; i <= totalPages; i++) {
         pageNumbers.push(i);
       }
       setPageNumbers(pageNumbers);
     }
-  }, [totalPage]);
+  }, [totalPages]);
 
   useEffect(() => {
     if (pageNum && pageNumbers) {
-      if (pageNum === 1) {
-        setCurrentPageNumbers(pageNumbers.slice(0, 5));
-      }
+      setCurrentPageNumbers(pageNumbers.slice(0, 5));
     }
   }, [pageNum, pageNumbers]);
 
   return (
-    <div className='my-10 w-full h-full px-14 lg:mx-0 lg:container'>
+    <div className='my-10 h-full w-full px-6 lg:px-14 lg:mx-auto lg:container'>
       <nav className='text-gray-600 my-8' aria-label='Breadcrumb'>
         <ol className='list-none p-0 inline-flex'>
           <li className='flex items-center'>
@@ -235,24 +216,17 @@ const UserCategory = (props) => {
         <span className='text-xl text-gray-400'>{slug ? slug.toUpperCase() : parent.toUpperCase()}</span>
       </div>
 
-      <div className='flex w-full justify-between list-none my-6 mt-20'>
-        <section className='relative flex flex-col list-none p-0' style={{ width: '200px' }}>
-          <div
-            className='flex w-full h-10 items-center justify-start list-none'
-            style={{
-              borderWidth: '0px 0px 1px',
-              borderColor: 'rgb(218, 218, 218)',
-              borderStyle: 'dotted',
-            }}
-          >
+      <div className='flex justify-between w-full my-6 mt-20'>
+        <section className='relative flex flex-col p-0'>
+          <div className='flex w-full h-10 items-center justify-start border-b border-gray-200 border-solid'>
             <span className='text-sm md:text-base font-semibold'>CATEGORY</span>
           </div>
-          <div className='relative py-3 text-sm md:text-base'>
+          <div className='py-3 text-sm md:text-base'>
             {parentCategories &&
               parentCategories?.map((parent) => (
-                <div className='relative' key={parent.id}>
-                  <div className='flex w-full items-center list-none'>
-                    <div className='relative mr-3 space-y-5'>
+                <div className='mr-3 md:mr-0' key={parent.id}>
+                  <div className='flex w-full items-center'>
+                    <div className='space-y-5'>
                       <Link
                         to={{
                           pathname: `/category/${parent.name.toString().toLowerCase()}`,
@@ -260,10 +234,11 @@ const UserCategory = (props) => {
                             parentId: parent.id,
                           },
                         }}
+                        onClick={() => setPageNum(1)}
                       >
                         {parent.name}
                       </Link>
-                      <div className='inline-flex relative pl-3'>
+                      <div className='inline-flex pl-3'>
                         <button
                           type='button'
                           onClick={() => {
@@ -284,9 +259,7 @@ const UserCategory = (props) => {
                     </div>
                   </div>
                   <div
-                    className={`relative flex flex-col space-y-5 my-5 ml-6 ${
-                      selectedParent?.id === parent.id ? '' : 'hidden'
-                    }`}
+                    className={`flex flex-col space-y-5 my-5 ml-6 ${selectedParent?.id === parent.id ? '' : 'hidden'}`}
                   >
                     {parent.subCategories &&
                       parent?.subCategories?.map((sub) => (
@@ -298,6 +271,7 @@ const UserCategory = (props) => {
                               parentId: parent.id,
                             },
                           }}
+                          onClick={() => setPageNum(1)}
                           key={sub.id}
                         >
                           {sub.name}
@@ -307,14 +281,14 @@ const UserCategory = (props) => {
                 </div>
               ))}
           </div>
-          <div className='relative py-6 border-t mt-6 border-gray-100 border-solid'>
+          <div className='py-6 border-t mt-6 border-gray-200 border-solid'>
             <div className='flex w-full items-center'>
               <FlagIcon className='h-6 w-6 text-gray-700' />
               <span className='font-semibold flex-grow pl-2 text-sm md:text-base'>Sales type</span>
             </div>
             <div className='flex flex-col mt-3'>
               {[...Array.from(['New', 'Sale'])].map((type, index) => (
-                <div className='relative py-2'>
+                <div className='relative py-2' key={`type_${type}`}>
                   <label className='inline-flex flex-row items-center'>
                     <input type='checkbox' value={type} className='w-4 h-4 md:w-5 md:h-5 cursor-pointer' />
                     <span className='pl-3 text-sm md:text-base'>{type}</span>
@@ -323,7 +297,7 @@ const UserCategory = (props) => {
               ))}
             </div>
           </div>
-          <div className='relative py-6 border-t border-gray-100 border-solid'>
+          <div className='py-6 border-t border-gray-200 border-solid'>
             <div className='flex w-full items-center'>
               <SparklesIcon className='h-6 w-6 text-gray-700' />
               <span className='font-semibold flex-grow pl-2 text-sm md:text-base'>Colors</span>
@@ -334,22 +308,20 @@ const UserCategory = (props) => {
                   colors?.map(
                     (color, index) =>
                       index <= 11 && (
-                        <>
-                          <span
-                            className={`cursor-pointer text-sm box-border inline-flex justify-center items-center align-middle relative w-6 h-6 md:w-8 md:h-8 rounded-full hover:border-3 hover:border-black hover:shadow-lg hover:p-3
+                        <span
+                          className={`cursor-pointer text-sm box-border inline-flex justify-center items-center align-middle w-6 h-6 md:w-8 md:h-8 rounded-full hover:border-3 hover:border-black hover:shadow-lg hover:p-3
                         }`}
-                            style={{
-                              backgroundColor: `${color?.source}`,
-                            }}
-                            key={`color_${color.id}`}
-                          ></span>
-                        </>
+                          style={{
+                            backgroundColor: `${color?.source}`,
+                          }}
+                          key={`color_${color.id}`}
+                        ></span>
                       )
                   )}
               </div>
             </div>
           </div>
-          <div className='relative py-6 border-t border-gray-100 border-solid mt-3'>
+          <div className='py-6 border-t border-gray-200 border-solid mt-3'>
             <div className='flex w-full items-center'>
               <ScaleIcon className='h-6 w-6 text-gray-700' />
               <span className='font-semibold flex-grow pl-2 text-sm md:text-base'>Sizes</span>
@@ -371,10 +343,10 @@ const UserCategory = (props) => {
               </div>
             </div>
           </div>
-          <div className='relative py-6 border-t mt-6 border-gray-100 border-solid'>
+          <div className='py-6 border-t mt-6 border-gray-200 border-solid'>
             <div className='flex w-full items-center'>
               <CurrencyDollarIcon className='h-6 w-6 text-gray-700' />
-              <span className='font-semibold  flex-grow pl-2 text-sm md:text-base'>price</span>
+              <span className='font-semibold flex-grow pl-2 text-sm md:text-base'>price</span>
             </div>
             <div className='flex flex-col mt-3'>
               {[...Array.from(['~49K', '50K~99K', '100K-199K', '200K-299K', '300K~399K', '400K~499K', '500K~'])].map(
@@ -391,15 +363,18 @@ const UserCategory = (props) => {
           </div>
         </section>
         <section className='relative ml-6' style={{ width: '858px' }}>
-          <div className='flex w-full justify-between list-none my-3'>
-            <div className='pr-4 w-2/5'>
+          <div className='flex w-full justify-between my-3'>
+            <div className='pr-4 w-full md:w-2/5'>
               <div className='relative'>
                 <input
                   type='text'
                   className='w-full pl-10 pr-4 py-2 rounded-lg shadow focus:outline-none focus:shadow-outline text-gray-600 font-medium'
                   placeholder='Search by name...'
                   value={searchedName}
-                  onChange={(e) => setSearchedName(e.target.value)}
+                  onChange={(e) => {
+                    setSearchedName(e.target.value);
+                    setPageNum(1);
+                  }}
                 />
 
                 <div className='absolute top-0 left-0 inline-flex items-center p-2'>
@@ -436,7 +411,7 @@ const UserCategory = (props) => {
                 ))}
             </select>
           </div>
-          <div className='flex w-full list-none'>
+          <div className='flex w-full'>
             <div className='w-full'>
               <div className='list-none p-0 m-0 grid grid-cols-2 md:grid-cols-4'>
                 {!products ? (
@@ -467,13 +442,13 @@ const UserCategory = (props) => {
               <p className='text-sm text-gray-700'>
                 Showing <span className='font-medium'>{pageNumbers && pageNumbers[0]}</span> to{' '}
                 <span className='font-medium'>{pageNumbers && pageNumbers[pageNumbers.length - 1]}</span> of{' '}
-                <span className='font-medium'>{results}</span> results
+                <span className='font-medium'>{totalResults}</span> totalResults
               </p>
             </div>
             <div>
-              <nav className='relative z-0 inline-flex rounded-md shadow-sm -space-x-px' aria-label='Pagination'>
+              <nav className='z-0 inline-flex rounded-md shadow-sm -space-x-px' aria-label='Pagination'>
                 <button
-                  className='relative inline-flex items-center md:px-2 md:py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50'
+                  className='inline-flex items-center md:px-2 md:py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50'
                   onClick={() => {
                     if (pageNum === currentPageNumbers[0] && pageNum !== 1) {
                       setCurrentPageNumbers(pageNumbers.slice(pageNum - 5, pageNum));
@@ -496,7 +471,7 @@ const UserCategory = (props) => {
                           : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
                       } relative inline-flex items-center px-2 md:px-4 py-2 border text-sm font-medium`}
                       onClick={() => {
-                        if (index === currentPageNumbers.length - 1 && pageNum < totalPage) {
+                        if (index === currentPageNumbers.length - 1 && pageNum < totalPages) {
                           setCurrentPageNumbers(pageNumbers.slice(pageNum, pageNum + 5));
                         } else if (index === currentPageNumbers[0] - 1 && pageNum !== 1) {
                           setCurrentPageNumbers(pageNumbers.slice(pageNum - 5, pageNum));
@@ -509,14 +484,14 @@ const UserCategory = (props) => {
                     </button>
                   ))}
                 <button
-                  className='relative inline-flex items-center md:px-2 md:py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50'
+                  className='inline-flex items-center md:px-2 md:py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50'
                   onClick={() => {
-                    if (pageNum === currentPageNumbers[currentPageNumbers.length - 1] && pageNum < totalPage) {
+                    if (pageNum === currentPageNumbers[currentPageNumbers.length - 1] && pageNum < totalPages) {
                       setCurrentPageNumbers(pageNumbers.slice(pageNum, pageNum + 5));
                     }
                     setPageNum(pageNum + 1);
                   }}
-                  disabled={pageNum === totalPage}
+                  disabled={pageNum === totalPages}
                   key='last'
                 >
                   <span className='sr-only'>Next</span>

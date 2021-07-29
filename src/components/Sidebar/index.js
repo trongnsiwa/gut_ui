@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Transition } from '@headlessui/react';
 import React from 'react';
+import { Transition } from '@headlessui/react';
 import logo from '../../assets/logo.png';
 import bars from '../../data/sidebarData';
 import SubMenu from './SubMenu.js';

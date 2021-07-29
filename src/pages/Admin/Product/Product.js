@@ -1,10 +1,14 @@
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+
 import { hideLoader, showLoader } from '../../../actions/LoaderAction';
+
 import TableAction from '../../../components/Table/TableAction';
 import TableWrapper from '../../../components/Table/TableWrapper';
+
 import { pageSizes, sorts } from '../../../data/productData';
+
 import {
   countProducts,
   countProductsByName,
@@ -55,7 +59,6 @@ const Product = () => {
         (res) => {
           setProducts(res.data.data);
           dispatch(hideLoader);
-          console.log(res.data.data);
         },
         (error) => {
           const message =

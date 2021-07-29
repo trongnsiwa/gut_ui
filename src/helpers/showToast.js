@@ -2,7 +2,7 @@ import { toast } from 'react-toastify';
 import { hideLoader } from '../actions/LoaderAction';
 import ERRORS from '../constants/Errors';
 import SUCCESS from '../constants/Success';
-import { format } from './String';
+import { format } from './formatString';
 
 export const showSuccess = (message) => {
   toast.success('✔️ ' + message, {
@@ -38,7 +38,7 @@ export const showSuccessMessage = (res, id, dispatch) => {
   }
 
   showSuccess(message.toString());
-  dispatch(hideLoader());
+  dispatch(hideLoader);
 };
 
 export const showErrorMessage = (error, id, dispatch) => {
@@ -53,5 +53,5 @@ export const showErrorMessage = (error, id, dispatch) => {
   }
 
   showError(message.toString());
-  dispatch(hideLoader());
+  dispatch(hideLoader);
 };

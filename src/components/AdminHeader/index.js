@@ -1,8 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Menu, Transition } from '@headlessui/react';
 import React, { Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { Menu, Transition } from '@headlessui/react';
+
 import { logout } from '../../actions/AuthAction';
 
 const AdminHeader = ({ setOpenSidebar, openSidebar }) => {

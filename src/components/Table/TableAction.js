@@ -1,10 +1,12 @@
-import { Popover } from '@headlessui/react';
-import React from 'react';
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { showLoader } from '../../actions/LoaderAction';
+import { Popover } from '@headlessui/react';
+
 import { showErrorMessage, showSuccessMessage } from '../../helpers/showToast';
+
+import { showLoader } from '../../actions/LoaderAction';
+
 import { deleteCategoryParent, deleteChildCategory } from '../../services/category.service';
 import { deleteColor } from '../../services/color.service';
 import { deleteProduct } from '../../services/product.service';
@@ -33,7 +35,18 @@ const TableAction = (props) => {
         deleteChildCategory(id).then(
           (res) => {
             showSuccessMessage(res, id, dispatch);
-            props.setList(props.list.filter((item) => item.id !== id));
+            if (!props.isSearch && !props.isDetail) {
+              props.setList(
+                props.list.map((item) => {
+                  return {
+                    ...item,
+                    subCategories: item.subCategories ? item.subCategories.filter((sub) => sub.id !== id) : null,
+                  };
+                })
+              );
+            } else {
+              props.setList(props.list.filter((item) => item.id !== id));
+            }
           },
           (error) => {
             showErrorMessage(error, id, dispatch);
@@ -125,7 +138,7 @@ const TableAction = (props) => {
           </svg>
         </Popover.Button>
         <div className='relative'>
-          <Popover.Panel className='absolute z-10 right-0 w-56 mt-2 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+          <Popover.Panel className='z-10 absolute right-0 w-56 mt-2 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
             <div className='flex flex-col justify-center my-2'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'

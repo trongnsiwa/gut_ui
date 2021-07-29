@@ -70,7 +70,7 @@ const ItemBox = ({ item, parent, category }) => {
           </div>
           <div>
             <p
-              className='text-center mb-3  text-sm md:text-xl font-bold tracking-wide'
+              className='text-center mb-3 text-sm md:text-xl font-bold tracking-wide'
               style={{ color: `${item.salePrice ? '#fe0000' : ''}` }}
             >
               {item.salePrice ? formatCash(item.salePrice) : formatCash(item.price)}

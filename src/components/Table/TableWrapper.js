@@ -64,7 +64,7 @@ const TableWrapper = ({
         </select>
       </div>
 
-      <div className='overflow-x-auto bg-white rounded-lg shadow overflow-y-auto relative'>
+      <div className='overflow-x-auto bg-white rounded-lg shadow overflow-y-auto'>
         {rows && rows.length > 0 ? (
           <>
             <table className='custom-table'>

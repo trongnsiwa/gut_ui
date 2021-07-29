@@ -1,32 +1,33 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { hideLoader, showLoader } from '../../actions/LoaderAction';
-import ERRORS from '../../constants/Errors';
-import { showError } from '../../helpers/showToast';
-import { format } from '../../helpers/String';
-import { getProductDetail } from '../../services/product.service';
+import { useForm } from 'react-hook-form';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import _ from 'lodash';
+import { ChevronDownIcon, StarIcon } from '@heroicons/react/outline';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, Thumbs } from 'swiper';
+
+import { hideLoader, showLoader } from '../../actions/LoaderAction';
+
+import ERRORS from '../../constants/Errors';
+import { Role } from '../../constants/Role';
+
+import { showError } from '../../helpers/showToast';
+import { format } from '../../helpers/formatString';
 import { formatCash } from '../../helpers/formatCash';
+
+import { getProductDetail } from '../../services/product.service';
+
 import RatingStar from '../../components/ReviewForm/RatingStar';
 import ReviewForm from '../../components/ReviewForm/ReviewForm';
-import * as Yup from 'yup';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { ChevronDownIcon, StarIcon } from '@heroicons/react/outline';
-import _ from 'lodash';
-import { Role } from '../../constants/Role';
 
 SwiperCore.use([Navigation, Pagination, Thumbs]);
 
 const ItemDetail = (props) => {
   const { id } = props.match.params;
   const { parentId, parentName } = props.location.state;
-
-  const { user: currentUser } = useSelector((state) => state.authReducer);
-  const history = useHistory();
 
   const [details, setDetails] = useState(null);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
@@ -41,7 +42,14 @@ const ItemDetail = (props) => {
   const [averageRating, setAverageRating] = useState(0);
   const [seeMore, setSeeMore] = useState(2);
 
+  const { user: currentUser } = useSelector((state) => state.authReducer);
+  const history = useHistory();
   const dispatch = useDispatch();
+
+  if (currentUser && currentUser.roles?.includes(Role.ADMIN)) {
+    history.push('/admin');
+    window.location.reload();
+  }
   const validationSchema = Yup.object().shape({
     title: Yup.string().required('Title is required.'),
     comment: Yup.string().required('Please write your comment here to post.'),
@@ -56,22 +64,18 @@ const ItemDetail = (props) => {
     resolver: yupResolver(validationSchema),
   });
 
-  if (currentUser && currentUser.roles?.includes(Role.ADMIN)) {
-    history.push('/admin');
-    window.location.reload();
-  }
-
   useEffect(() => {
     dispatch(showLoader());
 
     getProductDetail(id)
       .then((res) => {
-        console.log(res.data.data);
         setDetails(res.data.data);
+
         dispatch(hideLoader());
       })
       .catch((err) => {
         showError(format(ERRORS.ERR_PRODUCT_LOADED_FAIL, id));
+
         dispatch(hideLoader());
         props.history.push('/');
       });
@@ -79,6 +83,7 @@ const ItemDetail = (props) => {
 
   useEffect(() => {
     const productImages = [];
+
     if (activeColor && details) {
       productImages.push(details.productImages?.find((img) => img.colorCode === activeColor.colorId));
 
@@ -88,14 +93,13 @@ const ItemDetail = (props) => {
         }
       });
     }
+
     setProductImages(productImages);
   }, [activeColor, details]);
 
   useEffect(() => {
     if (details && details.colorSizes.length > 0) {
       const colors = [...new Set(details.colorSizes.map((item) => item.color.id))];
-
-      console.log(colors);
 
       const productColorSizes = colors.map((color) => {
         return {
@@ -111,6 +115,7 @@ const ItemDetail = (props) => {
         var first = true;
         var colorName = null;
         var colorSource = null;
+
         details.colorSizes.forEach((item) => {
           if (item.color.id === color.colorId) {
             sizes = [
@@ -121,6 +126,7 @@ const ItemDetail = (props) => {
                 quantity: item.quantity,
               },
             ];
+
             if (first) {
               colorName = item.color.name;
               colorSource = item.color.source;
@@ -150,7 +156,7 @@ const ItemDetail = (props) => {
     if (reviews && reviews.length > 0) {
       if (reviews.length > 1) {
         const countRating = reviews.reduce((acc, cur) => acc + cur.rating, 0);
-        setAverageRating(_.floor(countRating / reviews.length));
+        setAverageRating(_.round(countRating / reviews.length, 2));
       } else {
         setAverageRating(reviews[0].rating);
       }
@@ -159,6 +165,7 @@ const ItemDetail = (props) => {
 
   const renderQuantity = () => {
     var listQuantity = [];
+
     if (activeSize?.quantity > 10) {
       for (var i = 1; i <= activeSize?.quantity; i++) {
         listQuantity.push(i);
@@ -168,6 +175,7 @@ const ItemDetail = (props) => {
         listQuantity.push(i2);
       }
     }
+
     return listQuantity;
   };
 
@@ -232,9 +240,9 @@ const ItemDetail = (props) => {
       </nav>
 
       <div>
-        <div className='pt-5 md:pt-0 md:flex w-full mx-auto list-none px-2 md:px-6'>
-          <div className='relative flex flex-col m-0 p-0 w-full' style={{ width: '500px' }}>
-            <section className='relative mr-6'>
+        <div className='pt-5 md:pt-0 md:flex w-full mx-auto px-2 md:px-6'>
+          <div className='flex flex-col m-0 p-0 w-full' style={{ width: '500px' }}>
+            <section className='mr-6'>
               <Swiper
                 id='gallery'
                 thumbs={{ swiper: thumbsSwiper }}
@@ -260,7 +268,7 @@ const ItemDetail = (props) => {
                 watchSlidesProgress
                 watchSlidesVisibility
                 onSwiper={setThumbsSwiper}
-                style={{ width: '500px', height: 'auto' }}
+                style={{ width: 'auto', height: 'auto' }}
               >
                 {productImages &&
                   productImages.map((image, index) => (
@@ -291,12 +299,12 @@ const ItemDetail = (props) => {
               </Swiper>
             </section>
           </div>
-          <div className='relative mt-6' style={{ width: '578px' }}>
-            <div className='relative flex flex-col m-0 p-0'>
-              <div className='relative mb-6'>
+          <div className='mt-6' style={{ width: '578px' }}>
+            <div className='flex flex-col m-0 p-0'>
+              <div className='mb-6'>
                 <span className='text-2xl font-semibold'>{details?.name}</span>
               </div>
-              <div className='relative mb-3'>
+              <div className='mb-3'>
                 <div className='flex w-full items-start flex-wrap gap-3 list-none'>
                   {details?.brandNew && (
                     <div className='flex items-center p-2 border border-green-500 border-solid'>
@@ -341,24 +349,22 @@ const ItemDetail = (props) => {
                 <div className='grid gap-2' style={{ gridTemplateColumns: 'repeat(auto-fill, 36px)' }}>
                   {colorSizes &&
                     colorSizes?.map((color) => (
-                      <>
-                        <span
-                          className={`cursor-pointer text-sm box-border inline-flex justify-center items-center align-middle relative w-8 h-8 rounded-full ${
-                            activeColor?.colorId === color?.colorId && 'border-2 border-white shadow-lg p-2'
-                          }`}
-                          style={{
-                            backgroundColor: `${color?.colorSource}`,
-                          }}
-                          onClick={() => setActiveColor(color)}
-                          key={`color_${color.colorId}`}
-                        ></span>
-                      </>
+                      <span
+                        className={`cursor-pointer text-sm box-border inline-flex justify-center items-center align-middle relative w-8 h-8 rounded-full ${
+                          activeColor?.colorId === color?.colorId && 'border-2 border-white shadow-lg p-2'
+                        }`}
+                        style={{
+                          backgroundColor: `${color?.colorSource}`,
+                        }}
+                        onClick={() => setActiveColor(color)}
+                        key={`color_${color.colorId}`}
+                      ></span>
                     ))}
                 </div>
               </section>
-              <section className='relative my-6'>
-                <div className='relative mb-3'>
-                  <div className='flex w-full items-end list-none'>
+              <section className='my-6'>
+                <div className='mb-3'>
+                  <div className='flex w-full list-none'>
                     <div className='relative'>
                       <span className='text-sm font-bold mr-2'>sizes:</span>
                       <span className='font-sm'>{activeSize?.sizeName}</span>
@@ -368,7 +374,7 @@ const ItemDetail = (props) => {
                     {activeColor &&
                       activeColor?.sizes?.map((size) => (
                         <span
-                          className={`mr-3 mb-1 cursor-pointer text-base box-border inline-flex justify-center items-center align-middle relative border border-solid border-gray-600 p-2 ${
+                          className={`mr-3 mb-2 cursor-pointer text-base box-border inline-flex justify-center items-center align-middle border border-solid border-gray-600 w-16 h-10 ${
                             activeSize?.sizeId === size.sizeId ? 'bg-brand-dark text-white' : ''
                           }
                           ${size.quantity === 0 ? 'line-through pointer-events-none' : ''}
@@ -384,7 +390,7 @@ const ItemDetail = (props) => {
               </section>
               <div className='flex items-center w-full mb-6'>
                 <span className='text-sm font-bold mr-2'>sizes:</span>
-                <div className='relative'>
+                <div>
                   <select
                     className='form-select text-gray-600 font-medium bg-white focus:outline-none focus:shadow-outline flex'
                     onChange={(e) => {
@@ -402,7 +408,7 @@ const ItemDetail = (props) => {
               <div className='w-full mt-6'>
                 <button
                   className='bg-brand text-lg text-white
-               font-semibold w-full p-5 rounded-2xl shadow-xl hover:bg-brand-dark'
+               font-semibold w-full max-w-md p-5 rounded-2xl shadow-xl hover:bg-brand-dark'
                 >
                   Add to Cart
                 </button>
@@ -419,18 +425,18 @@ const ItemDetail = (props) => {
             <div className='mb-5'>
               <span className='text-base'>{details?.longDesc}</span>
             </div>
-            <div className='relative pb-2 mt-10 mb-6 border-b-2 border-solid border-gray-500'>
+            <div className='pb-2 mt-10 mb-6 border-b-2 border-solid border-gray-500'>
               <span className='font-bold text-xl'>Materials and handling</span>
             </div>
-            <div className='flex w-full justify-between list-none'>
+            <div className='flex w-full justify-between'>
               <span className='font-bold'>Material</span>
-              <div className='relative w-2/3 min-w-2/3 flex flex-col mb-6'>
+              <div className='w-2/3 flex flex-col mb-6'>
                 <span>{details?.material}</span>
               </div>
             </div>
-            <div className='flex w-full justify-between list-none'>
+            <div className='flex w-full justify-between'>
               <span className='font-bold'>Handling</span>
-              <div className='relative w-2/3 min-w-2/3 flex flex-col mb-6'>
+              <div className='w-2/3 flex flex-col mb-6'>
                 <span>{details?.handling}</span>
               </div>
             </div>
@@ -449,12 +455,16 @@ const ItemDetail = (props) => {
               </div>
 
               <div className='mt-10 max-w-lg'>
-                {reviews && reviews?.map((review, index) => index < seeMore && <ReviewForm review={review} />)}
+                {reviews &&
+                  reviews?.map(
+                    (review, index) => index < seeMore && <ReviewForm review={review} key={`review_${index}`} />
+                  )}
                 {reviews && reviews.length > seeMore && (
                   <button
                     type='button'
                     className='flex items-center w-100 justify-center h-10 border-t border-solid border-gray-100'
                     onClick={() => setSeeMore(seeMore + 2)}
+                    key='see_more'
                   >
                     <div className='flex w-full items-center justify-center'>
                       <span className='font-bold text-center'>See more</span>
@@ -462,7 +472,7 @@ const ItemDetail = (props) => {
                     </div>
                   </button>
                 )}
-                {!reviews || (reviews?.length === 0 && <span>No reviews for this product yet</span>)}
+                {!reviews || (reviews?.length === 0 && <span key='no_review'>No reviews for this product yet</span>)}
               </div>
             </div>
             <div className='flex items-center justify-center mb-4 max-w-lg h-full'>
@@ -504,7 +514,7 @@ const ItemDetail = (props) => {
                       placeholder='Add title'
                       {...register('title')}
                     />
-                    <p className='error-message mb-6'>{errors.title?.message}</p>
+                    <p className={`error-message ${errors.title ? 'mb-6' : ''}`}>{errors.title?.message}</p>
                     <textarea
                       className={`rounded border border-gray-400 leading-normal resize-none w-full h-20 py-2 px-3 font-medium focus:outline-none focus:bg-white ${
                         errors.comment?.message ? 'error-input' : ''

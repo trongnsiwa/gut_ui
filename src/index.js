@@ -1,15 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
+import { Provider } from 'react-redux';
+import store from './store/store';
 import reportWebVitals from './reportWebVitals';
-import './css/tailwind.css';
+import './index.css';
+import './styles/output.css';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
 import 'react-calendar/dist/Calendar.css';
 import 'swiper/swiper-bundle.css';
-import { Provider } from 'react-redux';
-import store from './store/store';
+import 'react-toastify/dist/ReactToastify.css';
 
 ReactDOM.render(
   <Provider store={store}>

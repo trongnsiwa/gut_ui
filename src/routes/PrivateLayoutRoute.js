@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Redirect, Route } from 'react-router-dom';
+
+import { Role } from '../constants/Role';
+
 import AdminHeader from '../components/AdminHeader';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
-import { Role } from '../constants/Role';
 
 const UserLayout = ({ children }) => (
   <div>

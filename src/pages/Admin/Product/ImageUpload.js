@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { hideLoader, showLoader } from '../../../actions/LoaderAction';
-import { getProductDetail, replaceImages } from '../../../services/product.service';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, Thumbs } from 'swiper';
 import Tippy from '@tippyjs/react';
-import { showError, showErrorMessage, showSuccess, showSuccessMessage } from '../../../helpers/showToast';
-import axios from 'axios';
 import Select from 'react-select';
+import axios from 'axios';
+
+import { hideLoader, showLoader } from '../../../actions/LoaderAction';
+
+import { getProductDetail, replaceImages } from '../../../services/product.service';
+
+import { showError, showErrorMessage, showSuccess, showSuccessMessage } from '../../../helpers/showToast';
 
 SwiperCore.use([Navigation, Pagination, Thumbs]);
 
@@ -15,24 +18,27 @@ const supportedExtensions = ['jpeg', 'jpg', 'png', 'gif', 'webp'];
 
 const ImageUpload = (props) => {
   const { id } = props.match.params;
+
   const [product, setProduct] = useState(null);
   const [productImages, setProductImages] = useState(null);
   const [colors, setColors] = useState(null);
+
   const [title, setTitle] = useState(null);
   const [colorCode, setColorCode] = useState(null);
   const [fileUpload, setFileUpload] = useState(null);
   const [preview, setPreview] = useState(null);
+
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(showLoader());
+    dispatch(showLoader);
 
     getProductDetail(id).then((res) => {
       console.log(res.data.data);
       setProduct(res.data.data);
-      dispatch(hideLoader());
+      dispatch(hideLoader);
     });
   }, [dispatch, id]);
 
@@ -63,6 +69,7 @@ const ImageUpload = (props) => {
         };
         listColorOptions.push(option);
       });
+
       setColors(listColorOptions);
     }
   }, [product]);
@@ -70,9 +77,11 @@ const ImageUpload = (props) => {
   useEffect(() => {
     if (fileUpload) {
       const reader = new FileReader();
+
       reader.onloadend = () => {
         setPreview(reader.result);
       };
+
       reader.readAsDataURL(fileUpload);
     } else {
       setPreview(null);
@@ -123,7 +132,7 @@ const ImageUpload = (props) => {
     formData.append('file', fileUpload);
     formData.append('upload_preset', 'zeiy0z45');
 
-    dispatch(showLoader());
+    dispatch(showLoader);
 
     const config = {
       headers: {
@@ -145,12 +154,15 @@ const ImageUpload = (props) => {
         setFileUpload(null);
         setPreview(null);
         setColorCode(null);
+
         showSuccess('Upload image successful!');
-        dispatch(hideLoader());
+
+        dispatch(hideLoader);
       })
       .catch((error) => {
         showError('Cannot upload image file now. Please try again later!');
-        dispatch(hideLoader());
+
+        dispatch(hideLoader);
       });
   };
 
@@ -161,9 +173,11 @@ const ImageUpload = (props) => {
       .then((res) => {
         console.log(res.data.data);
         showSuccessMessage(res, id, dispatch);
+        dispatch(hideLoader);
       })
       .catch((error) => {
         showErrorMessage(error, id, dispatch);
+        dispatch(hideLoader);
       });
   };
 
@@ -182,7 +196,7 @@ const ImageUpload = (props) => {
         <hr className='mx-4 mb-4 border-dashed border-1 border-brand-light' />
 
         <div className='mb-12 xl:flex xl:flex-row'>
-          <div className='my-6 mx-4 xl:container xl:w-1/2 bg-white p-6 shadow-lg border-brand rounded-lg'>
+          <div className='my-6 mx-4 xl:w-1/2 bg-white p-6 shadow-lg rounded-lg'>
             <div className='w-full'>
               {productImages && productImages.length > 0 && (
                 <>
@@ -209,7 +223,7 @@ const ImageUpload = (props) => {
                     spaceBetween={5}
                     slidesPerView={3}
                     onSwiper={setThumbsSwiper}
-                    style={{ width: '500px', marginTop: '20px' }}
+                    style={{ marginTop: '20px' }}
                   >
                     {productImages.map((image, index) => (
                       <SwiperSlide
@@ -226,8 +240,7 @@ const ImageUpload = (props) => {
                         >
                           <svg
                             xmlns='http://www.w3.org/2000/svg'
-                            className='h-6 w-6 text-gray-500 hover:text-red-600 absolute cursor-pointer left-full'
-                            style={{ right: '2px', top: '2px', marginLeft: '-30px', marginTop: '5px' }}
+                            className='h-6 w-6 text-gray-500 hover:text-red-600 absolute cursor-pointer right-[2px] top-[2px] ml-[-30px] mt-[5px]'
                             fill='none'
                             viewBox='0 0 24 24'
                             stroke='currentColor'
@@ -257,7 +270,7 @@ const ImageUpload = (props) => {
             </div>
           </div>
 
-          <div className='overflow-y-auto my-6 mx-4 xl:container xl:w-1/2 bg-white p-6 shadow-lg border-brand rounded-lg'>
+          <div className='overflow-y-auto my-6 mx-4 xl:w-1/2 bg-white p-6 shadow-lg border-brand rounded-lg'>
             <p className='text-xl font-bold mb-3 text-brand-dark flex flex-row items-center'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -325,8 +338,7 @@ const ImageUpload = (props) => {
                           >
                             <svg
                               xmlns='http://www.w3.org/2000/svg'
-                              className='h-6 w-6 text-gray-500 hover:text-red-600 absolute cursor-pointer left-full'
-                              style={{ right: '2px', top: '2px', marginLeft: '-30px', marginTop: '5px' }}
+                              className='h-6 w-6 text-gray-500 hover:text-red-600 absolute cursor-pointer right-[2px] top-[2px] ml-[-30px] mt-[5px]'
                               fill='none'
                               viewBox='0 0 24 24'
                               stroke='currentColor'

@@ -3,7 +3,7 @@ import { post } from '../helpers/httpHelper';
 const API_URL = '/auth';
 
 export const registerService = (email, password, confirm, firstname, lastname) => {
-  return post(API_URL + '/signup', {
+  return post(`${API_URL}/signup`, {
     email,
     password,
     retypePassword: confirm,
@@ -13,7 +13,7 @@ export const registerService = (email, password, confirm, firstname, lastname) =
 };
 
 export const loginService = (email, password) => {
-  return post(API_URL + '/login', {
+  return post(`${API_URL}/login`, {
     email,
     password,
   }).then((res) => {

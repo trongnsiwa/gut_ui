@@ -1,7 +1,10 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
 import {
   getCategoryParent,
   getChildCategory,
@@ -9,18 +12,20 @@ import {
   updateCategoryWithParentId,
   updateParentCategory,
 } from '../../../services/category.service';
-import * as Yup from 'yup';
+
 import ERRORS from '../../../constants/Errors';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+
 import { showLoader } from '../../../actions/LoaderAction';
+
 import TableAction from '../../../components/Table/TableAction';
+
 import { showErrorMessage, showSuccessMessage } from '../../../helpers/showToast';
 
 const CategoryDetail = (props) => {
   const { id } = props.match.params;
   const query = new URLSearchParams(useLocation().search);
   const isParent = query.get('parent');
+
   const [changed, setChanged] = useState(isParent ? true : false);
 
   const [details, setDetails] = useState(null);
@@ -41,8 +46,8 @@ const CategoryDetail = (props) => {
     resolver: yupResolver(validationSchema),
   });
 
-  const onSubmitHandler = ({ name, parent, parentId }) => {
-    dispatch(showLoader());
+  const handleSaveChange = ({ name, parent, parentId }) => {
+    dispatch(showLoader);
 
     if (parent) {
       updateParentCategory(id, name)
@@ -117,7 +122,7 @@ const CategoryDetail = (props) => {
             <div className='mt-6 mx-4'>
               <form
                 className='mb-0 grid-cols-2 inline-grid gap-0 space-y-6 lg:mr-16'
-                onSubmit={handleSubmit(onSubmitHandler)}
+                onSubmit={handleSubmit(handleSaveChange)}
               >
                 <div className='flex items-center'>
                   <label htmlFor='id' className='block text-sm font-medium text-gray-700'>
@@ -199,51 +204,54 @@ const CategoryDetail = (props) => {
             </div>
 
             {subCategories && subCategories.length > 0 && (
-              <div className='mt-10 mx-4 overflow-x-auto bg-white rounded-lg shadow overflow-y-visible relative'>
-                <table className='custom-table'>
-                  <thead>
-                    <tr className='text-left'>
-                      <th className='table-header'>
-                        <label className='table-header-label'>ID</label>
-                      </th>
-                      <th className='table-header'>
-                        <label className='table-header-label'>Name</label>
-                      </th>
-                      <th className='table-header'>
-                        <label className='table-header-label'>Parent</label>
-                      </th>
-                      <th className='table-header'>
-                        <label className='table-header-label justify-around flex'>Action</label>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {subCategories &&
-                      subCategories.map((sub) => (
-                        <tr className='text-left hover:bg-gray-100' key={sub.id}>
-                          <td className='table-row-custom'>
-                            <span className='table-row-content'>{sub.id}</span>
-                          </td>
-                          <td className='table-row-custom'>
-                            <span className='table-row-content'>{sub.name}</span>
-                          </td>
-                          <td className='table-row-custom'>
-                            <span className='table-row-content'>{sub.parentId}</span>
-                          </td>
-                          <td className='table-row-custom flex justify-around'>
-                            <TableAction
-                              url='/admin/category'
-                              itemId={sub.id}
-                              table='CATEGORY'
-                              parent={false}
-                              list={subCategories}
-                              setList={setSubCategories}
-                            />
-                          </td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
+              <div className='h-screen'>
+                <div className='mt-10 mx-4 overflow-x-auto bg-white rounded-lg shadow overflow-y-visible relative'>
+                  <table className='custom-table'>
+                    <thead>
+                      <tr className='text-left'>
+                        <th className='table-header'>
+                          <label className='table-header-label'>ID</label>
+                        </th>
+                        <th className='table-header'>
+                          <label className='table-header-label'>Name</label>
+                        </th>
+                        <th className='table-header'>
+                          <label className='table-header-label'>Parent</label>
+                        </th>
+                        <th className='table-header'>
+                          <label className='table-header-label justify-around flex'>Action</label>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {subCategories &&
+                        subCategories.map((sub) => (
+                          <tr className='text-left hover:bg-gray-100' key={sub.id}>
+                            <td className='table-row-custom'>
+                              <span className='table-row-content'>{sub.id}</span>
+                            </td>
+                            <td className='table-row-custom'>
+                              <span className='table-row-content'>{sub.name}</span>
+                            </td>
+                            <td className='table-row-custom'>
+                              <span className='table-row-content'>{sub.parentId}</span>
+                            </td>
+                            <td className='table-row-custom flex justify-around'>
+                              <TableAction
+                                url='/admin/category'
+                                itemId={sub.id}
+                                table='CATEGORY'
+                                parent={false}
+                                isDetail={true}
+                                list={subCategories}
+                                setList={setSubCategories}
+                              />
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             )}
           </>

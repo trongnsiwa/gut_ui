@@ -1,20 +1,23 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import * as Yup from 'yup';
-import ERRORS from '../../../constants/Errors';
 import { useForm } from 'react-hook-form';
+import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { hideLoader, showLoader } from '../../../actions/LoaderAction';
-import { showError, showErrorMessage, showSuccessMessage } from '../../../helpers/showToast';
 import Calendar from 'react-calendar';
 import Tippy from '@tippyjs/react';
 import dayjs from 'dayjs';
+import Select from 'react-select';
+
+import ERRORS from '../../../constants/Errors';
+
+import { hideLoader, showLoader } from '../../../actions/LoaderAction';
+
+import { showError, showErrorMessage, showSuccessMessage } from '../../../helpers/showToast';
+import { format } from '../../../helpers/formatString';
+
 import { getProductDetail, updateProduct } from '../../../services/product.service';
 import { getALlColors } from '../../../services/color.service';
 import { getALlSizes } from '../../../services/size.service';
-import Select from 'react-select';
-import { format } from '../../../helpers/String';
 
 const ProductDetail = (props) => {
   const { id } = props.match.params;
@@ -34,22 +37,6 @@ const ProductDetail = (props) => {
   const [quantity, setQuantity] = useState(0);
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(showLoader());
-
-    getProductDetail(id)
-      .then((res) => {
-        console.log(res.data.data);
-        setDetails(res.data.data);
-        dispatch(hideLoader());
-      })
-      .catch((err) => {
-        showError(format(ERRORS.ERR_PRODUCT_LOADED_FAIL, id));
-        dispatch(hideLoader());
-        props.history.push('/admin/product');
-      });
-  }, [dispatch, id, props.history]);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -81,7 +68,99 @@ const ProductDetail = (props) => {
     resolver: yupResolver(validationSchema),
   });
 
-  const onSubmitHandler = ({
+  useEffect(() => {
+    dispatch(showLoader());
+
+    getProductDetail(id)
+      .then((res) => {
+        console.log(res.data.data);
+        setDetails(res.data.data);
+        dispatch(hideLoader());
+      })
+      .catch((err) => {
+        showError(format(ERRORS.ERR_PRODUCT_LOADED_FAIL, id));
+        dispatch(hideLoader());
+        props.history.push('/admin/product');
+      });
+  }, [dispatch, id, props.history]);
+
+  useEffect(() => {
+    if (details && details.colorSizes.length > 0) {
+      const colors = [...new Set(details.colorSizes.map((item) => item.color.id))];
+
+      const productColorSizes = colors.map((color) => {
+        return {
+          colorId: color,
+          colorName: null,
+          sizes: [],
+        };
+      });
+
+      const productColors = productColorSizes.map((color) => {
+        var sizes = [];
+        var first = true;
+        var colorName = null;
+
+        details.colorSizes.forEach((item) => {
+          if (item.color.id === color.colorId) {
+            sizes = [
+              ...sizes,
+              {
+                sizeId: item.size.id,
+                sizeName: item.size.name,
+                quantity: item.quantity,
+              },
+            ];
+
+            if (first) colorName = item.color.name;
+          }
+        });
+
+        return {
+          ...color,
+          colorName,
+          sizes,
+        };
+      });
+
+      setColorSizes(productColors);
+    }
+  }, [details]);
+
+  useEffect(() => {
+    getALlColors().then((res) => {
+      var listColorOptions = [];
+
+      res.data.data.forEach((color) => {
+        const option = {
+          value: color.id,
+          label: color.name,
+        };
+        listColorOptions.push(option);
+      });
+
+      setColors(listColorOptions);
+      setColorSource(res.data.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    getALlSizes().then((res) => {
+      var listSizeOptions = [];
+
+      res.data.data.forEach((size) => {
+        const option = {
+          value: size.id,
+          label: size.name,
+        };
+        listSizeOptions.push(option);
+      });
+
+      setSizes(listSizeOptions);
+    });
+  }, []);
+
+  const handleSaveChange = ({
     name,
     price,
     shortDesc,
@@ -96,6 +175,7 @@ const ProductDetail = (props) => {
   }) => {
     var fromDate = null;
     var toDate = null;
+
     if (sale) {
       fromDate = new Date(new Date(details.saleFromDate).setHours(0, 0, 0, 0));
       toDate = new Date(new Date(details.saleToDate).setHours(0, 0, 0, 0));
@@ -134,7 +214,7 @@ const ProductDetail = (props) => {
       });
     }
 
-    dispatch(showLoader());
+    dispatch(showLoader);
 
     updateProduct(
       id,
@@ -157,6 +237,7 @@ const ProductDetail = (props) => {
         console.log(res.data.data);
         showSuccessMessage(res, id, dispatch);
         reset();
+        dispatch(hideLoader);
       })
       .catch((error) => {
         const code =
@@ -168,81 +249,9 @@ const ProductDetail = (props) => {
           showId = id;
         }
         showErrorMessage(error, showId, dispatch);
+        dispatch(hideLoader);
       });
   };
-
-  useEffect(() => {
-    if (details && details.colorSizes.length > 0) {
-      const colors = [...new Set(details.colorSizes.map((item) => item.color.id))];
-
-      console.log(colors);
-
-      const productColorSizes = colors.map((color) => {
-        return {
-          colorId: color,
-          colorName: null,
-          sizes: [],
-        };
-      });
-
-      const productColors = productColorSizes.map((color) => {
-        var sizes = [];
-        var first = true;
-        var colorName = null;
-        details.colorSizes.forEach((item) => {
-          if (item.color.id === color.colorId) {
-            sizes = [
-              ...sizes,
-              {
-                sizeId: item.size.id,
-                sizeName: item.size.name,
-                quantity: item.quantity,
-              },
-            ];
-            if (first) colorName = item.color.name;
-          }
-        });
-
-        return {
-          ...color,
-          colorName,
-          sizes,
-        };
-      });
-
-      setColorSizes(productColors);
-    }
-  }, [details]);
-
-  useEffect(() => {
-    getALlColors().then((res) => {
-      var listColorOptions = [];
-      res.data.data.forEach((color) => {
-        const option = {
-          value: color.id,
-          label: color.name,
-        };
-        listColorOptions.push(option);
-      });
-      setColors(listColorOptions);
-      setColorSource(res.data.data);
-    });
-  }, []);
-
-  useEffect(() => {
-    getALlSizes().then((res) => {
-      var listSizeOptions = [];
-      res.data.data.forEach((size) => {
-        const option = {
-          value: size.id,
-          label: size.name,
-        };
-        listSizeOptions.push(option);
-      });
-      // console.log(listSizeOptions);
-      setSizes(listSizeOptions);
-    });
-  }, []);
 
   const handleAddToColor = () => {
     if (colorSize.colorId < 0) {
@@ -318,13 +327,11 @@ const ProductDetail = (props) => {
 
         {details && (
           <div className='mb-12 xl:flex xl:flex-row'>
-            <div className='my-6 mx-4 xl:container xl:w-1/2 bg-white p-6 shadow-lg border-brand rounded-lg'>
-              <p className='text-base font-thin text-right text-gray-400'>
-                Required fields <span className='text-brand-dark'>*</span>
-              </p>
+            <div className='my-6 mx-4 xl:container xl:w-1/2 bg-white p-6 shadow-lg rounded-lg'>
+              <p className='text-base font-thin text-right text-gray-400'>Required fields *</p>
               <form
                 className='mb-0 grid-cols-3 inline-grid gap-0 space-y-6 lg:mr-16'
-                onSubmit={handleSubmit(onSubmitHandler)}
+                onSubmit={handleSubmit(handleSaveChange)}
               >
                 <div className='flex items-center'>
                   <label htmlFor='id' className='block text-base font-medium text-gray-700'>
@@ -385,7 +392,7 @@ const ProductDetail = (props) => {
                 <div className='flex items-center col-span-2 w-full'>
                   <div>
                     <textarea
-                      className={errors.shortDesc && 'error-input'}
+                      className={`resize-none ${errors.shortDesc && 'error-input'}`}
                       type='textarea'
                       rows={3}
                       cols={50}
@@ -410,6 +417,7 @@ const ProductDetail = (props) => {
                       cols={50}
                       name='longDesc'
                       id='longDesc'
+                      className='resize-none'
                       {...register('longDesc')}
                       defaultValue={details.longDesc}
                     />
@@ -438,7 +446,7 @@ const ProductDetail = (props) => {
                     Handling
                   </label>
                 </div>
-                <div className='flex items-center col-span-2 w-2/3 '>
+                <div className='flex items-center col-span-2 w-2/3'>
                   <div>
                     <input
                       className={errors.handling && 'error-input'}
@@ -452,7 +460,7 @@ const ProductDetail = (props) => {
                   </div>
                 </div>
                 <div className='flex items-center'>
-                  <label htmlFor='sale' className='block text-base font-medium text-gray-700 '>
+                  <label htmlFor='sale' className='block text-base font-medium text-gray-700'>
                     Is sale?
                   </label>
                 </div>
@@ -516,7 +524,7 @@ const ProductDetail = (props) => {
                                   });
                                 }
                               }}
-                              value={new Date(details.saleFromDate)}
+                              value={details?.saleFromDate ? new Date(details.saleFromDate) : new Date()}
                               minDate={new Date()}
                               className='ring-2 ring-brand-light shadow-lg rounded-base hover:text-brand-dark'
                             />
@@ -527,7 +535,9 @@ const ProductDetail = (props) => {
                             name='saleFromDate'
                             id='saleFromDate'
                             {...register('saleFromDate')}
-                            value={dayjs(details.saleFromDate).format('DD/MM/YYYY')}
+                            value={dayjs(details?.saleFromDate ? details.saleFromDate : new Date()).format(
+                              'DD/MM/YYYY'
+                            )}
                             readOnly={true}
                           />
                         </Tippy>{' '}
@@ -553,7 +563,7 @@ const ProductDetail = (props) => {
                                   saleToDate: value,
                                 })
                               }
-                              value={new Date(details.saleToDate)}
+                              value={details?.saleToDate ? new Date(details.saleToDate) : new Date()}
                               minDate={new Date(details.saleFromDate)}
                               className='ring-2 ring-brand-light shadow-lg rounded-base hover:text-brand-dark'
                             />
@@ -564,7 +574,7 @@ const ProductDetail = (props) => {
                             name='saleToDate'
                             id='saleToDate'
                             {...register('saleToDate')}
-                            value={dayjs(details.saleToDate).format('DD/MM/YYYY')}
+                            value={dayjs(details?.saleToDate ? details.saleToDate : new Date()).format('DD/MM/YYYY')}
                             readOnly={true}
                           />
                         </Tippy>{' '}
@@ -574,7 +584,7 @@ const ProductDetail = (props) => {
                 )}
 
                 <div className='flex items-center'>
-                  <label htmlFor='deleted' className='block text-base font-medium text-gray-700 '>
+                  <label htmlFor='deleted' className='block text-base font-medium text-gray-700'>
                     Is deleted?
                   </label>
                 </div>
@@ -703,7 +713,7 @@ const ProductDetail = (props) => {
                   >
                     Quantity
                   </p>
-                  <div className='1/3 mr-3'>
+                  <div className='mr-3'>
                     <input
                       type='number'
                       min={0}

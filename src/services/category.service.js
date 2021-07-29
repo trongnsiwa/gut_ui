@@ -3,7 +3,7 @@ import { del, get, getWithParams, put, post } from '../helpers/httpHelper';
 const API_URL = '/category';
 
 export const getAllParentCategories = () => {
-  return get(API_URL + '/parent');
+  return get(`${API_URL}/parent`);
 };
 
 export const getParentCategories = (num, size, sortBy) => {
@@ -13,11 +13,11 @@ export const getParentCategories = (num, size, sortBy) => {
     sortBy,
   };
 
-  return getWithParams(API_URL + '/page', params);
+  return getWithParams(`${API_URL}/page`, params);
 };
 
 export const searchByName = (num, size, sortBy, name) => {
-  return getWithParams(API_URL + '/search', {
+  return getWithParams(`${API_URL}/search`, {
     num,
     size,
     sortBy,
@@ -26,33 +26,33 @@ export const searchByName = (num, size, sortBy, name) => {
 };
 
 export const countParents = () => {
-  return get(API_URL + '/count');
+  return get(`${API_URL}/count`);
 };
 
 export const countParentsByName = (name) => {
-  return getWithParams(API_URL + '/count-name', {
+  return getWithParams(`${API_URL}/count-name`, {
     name,
   });
 };
 
 export const getCategoryParent = (id) => {
-  return get(API_URL + `/parent/${id}`);
+  return get(`${API_URL}/parent/${id}`);
 };
 
 export const getChildCategory = (id) => {
-  return get(API_URL + `/${id}`);
+  return get(`${API_URL}/${id}`);
 };
 
 export const deleteCategoryParent = (id) => {
-  return del(API_URL + '/parent/delete/' + id);
+  return del(`${API_URL}/parent/delete/${id}`);
 };
 
 export const deleteChildCategory = (id) => {
-  return del(API_URL + '/delete/' + id);
+  return del(`${API_URL}/delete/${id}`);
 };
 
 export const updateParentCategory = (id, name) => {
-  return put(API_URL + '/parent', {
+  return put(`${API_URL}/parent`, {
     id,
     name,
   });
@@ -74,7 +74,7 @@ export const updateCategoryNonParentId = (id, name) => {
 };
 
 export const createCategoryParent = (name) => {
-  return post(API_URL + '/parent', {
+  return post(`${API_URL}/parent`, {
     name,
   });
 };

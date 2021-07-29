@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
+import { Link, Redirect } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { Link, Redirect, withRouter } from 'react-router-dom';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,12 +11,9 @@ import ERRORS from '../constants/Errors';
 import { showError } from '../helpers/showToast';
 
 const Signin = (props) => {
-  const loginImage = 'https://ik.imagekit.io/tnyyngwxvx9/Background/fc7d5755f69adc1fd50cb48f8e7a578e_7h0gsh0ns.jpg';
-  const signupImage =
-    'https://ik.imagekit.io/tnyyngwxvx9/patrick-tomasso-QMDap1TAu0g-unsplash_XafnH-_YX.jpg?updatedAt=1626750231215';
-
   const { isLoggedIn } = useSelector((state) => state.authReducer);
   const { message } = useSelector((state) => state.messageReducer);
+
   const dispatch = useDispatch();
 
   const validationSchema = Yup.object().shape({
@@ -33,7 +30,7 @@ const Signin = (props) => {
     resolver: yupResolver(validationSchema),
   });
 
-  const onSubmitHandler = ({ email, password }) => {
+  const handleLogin = ({ email, password }) => {
     dispatch(showLoader());
 
     dispatch(login(email, password))
@@ -62,7 +59,7 @@ const Signin = (props) => {
       <div
         className='mx-auto w-full bg-cover bg-center'
         style={{
-          backgroundImage: `url('${signupImage}')`,
+          backgroundImage: `url('https://ik.imagekit.io/tnyyngwxvx9/patrick-tomasso-QMDap1TAu0g-unsplash_XafnH-_YX.jpg?updatedAt=1626750231215')`,
           height: 'calc(100vh - 80px)',
         }}
       >
@@ -70,29 +67,24 @@ const Signin = (props) => {
           <section className='flex justify-center px-6 py-12'>
             <div className='w-full xl:w-3/4 lg:w-11/12 flex shadow'>
               <div
-                className='hidden md:block w-full h-auto md:w-2/3 lg:w-1/2 bg-gray-400 bg-cover rounded-l-lg bg-center'
+                className='hidden md:block w-full h-auto md:w-2/3 lg:w-1/2 bg-cover rounded-l-lg bg-center'
                 style={{
-                  backgroundImage: `url('${loginImage}')`,
+                  backgroundImage: `url('https://ik.imagekit.io/tnyyngwxvx9/Background/fc7d5755f69adc1fd50cb48f8e7a578e_7h0gsh0ns.jpg')`,
                 }}
               ></div>
-              <div
-                className='bg-white w-full rounded-r-lg rounded-l-lg lg:rounded-l-none md:max-w-md p-5 lg:max-w-full md:1/3 lg:w-1/2 h-full px-6 lg:px-16 xl:px-12
-        flex flex-col'
-              >
+              <div className='bg-white w-full rounded-r-lg rounded-l-lg md:rounded-l-none md:max-w-md lg:max-w-full lg:w-1/2 h-full px-6 lg:px-16 xl:px-12 flex flex-col'>
                 <div className='text-left mt-12 mb-3 px-6 sm:px-10 lg:px-0 xl:mb-6 xl:px-10'>
-                  <h1 className='text-3xl text-brand-dark xl:text-4xl font-bold leading-6'>Welcome to GUT</h1>
+                  <h1 className='font-bold leading-6 text-brand-dark text-3xl xl:text-4xl '>Welcome to GUT</h1>
                   <h2 className='italic text-xl xl:text-2xl font-medium'>Good Choice Good Fashion</h2>
                 </div>
 
-                <div className='bg-white py-8 px-6 sm:px-10 lg:px-0 xl:px-10 items-center justify-center'>
+                <div className='bg-white py-8 px-6 sm:px-10 lg:px-0 xl:px-10'>
                   <div className='flex items-center justify-between mb-8'>
-                    <p className='text-xl font-bold text-gray-700 text-left'>LOGIN</p>
-                    <p className='text-xs font-thin text-right text-gray-400'>
-                      Required fields <span className='text-brand-dark'>*</span>
-                    </p>
+                    <p className='text-xl font-bold text-gray-700'>LOGIN</p>
+                    <p className='text-xs font-thin text-gray-400'>Required fields *</p>
                   </div>
 
-                  <form className='mb-0 space-y-6' onSubmit={handleSubmit(onSubmitHandler)}>
+                  <form className='space-y-6' onSubmit={handleSubmit(handleLogin)}>
                     {message && <p className='error-message text-sm'>{message}</p>}
                     <div>
                       <label htmlFor='email' className='block text-sm font-medium text-gray-700'>
@@ -142,7 +134,7 @@ const Signin = (props) => {
 
                   <hr className='my-6 border-gray-300 w-full' />
 
-                  <p className='mt-8 text-center font-semibold text-gray-700'>
+                  <p className='mt-8 text-sm text-center font-semibold text-gray-700'>
                     Need an account?{' '}
                     <Link to='/signup' className='text-brand hover:text-brand-dark font-semibold'>
                       Create an account
@@ -158,4 +150,4 @@ const Signin = (props) => {
   );
 };
 
-export default withRouter(Signin);
+export default Signin;

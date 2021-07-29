@@ -14,7 +14,6 @@ const useViewport = () => {
     return () => window.removeEventListener('resize', handleWindowResize);
   }, [first]);
 
-  // Return the width so we can use it in our components
   return { width };
 };
 
