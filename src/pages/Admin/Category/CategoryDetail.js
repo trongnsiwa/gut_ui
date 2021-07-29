@@ -42,12 +42,13 @@ const CategoryDetail = (props) => {
     handleSubmit,
     formState: { errors },
     setValue,
+    reset,
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
 
   const handleSaveChange = ({ name, parent, parentId }) => {
-    dispatch(showLoader);
+    dispatch(showLoader());
 
     if (parent) {
       updateParentCategory(id, name)
@@ -79,6 +80,8 @@ const CategoryDetail = (props) => {
   };
 
   useEffect(() => {
+    reset();
+
     if (isParent) {
       getCategoryParent(id)
         .then((res) => {
@@ -94,12 +97,13 @@ const CategoryDetail = (props) => {
         .then((res) => {
           console.log(res.data.data);
           setDetails(res.data.data);
+          setSubCategories(null);
         })
         .catch((error) => {
           console.log(error.response.data);
         });
     }
-  }, [id, isParent]);
+  }, [id, isParent, reset]);
 
   return (
     <>

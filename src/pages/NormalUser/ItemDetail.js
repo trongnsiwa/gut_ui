@@ -64,6 +64,10 @@ const ItemDetail = (props) => {
     resolver: yupResolver(validationSchema),
   });
 
+  if (details?.deleted) {
+    props.history.push('/not-found');
+  }
+
   useEffect(() => {
     dispatch(showLoader());
 

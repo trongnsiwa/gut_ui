@@ -33,12 +33,12 @@ const ImageUpload = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(showLoader);
+    dispatch(showLoader());
 
     getProductDetail(id).then((res) => {
       console.log(res.data.data);
       setProduct(res.data.data);
-      dispatch(hideLoader);
+      dispatch(hideLoader());
     });
   }, [dispatch, id]);
 
@@ -132,7 +132,7 @@ const ImageUpload = (props) => {
     formData.append('file', fileUpload);
     formData.append('upload_preset', 'zeiy0z45');
 
-    dispatch(showLoader);
+    dispatch(showLoader());
 
     const config = {
       headers: {
@@ -157,12 +157,12 @@ const ImageUpload = (props) => {
 
         showSuccess('Upload image successful!');
 
-        dispatch(hideLoader);
+        dispatch(hideLoader());
       })
       .catch((error) => {
         showError('Cannot upload image file now. Please try again later!');
 
-        dispatch(hideLoader);
+        dispatch(hideLoader());
       });
   };
 
@@ -173,11 +173,11 @@ const ImageUpload = (props) => {
       .then((res) => {
         console.log(res.data.data);
         showSuccessMessage(res, id, dispatch);
-        dispatch(hideLoader);
+        dispatch(hideLoader());
       })
       .catch((error) => {
         showErrorMessage(error, id, dispatch);
-        dispatch(hideLoader);
+        dispatch(hideLoader());
       });
   };
 
@@ -224,6 +224,8 @@ const ImageUpload = (props) => {
                     slidesPerView={3}
                     onSwiper={setThumbsSwiper}
                     style={{ marginTop: '20px' }}
+                    watchSlidesVisibility
+                    watchSlidesProgress
                   >
                     {productImages.map((image, index) => (
                       <SwiperSlide

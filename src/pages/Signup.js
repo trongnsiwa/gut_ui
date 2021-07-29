@@ -51,7 +51,7 @@ const Signup = () => {
   });
 
   const handleRegister = ({ email, password, confirm, firstname, lastname }) => {
-    dispatch(showLoader);
+    dispatch(showLoader());
 
     dispatch(Actions.register(email, password, confirm, firstname, lastname))
       .then(() => {
@@ -60,12 +60,12 @@ const Signup = () => {
 
         reset();
 
-        dispatch(hideLoader);
+        dispatch(hideLoader());
       })
       .catch(() => {
         setSuccess(false);
 
-        dispatch(hideLoader);
+        dispatch(hideLoader());
       });
   };
 

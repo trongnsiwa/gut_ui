@@ -50,7 +50,7 @@
   }
 
   .table-header {
-    @apply py-2 px-3 sticky top-0 border-b border-gray-200 bg-brand-light z-50;
+    @apply py-2 px-3 sticky top-0 border-b border-gray-200 bg-brand-light z-20;
   }
 
   .table-header-label {

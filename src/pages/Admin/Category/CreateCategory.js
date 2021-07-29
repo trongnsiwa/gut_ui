@@ -31,7 +31,7 @@ const CreateCategory = () => {
   });
 
   const handleCreateNew = ({ name, parent, parentId }) => {
-    dispatch(showLoader);
+    dispatch(showLoader());
 
     if (parent) {
       createCategoryParent(name)

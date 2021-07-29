@@ -17,7 +17,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
       leaveFrom='ml-0'
       leaveTo='-ml-64'
     >
-      <div className={`z-10 absolute sm:sticky w-64 h-screen bg-white border border-r-2`}>
+      <div className='absolute sm:sticky w-64 h-screen bg-white border border-r-2' style={{ zIndex: '888' }}>
         <div className='flex items-center justify-between px-4'>
           <div className='flex items-center'>
             <img className='h-16 w-16' src={logo} alt='GUT' />
@@ -46,7 +46,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
           </button>
         </div>
 
-        <nav className='mt-10'>{bars && bars.map((item, index) => <SubMenu item={item} key={index} />)}</nav>
+        <nav className='mt-10 z-50'>{bars && bars.map((item, index) => <SubMenu item={item} key={index} />)}</nav>
       </div>
     </Transition>
   );

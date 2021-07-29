@@ -10,7 +10,7 @@ const SubMenu = ({ item }) => {
   return (
     <div>
       {item.subNav ? (
-        <button className='btn-dash-main' onClick={item.subNav && showSubnav}>
+        <button className='btn-dash-main z-50' onClick={item.subNav && showSubnav}>
           <span className='flex items-center mx-4'>
             {item.icon}
             <span className='font-medium pl-2'>{item.title}</span>

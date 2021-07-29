@@ -2,8 +2,6 @@ import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { hideLoader, showLoader } from '../../../actions/LoaderAction';
-
 import TableAction from '../../../components/Table/TableAction';
 import TableWrapper from '../../../components/Table/TableWrapper';
 
@@ -52,27 +50,21 @@ const Product = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(showLoader);
-
     if (!searchedName || searchedName === '') {
       getProducts(pageNum, pageSize, sortBy).then(
         (res) => {
           setProducts(res.data.data);
-          dispatch(hideLoader);
         },
         (error) => {
           const message =
             (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
 
           console.log(message);
-          dispatch(hideLoader);
         }
       );
     } else {
-      setPageNum(1);
-      searchProductsByName(1, pageSize, sortBy, searchedName).then((res) => {
+      searchProductsByName(pageNum, pageSize, sortBy, searchedName).then((res) => {
         setProducts(res.data.data);
-        dispatch(hideLoader);
       });
     }
   }, [dispatch, pageNum, pageSize, searchedName, sortBy]);
@@ -94,7 +86,7 @@ const Product = () => {
   }, [pageSize, searchedName]);
 
   return (
-    <div className='min-h-screen w-full px-4 pt-4'>
+    <div className='h-screen w-full px-4 pt-4'>
       <div className='section-title w-full p-4'>
         <div className='flex flex-row items-center justify-between'>
           <div className='flex flex-col'>
@@ -104,6 +96,7 @@ const Product = () => {
         </div>
       </div>
       <hr className='mx-4 mb-4 border-dashed border-1 border-brand-light' />
+
       {
         <TableWrapper
           name='PRODUCTS'

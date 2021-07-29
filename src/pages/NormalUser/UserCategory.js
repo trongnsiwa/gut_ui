@@ -223,63 +223,73 @@ const UserCategory = (props) => {
           </div>
           <div className='py-3 text-sm md:text-base'>
             {parentCategories &&
-              parentCategories?.map((parent) => (
-                <div className='mr-3 md:mr-0' key={parent.id}>
-                  <div className='flex w-full items-center'>
-                    <div className='space-y-5'>
-                      <Link
-                        to={{
-                          pathname: `/category/${parent.name.toString().toLowerCase()}`,
-                          state: {
-                            parentId: parent.id,
-                          },
-                        }}
-                        onClick={() => setPageNum(1)}
+              parentCategories?.map(
+                (parent) =>
+                  !parent.deleted && (
+                    <div className='mr-3 md:mr-0' key={parent.id}>
+                      <div className='flex w-full items-center'>
+                        <div className='space-y-5'>
+                          <Link
+                            to={{
+                              pathname: `/category/${parent.name.toString().toLowerCase()}`,
+                              state: {
+                                parentId: parent.id,
+                              },
+                            }}
+                            onClick={() => setPageNum(1)}
+                          >
+                            {parent.name}
+                          </Link>
+                          <div className='inline-flex pl-3'>
+                            <button
+                              type='button'
+                              onClick={() => {
+                                if (selectedParent?.id === parent.id) {
+                                  setSelectedParent(null);
+                                  return;
+                                }
+                                setSelectedParent(parent);
+                              }}
+                            >
+                              {selectedParent?.id === parent.id ? (
+                                <ChevronDownIcon className='h-4 w-4' />
+                              ) : (
+                                <ChevronRightIcon className='h-4 w-4' />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className={`flex flex-col space-y-5 my-5 ml-6 ${
+                          selectedParent?.id === parent.id ? '' : 'hidden'
+                        }`}
                       >
-                        {parent.name}
-                      </Link>
-                      <div className='inline-flex pl-3'>
-                        <button
-                          type='button'
-                          onClick={() => {
-                            if (selectedParent?.id === parent.id) {
-                              setSelectedParent(null);
-                              return;
-                            }
-                            setSelectedParent(parent);
-                          }}
-                        >
-                          {selectedParent?.id === parent.id ? (
-                            <ChevronDownIcon className='h-4 w-4' />
-                          ) : (
-                            <ChevronRightIcon className='h-4 w-4' />
+                        {parent.subCategories &&
+                          parent?.subCategories?.map(
+                            (sub) =>
+                              !sub.deleted && (
+                                <Link
+                                  to={{
+                                    pathname: `/category/${lowerCaseString(parent.name)}/${sub.name
+                                      .toString()
+                                      .toLowerCase()}`,
+                                    state: {
+                                      id: sub.id,
+                                      parentId: parent.id,
+                                    },
+                                  }}
+                                  onClick={() => setPageNum(1)}
+                                  key={sub.id}
+                                >
+                                  {sub.name}
+                                </Link>
+                              )
                           )}
-                        </button>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    className={`flex flex-col space-y-5 my-5 ml-6 ${selectedParent?.id === parent.id ? '' : 'hidden'}`}
-                  >
-                    {parent.subCategories &&
-                      parent?.subCategories?.map((sub) => (
-                        <Link
-                          to={{
-                            pathname: `/category/${lowerCaseString(parent.name)}/${sub.name.toString().toLowerCase()}`,
-                            state: {
-                              id: sub.id,
-                              parentId: parent.id,
-                            },
-                          }}
-                          onClick={() => setPageNum(1)}
-                          key={sub.id}
-                        >
-                          {sub.name}
-                        </Link>
-                      ))}
-                  </div>
-                </div>
-              ))}
+                  )
+              )}
           </div>
           <div className='py-6 border-t mt-6 border-gray-200 border-solid'>
             <div className='flex w-full items-center'>
@@ -419,20 +429,48 @@ const UserCategory = (props) => {
                     <Spinner />
                   </>
                 ) : (
-                  products?.map((product) => (
-                    <ItemBox
-                      item={product}
-                      key={product.id}
-                      parent={{
-                        id: parentId,
-                        name: parent,
-                      }}
-                      category={{
-                        id: id,
-                        name: slug,
-                      }}
-                    />
-                  ))
+                  products?.map(
+                    (product) =>
+                      !product.deleted && (
+                        <ItemBox
+                          item={product}
+                          key={product.id}
+                          parent={{
+                            id: parentId,
+                            name: parent,
+                          }}
+                          category={{
+                            id: id,
+                            name: slug,
+                          }}
+                        />
+                      )
+                  )
+                )}
+                {searchedName && (!products || products?.length === 0) && (
+                  <div className='w-full col-span-2 md:col-span-4 shadow-lg rounded-md my-5'>
+                    <div className='flex flex-col justify-center items-center w-full my-6 bg-white px-4 sm:px-6 lg:px-16'>
+                      <img
+                        src='https://ik.imagekit.io/tnyyngwxvx9/no-results_sbm3UFZiL.svg?updatedAt=1626878273006'
+                        alt='Not Found'
+                        className='h-16 w-16 mx-auto mb-4 text-gray-900'
+                      />
+                      <p className='text-base leading-5 font-medium text-gray-900 mb-3'>No Result Found</p>
+                      <p className='text-sm'>We did not find any items name "{searchedName}" for your search.</p>
+                    </div>
+                  </div>
+                )}
+                {!searchedName && (!products || products?.length === 0) && (
+                  <div className='w-full col-span-2 md:col-span-4 shadow-lg rounded-md my-5'>
+                    <div className='flex flex-col justify-center items-center w-full my-6 bg-white px-4 sm:px-6 lg:px-16'>
+                      <img
+                        src='https://ik.imagekit.io/tnyyngwxvx9/no-results_sbm3UFZiL.svg?updatedAt=1626878273006'
+                        alt='Not Found'
+                        className='h-16 w-16 mx-auto mb-4 text-gray-900'
+                      />
+                      <p className='text-base leading-5 font-medium text-gray-900 mb-3'>No Result Found</p>
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
@@ -442,7 +480,7 @@ const UserCategory = (props) => {
               <p className='text-sm text-gray-700'>
                 Showing <span className='font-medium'>{pageNumbers && pageNumbers[0]}</span> to{' '}
                 <span className='font-medium'>{pageNumbers && pageNumbers[pageNumbers.length - 1]}</span> of{' '}
-                <span className='font-medium'>{totalResults}</span> totalResults
+                <span className='font-medium'>{totalResults}</span> total results
               </p>
             </div>
             <div>

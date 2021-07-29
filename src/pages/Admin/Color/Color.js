@@ -7,7 +7,7 @@ import _ from 'lodash';
 import Tippy from '@tippyjs/react';
 import { SketchPicker } from 'react-color';
 
-import { hideLoader, showLoader } from '../../../actions/LoaderAction';
+import { showLoader } from '../../../actions/LoaderAction';
 
 import TableAction from '../../../components/Table/TableAction';
 import TableWrapper from '../../../components/Table/TableWrapper';
@@ -65,27 +65,21 @@ const Color = () => {
   });
 
   useEffect(() => {
-    dispatch(showLoader);
-
     if (!searchedName || searchedName === '') {
       getColors(pageNum, pageSize, sortBy).then(
         (res) => {
           setColors(res.data.data);
-          dispatch(hideLoader);
         },
         (error) => {
           const message =
             (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
 
           console.log(message);
-          dispatch(hideLoader);
         }
       );
     } else {
-      setPageNum(1);
-      searchByName(1, pageSize, sortBy, searchedName).then((res) => {
+      searchByName(pageNum, pageSize, sortBy, searchedName).then((res) => {
         setColors(res.data.data);
-        dispatch(hideLoader);
       });
     }
   }, [dispatch, pageNum, pageSize, searchedName, sortBy]);
@@ -107,7 +101,7 @@ const Color = () => {
   }, [pageSize, searchedName]);
 
   const handleCreateNew = ({ name }) => {
-    dispatch(showLoader);
+    dispatch(showLoader());
 
     addColor(name, selectedColor.hex ? selectedColor.hex : selectedColor)
       .then((res) => {

@@ -37,17 +37,17 @@ const ColorDetail = (props) => {
   });
 
   useEffect(() => {
-    dispatch(showLoader);
+    dispatch(showLoader());
 
     getColor(id)
       .then((res) => {
         console.log(res.data.data);
         setDetails(res.data.data);
-        dispatch(hideLoader);
+        dispatch(hideLoader());
       })
       .catch((error) => {
         console.log(error.response.data);
-        dispatch(hideLoader);
+        dispatch(hideLoader());
       });
   }, [dispatch, id]);
 
@@ -60,7 +60,7 @@ const ColorDetail = (props) => {
   }, [details]);
 
   const handleSaveChange = ({ name }) => {
-    dispatch(showLoader);
+    dispatch(showLoader());
 
     if (!details) {
       return;

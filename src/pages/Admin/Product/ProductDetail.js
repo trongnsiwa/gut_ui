@@ -214,7 +214,7 @@ const ProductDetail = (props) => {
       });
     }
 
-    dispatch(showLoader);
+    dispatch(showLoader());
 
     updateProduct(
       id,
@@ -237,7 +237,7 @@ const ProductDetail = (props) => {
         console.log(res.data.data);
         showSuccessMessage(res, id, dispatch);
         reset();
-        dispatch(hideLoader);
+        dispatch(hideLoader());
       })
       .catch((error) => {
         const code =
@@ -249,7 +249,7 @@ const ProductDetail = (props) => {
           showId = id;
         }
         showErrorMessage(error, showId, dispatch);
-        dispatch(hideLoader);
+        dispatch(hideLoader());
       });
   };
 
@@ -327,7 +327,7 @@ const ProductDetail = (props) => {
 
         {details && (
           <div className='mb-12 xl:flex xl:flex-row'>
-            <div className='my-6 mx-4 xl:container xl:w-1/2 bg-white p-6 shadow-lg rounded-lg'>
+            <div className='my-6 mx-4 xl:w-1/2 bg-white p-6 shadow-lg rounded-lg'>
               <p className='text-base font-thin text-right text-gray-400'>Required fields *</p>
               <form
                 className='mb-0 grid-cols-3 inline-grid gap-0 space-y-6 lg:mr-16'
@@ -652,7 +652,7 @@ const ProductDetail = (props) => {
               </form>
             </div>
 
-            <div className='h-screen lg:overflow-y-auto my-6 mx-4 xl:container xl:w-1/2 bg-white p-6 shadow-lg border-brand rounded-lg'>
+            <div className='h-full lg:overflow-y-auto my-6 mx-4 xl:w-1/2 bg-white p-6 shadow-lg border-brand rounded-lg'>
               <p className='text-xl font-bold mb-3 text-brand-dark flex flex-row items-center'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'

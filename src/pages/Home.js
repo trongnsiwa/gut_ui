@@ -20,7 +20,7 @@ const Home = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  dispatch(hideLoader);
+  dispatch(hideLoader());
 
   if (currentUser && currentUser.roles?.includes(Role.ADMIN)) {
     history.push('/admin');
@@ -29,38 +29,27 @@ const Home = () => {
 
   useEffect(() => {
     if (!saleProducts) {
-      dispatch(showLoader);
-
       getSaleProducts(6)
         .then((res) => {
           setSaleProducts(res.data.data);
-
-          dispatch(hideLoader);
         })
         .catch((err) => {
           console.log(err.response);
-
-          dispatch(hideLoader);
         });
     }
-  }, [dispatch, saleProducts]);
+  }, [saleProducts]);
 
   useEffect(() => {
     if (!newProducts) {
-      dispatch(showLoader);
-
       getNewProducts(6)
         .then((res) => {
           setNewProducts(res.data.data);
-
-          dispatch(hideLoader);
         })
         .catch((err) => {
           console.log(err.response);
-          dispatch(hideLoader);
         });
     }
-  }, [dispatch, newProducts]);
+  }, [newProducts]);
 
   return (
     <>

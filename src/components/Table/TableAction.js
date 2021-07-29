@@ -16,7 +16,7 @@ const TableAction = (props) => {
   const dispatch = useDispatch();
 
   const deleteItem = (id) => {
-    dispatch(showLoader);
+    dispatch(showLoader());
 
     if ('CATEGORY' === props.table) {
       if (props.parent) {

@@ -74,7 +74,7 @@ const CreateProduct = () => {
     resolver: yupResolver(validationSchema),
   });
 
-  const onSubmitHandler = ({
+  const handleCreateProduct = ({
     name,
     price,
     shortDesc,
@@ -133,7 +133,7 @@ const CreateProduct = () => {
       return;
     }
 
-    dispatch(showLoader);
+    dispatch(showLoader());
 
     addProduct(
       name,
@@ -280,7 +280,7 @@ const CreateProduct = () => {
             </p>
             <form
               className='mb-0 grid-cols-3 inline-grid gap-0 space-y-6 lg:mr-16'
-              onSubmit={handleSubmit(onSubmitHandler)}
+              onSubmit={handleSubmit(handleCreateProduct)}
             >
               <div className='flex items-center'>
                 <label htmlFor='name' className='block text-base font-medium text-gray-700'>

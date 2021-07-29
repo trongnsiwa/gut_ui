@@ -42,7 +42,7 @@ const Header = () => {
   }, []);
 
   const logOut = () => {
-    dispatch(showLoader);
+    dispatch(showLoader());
 
     dispatch(logout());
     history.push('/');
@@ -108,17 +108,20 @@ const Header = () => {
                                   </span>
                                 </div>
                                 {parentCategories &&
-                                  parentCategories.map((parent) => (
-                                    <div
-                                      className={`flex w-full items-center h-12 hover:bg-gray-100 p-5 ${
-                                        selectedParent && parent.id === selectedParent.id ? 'bg-gray-100' : ''
-                                      }`}
-                                      key={parent.id}
-                                      onClick={() => setSelectedParent(parent)}
-                                    >
-                                      <span className='text-sm text-gray-600  cursor-default'>{parent.name}</span>
-                                    </div>
-                                  ))}
+                                  parentCategories.map(
+                                    (parent) =>
+                                      !parent.deleted && (
+                                        <div
+                                          className={`flex w-full items-center h-12 hover:bg-gray-100 p-5 ${
+                                            selectedParent && parent.id === selectedParent.id ? 'bg-gray-100' : ''
+                                          }`}
+                                          key={parent.id}
+                                          onClick={() => setSelectedParent(parent)}
+                                        >
+                                          <span className='text-sm text-gray-600  cursor-default'>{parent.name}</span>
+                                        </div>
+                                      )
+                                  )}
                               </div>
                               <div className='pl-5'>
                                 {selectedParent && (
@@ -130,25 +133,28 @@ const Header = () => {
                                 )}
 
                                 {selectedParent &&
-                                  selectedParent.subCategories?.map((sub) => (
-                                    <div className='flex w-full items-center p-5 h-12' key={sub.id}>
-                                      <Link
-                                        to={{
-                                          pathname: `/category/${lowerCaseString(
-                                            selectedParent.name
-                                          )}/${lowerCaseString(sub.name)}`,
-                                          state: {
-                                            id: sub.id,
-                                            parentId: selectedParent.id,
-                                          },
-                                        }}
-                                        className='text-sm text-gray-600  cursor-pointer hover:underline'
-                                        onClick={() => buttonRef.current?.click()}
-                                      >
-                                        {sub.name}
-                                      </Link>
-                                    </div>
-                                  ))}
+                                  selectedParent.subCategories?.map(
+                                    (sub) =>
+                                      !sub.deleted && (
+                                        <div className='flex w-full items-center p-5 h-12' key={sub.id}>
+                                          <Link
+                                            to={{
+                                              pathname: `/category/${lowerCaseString(
+                                                selectedParent.name
+                                              )}/${lowerCaseString(sub.name)}`,
+                                              state: {
+                                                id: sub.id,
+                                                parentId: selectedParent.id,
+                                              },
+                                            }}
+                                            className='text-sm text-gray-600  cursor-pointer hover:underline'
+                                            onClick={() => buttonRef.current?.click()}
+                                          >
+                                            {sub.name}
+                                          </Link>
+                                        </div>
+                                      )
+                                  )}
                               </div>
                             </div>
                           </Popover.Panel>
@@ -291,69 +297,75 @@ const Header = () => {
                   <div className='h-full overflow-auto mb-10'>
                     <dl className='block'>
                       {parentCategories &&
-                        parentCategories.map((parent) => (
-                          <React.Fragment key={`${parent.id}_small`}>
-                            <dt
-                              className='flex w-full items-center justify-between list-none border-gray-400 border-solid relative bg-white z-20'
-                              style={{ height: '55px', marginTop: '-1px', borderWidth: '1px 0' }}
-                              onClick={() => {
-                                if (selectedParent !== parent) {
-                                  setSelectedParent(parent);
-                                } else {
-                                  setSelectedParent(null);
-                                }
-                              }}
-                            >
-                              <span className='relative pl-2 text-sm font-bold text-gray-600 align-middle m-0 no-underline'>
-                                {parent.name}
-                              </span>
-                              {selectedParent && selectedParent.id === parent.id ? (
-                                <ChevronDownIcon className='h-4 w-4' />
-                              ) : (
-                                <ChevronRightIcon className='h-4 w-4' />
-                              )}
-                            </dt>
-                            {parent.subCategories && (
-                              <Transition
-                                show={selectedParent?.id === parent.id}
-                                as={Fragment}
-                                enter='transition ease-in-out duration-300 transform'
-                                enterFrom='-translate-y-full'
-                                enterTo='translate-y-0'
-                                leave='transition ease-in-out duration-300 transform'
-                                leaveFrom='translate-y-0'
-                                leaveTo='-translate-y-full'
-                              >
-                                <dd className='z-0'>
-                                  <ul className='grid grid-cols-2 list-none p-0 cursor-pointer'>
-                                    {parent.subCategories.map((sub) => (
-                                      <Link
-                                        to={{
-                                          pathname: `/category/${lowerCaseString(sub.name)}`,
-                                          state: {
-                                            id: sub.id,
-                                          },
-                                        }}
-                                        key={`${sub.id}_small`}
-                                        onClick={() => buttonSmallRef.current?.click()}
-                                      >
-                                        <li
-                                          style={{
-                                            borderBottom: '1px solid #dadada',
-                                            borderRight: '1px solid #dadada',
-                                          }}
-                                          className='p-4 text-sm'
-                                        >
-                                          {sub.name}
-                                        </li>
-                                      </Link>
-                                    ))}
-                                  </ul>
-                                </dd>
-                              </Transition>
-                            )}
-                          </React.Fragment>
-                        ))}
+                        parentCategories.map(
+                          (parent) =>
+                            !parent.deleted && (
+                              <React.Fragment key={`${parent.id}_small`}>
+                                <dt
+                                  className='flex w-full items-center justify-between list-none border-gray-400 border-solid relative bg-white z-20'
+                                  style={{ height: '55px', marginTop: '-1px', borderWidth: '1px 0' }}
+                                  onClick={() => {
+                                    if (selectedParent !== parent) {
+                                      setSelectedParent(parent);
+                                    } else {
+                                      setSelectedParent(null);
+                                    }
+                                  }}
+                                >
+                                  <span className='relative pl-2 text-sm font-bold text-gray-600 align-middle m-0 no-underline'>
+                                    {parent.name}
+                                  </span>
+                                  {selectedParent && selectedParent.id === parent.id ? (
+                                    <ChevronDownIcon className='h-4 w-4' />
+                                  ) : (
+                                    <ChevronRightIcon className='h-4 w-4' />
+                                  )}
+                                </dt>
+                                {parent.subCategories && (
+                                  <Transition
+                                    show={selectedParent?.id === parent.id}
+                                    as={Fragment}
+                                    enter='transition ease-in-out duration-300 transform'
+                                    enterFrom='-translate-y-full'
+                                    enterTo='translate-y-0'
+                                    leave='transition ease-in-out duration-300 transform'
+                                    leaveFrom='translate-y-0'
+                                    leaveTo='-translate-y-full'
+                                  >
+                                    <dd className='z-0'>
+                                      <ul className='grid grid-cols-2 list-none p-0 cursor-pointer'>
+                                        {parent.subCategories.map(
+                                          (sub) =>
+                                            !sub.deleted && (
+                                              <Link
+                                                to={{
+                                                  pathname: `/category/${lowerCaseString(sub.name)}`,
+                                                  state: {
+                                                    id: sub.id,
+                                                  },
+                                                }}
+                                                key={`${sub.id}_small`}
+                                                onClick={() => buttonSmallRef.current?.click()}
+                                              >
+                                                <li
+                                                  style={{
+                                                    borderBottom: '1px solid #dadada',
+                                                    borderRight: '1px solid #dadada',
+                                                  }}
+                                                  className='p-4 text-sm'
+                                                >
+                                                  {sub.name}
+                                                </li>
+                                              </Link>
+                                            )
+                                        )}
+                                      </ul>
+                                    </dd>
+                                  </Transition>
+                                )}
+                              </React.Fragment>
+                            )
+                        )}
                     </dl>
                   </div>
                   <div>

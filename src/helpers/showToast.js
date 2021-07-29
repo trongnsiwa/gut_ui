@@ -38,7 +38,7 @@ export const showSuccessMessage = (res, id, dispatch) => {
   }
 
   showSuccess(message.toString());
-  dispatch(hideLoader);
+  dispatch(hideLoader());
 };
 
 export const showErrorMessage = (error, id, dispatch) => {
@@ -53,5 +53,5 @@ export const showErrorMessage = (error, id, dispatch) => {
   }
 
   showError(message.toString());
-  dispatch(hideLoader);
+  dispatch(hideLoader());
 };

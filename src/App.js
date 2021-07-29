@@ -53,6 +53,11 @@ function App() {
     <>
       <Router history={history}>
         <Switch>
+          <LayoutRoute exact path='/' component={Home} />
+
+          <LoginLayoutRoute exact path='/signin' component={Signin} />
+          <LoginLayoutRoute exact path='/signup' component={Signup} />
+
           <PrivateLayoutRoute
             exact
             path='/admin'
@@ -124,10 +129,6 @@ function App() {
             component={ImageUpload}
           />
 
-          <LoginLayoutRoute exact path='/signin' component={Signin} />
-          <LoginLayoutRoute exact path='/signup' component={Signup} />
-
-          <LayoutRoute exact path='/' component={Home} />
           <LayoutRoute exact path='/category/:parent/:slug' component={UserCategory} />
           <LayoutRoute exact path='/category/:parent' component={UserCategory} />
           <LayoutRoute exact path='/product/:id' component={ItemDetail} />

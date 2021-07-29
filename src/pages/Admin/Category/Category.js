@@ -3,8 +3,6 @@ import { useDispatch } from 'react-redux';
 import { Transition } from '@headlessui/react';
 import _ from 'lodash';
 
-import { hideLoader, showLoader } from '../../../actions/LoaderAction';
-
 import TableAction from '../../../components/Table/TableAction';
 import TableWrapper from '../../../components/Table/TableWrapper';
 
@@ -50,27 +48,22 @@ const Category = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(showLoader);
-
     if (!searchedName || searchedName === '') {
       getParentCategories(pageNum, pageSize, sortBy).then(
         (res) => {
           setParentCategories(res.data.data);
-          dispatch(hideLoader);
         },
         (error) => {
           const message =
             (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
 
           console.log(message);
-          dispatch(hideLoader);
         }
       );
     } else {
       searchByName(pageNum, pageSize, sortBy, searchedName).then((res) => {
         setParentCategories(null);
         setSearchedCategories(res.data.data);
-        dispatch(hideLoader);
       });
     }
   }, [dispatch, pageNum, pageSize, searchedName, sortBy]);
@@ -113,7 +106,7 @@ const Category = () => {
                     <tr
                       className={`text-left z-1 hover:bg-gray-100 cursor-pointer ${
                         selectedParent === item.id ? 'bg-gray-100' : ''
-                      }`}
+                      } ${item.deleted ? 'strikeout' : ''}`}
                       key={item.id + '_parent'}
                       onClick={() => {
                         setSelectedParent(item.id);
@@ -164,7 +157,7 @@ const Category = () => {
                           as='tr'
                           className={`text-left hover:bg-gray-100 ${
                             selectedParent === item.id ? 'shadow-lg  rounded-lg mt-0' : 'mb-48'
-                          }`}
+                          } ${sub.deleted ? 'strikeout' : ''}`}
                           key={sub.id + '_sub'}
                           show={selectedParent === item.id}
                           enter='transition-all duration-300'

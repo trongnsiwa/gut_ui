@@ -6,11 +6,13 @@ import { Role } from '../constants/Role';
 import AdminHeader from '../components/AdminHeader';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 
 const UserLayout = ({ children }) => (
   <div>
     <Header />
     <main>{children}</main>
+    <Footer />
   </div>
 );
 
@@ -20,7 +22,7 @@ const AdminLayout = ({ children }) => {
   return (
     <div className='flex flex-row relative'>
       <Sidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
-      <main className={`w-full overflow-y-auto h-screen bg-gray-50 text-gray-900 absolute sm:sticky`}>
+      <main className='w-full overflow-y-auto h-screen bg-gray-50 text-gray-900 absolute sm:sticky'>
         <AdminHeader setOpenSidebar={setOpenSidebar} openSidebar={openSidebar} />
         {children}
       </main>
