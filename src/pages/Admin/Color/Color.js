@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -17,7 +17,9 @@ import { addColor, countColors, countColorsByName, getColors, searchByName } fro
 
 import ERRORS from '../../../constants/Errors';
 
-import { showErrorMessage, showSuccessMessage } from '../../../helpers/showToast';
+import { showSuccessMessage } from '../../../helpers/showToast';
+import { showStoreErrorMessage } from '../../../helpers/setErrorMessage';
+import { clearMessage } from '../../../actions/MessageAction';
 
 const headers = (
   <>
@@ -49,6 +51,7 @@ const Color = () => {
 
   const [searchedName, setSearchedName] = useState('');
 
+  const { message } = useSelector((state) => state.messageReducer);
   const dispatch = useDispatch();
 
   const validationSchema = Yup.object().shape({
@@ -107,17 +110,21 @@ const Color = () => {
       .then((res) => {
         showSuccessMessage(res, name, dispatch);
         setPageNum(1);
+        dispatch(clearMessage());
         reset();
       })
       .catch((error) => {
         const code =
           (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
 
+        var showId = '';
         if (code.includes('SOURCE')) {
-          showErrorMessage(error, selectedColor, dispatch);
+          showId = selectedColor.hex ? selectedColor.hex : selectedColor;
         } else {
-          showErrorMessage(error, name, dispatch);
+          showId = name;
         }
+
+        showStoreErrorMessage(error, showId, dispatch);
       });
   };
 
@@ -165,14 +172,7 @@ const Color = () => {
                     ))
                   : null
               }
-              sorts={
-                sortByName &&
-                sortByName.map((item, index) => (
-                  <option value={item.value} key={item.label}>
-                    {item.label}
-                  </option>
-                ))
-              }
+              sorts={sortByName}
               sizes={
                 pageSizes &&
                 pageSizes.map((item, index) => (
@@ -216,6 +216,7 @@ const Color = () => {
             className='mb-0 grid-cols-2 inline-grid gap-0 space-y-3 lg:mr-16'
             onSubmit={handleSubmit(handleCreateNew)}
           >
+            {message && <p className='error-message col-span-2'>{message}</p>}
             <div className='flex items-center'>
               <label htmlFor='name' className='block text-sm font-medium text-gray-700 '>
                 Color name <span className='text-red-500'>*</span>

@@ -85,7 +85,6 @@ export const updateProduct = (
   priceSale,
   saleFromDate,
   saleToDate,
-  deleted,
   colors,
   categoryId,
   brandId
@@ -102,7 +101,6 @@ export const updateProduct = (
     priceSale,
     saleFromDate,
     saleToDate,
-    deleted,
     colors,
     categoryId,
     brandId,

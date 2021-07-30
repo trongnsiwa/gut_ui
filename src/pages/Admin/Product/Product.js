@@ -6,16 +6,24 @@ import TableAction from '../../../components/Table/TableAction';
 import TableWrapper from '../../../components/Table/TableWrapper';
 
 import { pageSizes, sorts } from '../../../data/productData';
+import { getAllChildCategories } from '../../../services/category.service';
 
 import {
   countProducts,
+  countProductsByCategory,
+  countProductsByCategoryAndName,
   countProductsByName,
   getProducts,
+  getProductsByCategory,
+  searchProductsByCategoryAndName,
   searchProductsByName,
 } from '../../../services/product.service';
 
 const headers = (
   <>
+    <th className='table-header'>
+      <label className='table-header-label'>Label</label>
+    </th>
     <th className='table-header'>
       <label className='table-header-label'>ID</label>
     </th>
@@ -45,45 +53,112 @@ const Product = () => {
   const [pageSize, setPageSize] = useState(5);
   const [sortBy, setSortBy] = useState('A-Z');
 
+  const [filters, setFilters] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState(null);
+
   const [searchedName, setSearchedName] = useState('');
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (!searchedName || searchedName === '') {
-      getProducts(pageNum, pageSize, sortBy).then(
-        (res) => {
-          setProducts(res.data.data);
-        },
-        (error) => {
-          const message =
-            (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+      if (!selectedFilter || selectedFilter?.name === 'ALL') {
+        getProducts(pageNum, pageSize, sortBy).then(
+          (res) => {
+            setProducts(res.data.data);
+          },
+          (error) => {
+            const message =
+              (error.response && error.response.data && error.response.data.message) ||
+              error.message ||
+              error.toString();
 
-          console.log(message);
-        }
-      );
+            console.log(message);
+          }
+        );
+      } else if (selectedFilter) {
+        getProductsByCategory(selectedFilter.id, pageNum, pageSize, sortBy).then(
+          (res) => {
+            setProducts(res.data.data);
+          },
+          (error) => {
+            const message =
+              (error.response && error.response.data && error.response.data.message) ||
+              error.message ||
+              error.toString();
+
+            console.log(message);
+          }
+        );
+      }
     } else {
-      searchProductsByName(pageNum, pageSize, sortBy, searchedName).then((res) => {
-        setProducts(res.data.data);
-      });
+      if (!selectedFilter || selectedFilter?.name === 'ALL') {
+        searchProductsByName(pageNum, pageSize, sortBy, searchedName).then((res) => {
+          setProducts(res.data.data);
+        });
+      } else if (selectedFilter) {
+        searchProductsByCategoryAndName(selectedFilter.id, pageNum, pageSize, sortBy, searchedName).then((res) => {
+          setProducts(res.data.data);
+        });
+      }
     }
-  }, [dispatch, pageNum, pageSize, searchedName, sortBy]);
+  }, [dispatch, pageNum, pageSize, searchedName, selectedFilter, sortBy]);
 
   useEffect(() => {
     if (pageSize) {
       if (!searchedName || searchedName === '') {
-        countProducts().then((res) => {
-          const pages = _.ceil(res.data.data / pageSize);
-          setTotalPage(pages >= 1 ? pages : 1);
-        });
+        if (!selectedFilter || selectedFilter?.name === 'ALL') {
+          countProducts().then((res) => {
+            const pages = _.ceil(res.data.data / pageSize);
+            setTotalPage(pages >= 1 ? pages : 1);
+          });
+        } else if (selectedFilter) {
+          countProductsByCategory(selectedFilter.id).then((res) => {
+            const pages = _.ceil(res.data.data / pageSize);
+            setTotalPage(pages >= 1 ? pages : 1);
+          });
+        }
       } else {
-        countProductsByName(searchedName).then((res) => {
-          const pages = _.ceil(res.data.data / pageSize);
-          setTotalPage(pages >= 1 ? pages : 1);
-        });
+        if (!selectedFilter || selectedFilter?.name === 'ALL') {
+          countProductsByName(searchedName).then((res) => {
+            const pages = _.ceil(res.data.data / pageSize);
+            setTotalPage(pages >= 1 ? pages : 1);
+          });
+        } else if (selectedFilter) {
+          countProductsByCategoryAndName(selectedFilter.id, searchedName).then((res) => {
+            const pages = _.ceil(res.data.data / pageSize);
+            setTotalPage(pages >= 1 ? pages : 1);
+          });
+        }
       }
     }
-  }, [pageSize, searchedName]);
+  }, [pageSize, searchedName, selectedFilter]);
+
+  useEffect(() => {
+    getAllChildCategories()
+      .then((res) => {
+        var childCategories = [
+          {
+            value: 'ALL',
+            label: 'ALL',
+          },
+        ];
+        childCategories = childCategories.concat(
+          res.data.data.map((cate) => {
+            return {
+              value: cate.id,
+              label: cate.name,
+            };
+          })
+        );
+        console.log(childCategories);
+
+        setFilters(childCategories);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  }, []);
 
   return (
     <div className='h-screen w-full px-4 pt-4'>
@@ -109,23 +184,42 @@ const Product = () => {
                       className={`table-row-custom 
                    `}
                     >
-                      <span className={`table-row-content ${item.salePrice ? 'text-red-600' : ''}`}>{item.id}</span>
-                    </td>
-                    <td className='table-row-custom'>
-                      <span className={`table-row-content ${item.salePrice ? 'text-red-600' : ''}`}>{item.name}</span>
-                    </td>
-                    <td className='table-row-custom'>
-                      <span className={`table-row-content ${item.salePrice ? 'text-red-600' : ''}`}>{item.price}</span>
-                    </td>
-                    <td className='table-row-custom'>
-                      <span className={`table-row-content ${item.salePrice ? 'text-red-600' : ''}`}>
-                        {item.categoryName}
+                      <span className='table-row-content flex justify-center'>
+                        {item?.salePrice ? (
+                          <div className='flex items-center p-2 border border-brand-sale border-solid'>
+                            <span className='text-brand-sale tracking-normal text-xs'>Sale</span>
+                          </div>
+                        ) : (
+                          item?.brandNew && (
+                            <div className='flex items-center p-2 border border-green-500 border-solid'>
+                              <span className='text-green-500 tracking-normal text-xs text'>New</span>
+                            </div>
+                          )
+                        )}
+                        {!item?.brandNew && !item?.salePrice && (
+                          <div className='flex items-center p-2 border border-gray-400 border-solid'>
+                            <span className='text-gray-400 tracking-normal text-xs'>Dated</span>
+                          </div>
+                        )}
                       </span>
                     </td>
+                    <td
+                      className={`table-row-custom 
+                   `}
+                    >
+                      <span className='table-row-content'>{item.id}</span>
+                    </td>
                     <td className='table-row-custom'>
-                      <span className={`table-row-content ${item.salePrice ? 'text-red-600' : ''}`}>
-                        {item.brandName}
-                      </span>
+                      <span className='table-row-content'>{item.name}</span>
+                    </td>
+                    <td className='table-row-custom'>
+                      <span className='table-row-content'>{item.price}</span>
+                    </td>
+                    <td className='table-row-custom'>
+                      <span className='table-row-content'>{item.categoryName}</span>
+                    </td>
+                    <td className='table-row-custom'>
+                      <span className='table-row-content'>{item.brandName}</span>
                     </td>
                     <td className='table-row-custom flex justify-around'>
                       <TableAction
@@ -140,14 +234,8 @@ const Product = () => {
                 ))
               : null
           }
-          sorts={
-            sorts &&
-            sorts.map((item, index) => (
-              <option value={item.value} key={item.label}>
-                {item.label}
-              </option>
-            ))
-          }
+          sorts={sorts}
+          filters={filters}
           sizes={
             pageSizes &&
             pageSizes.map((item, index) => (
@@ -160,6 +248,7 @@ const Product = () => {
           setSortBy={setSortBy}
           pageNum={pageNum}
           setPageNum={setPageNum}
+          setSelectedFilter={setSelectedFilter}
           totalPage={totalPage}
           searchedName={searchedName}
           setSeachedName={setSearchedName}

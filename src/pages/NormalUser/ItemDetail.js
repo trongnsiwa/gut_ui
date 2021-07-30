@@ -22,6 +22,7 @@ import { getProductDetail } from '../../services/product.service';
 
 import RatingStar from '../../components/ReviewForm/RatingStar';
 import ReviewForm from '../../components/ReviewForm/ReviewForm';
+import { setMessage } from '../../actions/MessageAction';
 
 SwiperCore.use([Navigation, Pagination, Thumbs]);
 
@@ -44,6 +45,7 @@ const ItemDetail = (props) => {
 
   const { user: currentUser } = useSelector((state) => state.authReducer);
   const history = useHistory();
+  const { message } = useSelector((state) => state.messageReducer);
   const dispatch = useDispatch();
 
   if (currentUser && currentUser.roles?.includes(Role.ADMIN)) {
@@ -185,12 +187,12 @@ const ItemDetail = (props) => {
 
   const handlePostComment = ({ title, comment }) => {
     if (!currentUser) {
-      showError('Please login to post review!');
+      dispatch(setMessage('Please login to post review!'));
       return;
     }
 
     if (!rating) {
-      showError('Please rating before review this product!');
+      dispatch(setMessage('Please rating before review this product!'));
       return;
     }
 
@@ -332,6 +334,13 @@ const ItemDetail = (props) => {
                     ? formatCash(details.priceSale ? details?.priceSale : '')
                     : formatCash(details ? details?.price : '')}
                 </span>
+                <span
+                  className={`text-xl text-gray-500 ${
+                    details?.sale ? 'block' : 'hidden'
+                  } whitespace-nowrap align-baseline line-through`}
+                >
+                  {details && formatCash(details ? details?.price : '')}
+                </span>
               </div>
               <div className='relative my-3'>
                 <div className='flex items-center'>
@@ -393,7 +402,7 @@ const ItemDetail = (props) => {
                 </div>
               </section>
               <div className='flex items-center w-full mb-6'>
-                <span className='text-sm font-bold mr-2'>sizes:</span>
+                <span className='text-sm font-bold mr-2'>quantity:</span>
                 <div>
                   <select
                     className='form-select text-gray-600 font-medium bg-white focus:outline-none focus:shadow-outline flex'
@@ -484,6 +493,7 @@ const ItemDetail = (props) => {
                 <div className='flex flex-wrap -mx-3 mb-6'>
                   <div className='flex justify-between items-center'>
                     <h2 className='px-4 pt-3 pb-2 text-gray-800 text-lg'>Add a new review</h2>
+
                     <div className='flex items-center'>
                       {[...Array(5)].map((star, i) => {
                         const ratingValue = i + 1;
@@ -509,6 +519,7 @@ const ItemDetail = (props) => {
                       })}
                     </div>
                   </div>
+                  {message && <p className='error-message col-span-2 px-3 mb-2'>{message}</p>}
                   <div className='w-full px-3 mb-2 mt-2'>
                     <input
                       type='text'

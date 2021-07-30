@@ -209,7 +209,13 @@ const CategoryDetail = (props) => {
 
             {subCategories && subCategories.length > 0 && (
               <div className='h-screen'>
-                <div className='mt-10 mx-4 overflow-x-auto bg-white rounded-lg shadow overflow-y-visible relative'>
+                <div className='flex flex-col text-right mb-4 mx-4 mt-10'>
+                  <div className='text-sm font-light text-gray-500'>TABLE</div>
+                  <div className='text-sm font-bold text-brand-dark'>
+                    <span>SUB CATEGORIES</span>
+                  </div>
+                </div>
+                <div className='mx-4 overflow-x-auto bg-white rounded-lg shadow overflow-y-visible relative'>
                   <table className='custom-table'>
                     <thead>
                       <tr className='text-left'>

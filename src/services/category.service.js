@@ -6,6 +6,10 @@ export const getAllParentCategories = () => {
   return get(`${API_URL}/parent`);
 };
 
+export const getAllChildCategories = () => {
+  return get(`${API_URL}/child`);
+};
+
 export const getParentCategories = (num, size, sortBy) => {
   const params = {
     num,
@@ -25,12 +29,29 @@ export const searchByName = (num, size, sortBy, name) => {
   });
 };
 
+export const searchByParentAndName = (parent, num, size, sortBy, name) => {
+  return getWithParams(`${API_URL}/search-parent`, {
+    parent,
+    num,
+    size,
+    sortBy,
+    name,
+  });
+};
+
 export const countParents = () => {
   return get(`${API_URL}/count`);
 };
 
-export const countParentsByName = (name) => {
+export const countByName = (name) => {
   return getWithParams(`${API_URL}/count-name`, {
+    name,
+  });
+};
+
+export const countByParentAndName = (parent, name) => {
+  return getWithParams(`${API_URL}/count-parent`, {
+    parent,
     name,
   });
 };

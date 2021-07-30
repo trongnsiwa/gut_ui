@@ -1,8 +1,11 @@
 import React from 'react';
+import Select from 'react-select';
 
 const TableWrapper = ({
   name,
   sorts,
+  filters,
+  setSelectedFilter,
   pageNum,
   setPageNum,
   totalPage,
@@ -23,12 +26,12 @@ const TableWrapper = ({
         </div>
       </div>
 
-      <div className='mb-4 flex justify-between items-center'>
-        <div className='pr-4 w-3/4'>
+      <div className='mb-4 flex justify-between items-center gap-2'>
+        <div className={`${filters ? 'w-1/2' : 'w-3/4'}`}>
           <div className='relative'>
             <input
               type='text'
-              className='w-full pl-10 pr-4 py-2 rounded-lg shadow focus:outline-none focus:shadow-outline text-gray-600 font-medium'
+              className='w-full pl-10 pr-4 py-2 rounded-lg shadow focus:outline-none focus:shadow-outline text-gray-600'
               placeholder='Search by name...'
               value={searchedName}
               onChange={(e) => {
@@ -56,15 +59,33 @@ const TableWrapper = ({
           </div>
         </div>
 
-        <select
-          className='form-select text-gray-600 font-medium w-1/4 bg-white focus:outline-none focus:shadow-outline shadow rounded-lg flex'
-          onChange={(e) => {
+        <Select
+          defaultValue={sorts[0]}
+          options={sorts}
+          onChange={({ label, value }) => {
             setPageNum(1);
-            setSortBy(e.target.value);
+            setSortBy(value);
           }}
-        >
-          {sorts}
-        </select>
+          className='text-gray-600 w-1/4 bg-white focus:outline-none focus:shadow-outline shadow rounded-lg z-50'
+        />
+
+        {filters && (
+          <Select
+            defaultValue={{
+              value: 'ALL',
+              label: 'ALL',
+            }}
+            options={filters}
+            onChange={({ label, value }) => {
+              setSelectedFilter({
+                id: value,
+                name: label,
+              });
+              setPageNum(1);
+            }}
+            className='text-gray-600 w-1/4 bg-white focus:outline-none focus:shadow-outline shadow rounded-lg z-50'
+          />
+        )}
       </div>
 
       <div className='overflow-x-auto bg-white rounded-lg shadow overflow-y-auto'>

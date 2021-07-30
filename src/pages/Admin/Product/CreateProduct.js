@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -7,10 +7,11 @@ import Calendar from 'react-calendar';
 import Select from 'react-select';
 import Tippy from '@tippyjs/react';
 import dayjs from 'dayjs';
+import _ from 'lodash';
 
 import ERRORS from '../../../constants/Errors';
 
-import { showError, showErrorMessage, showSuccessMessage } from '../../../helpers/showToast';
+import { showError, showSuccessMessage } from '../../../helpers/showToast';
 
 import { showLoader } from '../../../actions/LoaderAction';
 import { addProduct } from '../../../services/product.service';
@@ -18,6 +19,8 @@ import { getALlColors } from '../../../services/color.service';
 import { getALlSizes } from '../../../services/size.service';
 
 import { format } from '../../../helpers/formatString';
+import { clearMessage, setMessage } from '../../../actions/MessageAction';
+import { showStoreErrorMessage } from '../../../helpers/setErrorMessage';
 
 const CreateProduct = () => {
   const [colors, setColors] = useState(null);
@@ -39,6 +42,7 @@ const CreateProduct = () => {
     saleToDate: new Date(),
   });
 
+  const { message } = useSelector((state) => state.messageReducer);
   const dispatch = useDispatch();
 
   const validationSchema = Yup.object().shape({
@@ -68,9 +72,11 @@ const CreateProduct = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
+    getValues,
   } = useForm({
+    mode: 'all',
     resolver: yupResolver(validationSchema),
   });
 
@@ -98,15 +104,15 @@ const CreateProduct = () => {
       toDate = new Date(toDate.getTime() - toDate.getTimezoneOffset() * 60000).toJSON();
 
       if (!priceSale || priceSale === '') {
-        showError(ERRORS.ERR_PRODUCT_PRICE_SALE_NOT_NULL);
+        dispatch(setMessage(ERRORS.ERR_PRODUCT_PRICE_SALE_NOT_NULL));
         return;
       }
       if (isNaN(parseFloat(priceSale))) {
-        showError(ERRORS.ERR_PRODUCT_PRICE_SALE_NUMBER);
+        dispatch(setMessage(ERRORS.ERR_PRODUCT_PRICE_SALE_NUMBER));
         return;
       }
       if (parseFloat(priceSale) < 1000) {
-        showError(ERRORS.ERR_PRODUCT_PRICE_SALE_MIN);
+        dispatch(setMessage(ERRORS.ERR_PRODUCT_PRICE_SALE_MIN));
         return;
       }
     } else {
@@ -129,7 +135,7 @@ const CreateProduct = () => {
     }
 
     if (productColorSizes.length === 0) {
-      showError(ERRORS.ERR_PRODUCT_COLORS_NOT_EMPTY);
+      dispatch(setMessage(ERRORS.ERR_PRODUCT_COLORS_NOT_EMPTY));
       return;
     }
 
@@ -158,6 +164,7 @@ const CreateProduct = () => {
           saleFromDate: new Date(),
           saleToDate: new Date(),
         });
+        dispatch(clearMessage());
       })
       .catch((error) => {
         var code =
@@ -169,7 +176,8 @@ const CreateProduct = () => {
         } else {
           showId = name;
         }
-        showErrorMessage(error, showId, dispatch);
+
+        showStoreErrorMessage(error, showId, dispatch);
       });
   };
 
@@ -282,6 +290,9 @@ const CreateProduct = () => {
               className='mb-0 grid-cols-3 inline-grid gap-0 space-y-6 lg:mr-16'
               onSubmit={handleSubmit(handleCreateProduct)}
             >
+              {message && message !== ERRORS.ERR_PRODUCT_COLORS_NOT_EMPTY && (
+                <p className='error-message col-span-3'>{message}</p>
+              )}
               <div className='flex items-center'>
                 <label htmlFor='name' className='block text-base font-medium text-gray-700'>
                   Product name <span className='text-red-500'>*</span>
@@ -295,6 +306,7 @@ const CreateProduct = () => {
                     name='name'
                     id='name'
                     {...register('name')}
+                    defaultValue={''}
                   />
                   <p className='error-message'>{errors.name?.message}</p>
                 </div>
@@ -312,6 +324,7 @@ const CreateProduct = () => {
                     name='price'
                     id='price'
                     {...register('price')}
+                    defaultValue={''}
                   />
                   <p className='error-message'>{errors.price?.message}</p>
                 </div>
@@ -331,6 +344,7 @@ const CreateProduct = () => {
                     name='shortDesc'
                     id='shortDesc'
                     {...register('shortDesc')}
+                    defaultValue={''}
                   />
                   <p className='error-message'>{errors.shortDesc?.message}</p>
                 </div>
@@ -350,6 +364,7 @@ const CreateProduct = () => {
                     id='longDesc'
                     className='resize-none'
                     {...register('longDesc')}
+                    defaultValue={''}
                   />
                 </div>
               </div>
@@ -366,6 +381,7 @@ const CreateProduct = () => {
                     name='material'
                     id='material'
                     {...register('material')}
+                    defaultValue={''}
                   />
                   <p className='error-message'>{errors.material?.message}</p>
                 </div>
@@ -383,6 +399,7 @@ const CreateProduct = () => {
                     name='handling'
                     id='handling'
                     {...register('handling')}
+                    defaultValue={''}
                   />
                   <p className='error-message'>{errors.handling?.message}</p>
                 </div>
@@ -405,6 +422,7 @@ const CreateProduct = () => {
                       sale: !sales.sale,
                     });
                   }}
+                  defaultChecked={false}
                 />
               </div>
               {sales.sale === true && (
@@ -416,7 +434,7 @@ const CreateProduct = () => {
                   </div>
                   <div className='flex items-center col-span-2 w-2/3'>
                     <div>
-                      <input type='text' name='priceSale' id='priceSale' {...register('priceSale')} />
+                      <input type='text' name='priceSale' id='priceSale' {...register('priceSale')} defaultValue={''} />
                     </div>
                   </div>
                   <div className='flex items-center'>
@@ -458,6 +476,7 @@ const CreateProduct = () => {
                             id='saleFromDate'
                             {...register('saleFromDate')}
                             value={sales.saleFromDate}
+                            defaultValue={sales.saleFromDate}
                           />
                         </div>
                       </Tippy>{' '}
@@ -497,6 +516,7 @@ const CreateProduct = () => {
                             id='saleToDate'
                             {...register('saleToDate')}
                             value={sales.saleToDate}
+                            defaultValue={sales.saleToDate}
                           />
                         </div>
                       </Tippy>{' '}
@@ -517,6 +537,7 @@ const CreateProduct = () => {
                     name='categoryId'
                     id='categoryId'
                     {...register('categoryId')}
+                    defaultValue={''}
                   />
                   <p className='error-message'>{errors.categoryId?.message}</p>
                 </div>
@@ -534,6 +555,7 @@ const CreateProduct = () => {
                     name='brandId'
                     id='brandId'
                     {...register('brandId')}
+                    defaultValue={''}
                   />
                   <p className='error-message'>{errors.brandId?.message}</p>
                 </div>
@@ -542,7 +564,24 @@ const CreateProduct = () => {
               <div className='flex flex-row col-span-3'>
                 <button
                   type='submit'
-                  className='block bg-brand-dark hover:bg-brand-darker focus:bg-brand-darker text-white font-semibold rounded-lg px-4 py-3 mt-6'
+                  className={`block text-white font-semibold rounded-lg px-4 py-3 mt-6 ${
+                    !isDirty ||
+                    _.isEmpty(getValues()) ||
+                    getValues('price') === '' ||
+                    getValues('categoryId') === '' ||
+                    getValues('name') === '' ||
+                    getValues('brandId') === ''
+                      ? 'bg-gray-500 cursor-default'
+                      : 'bg-brand-dark hover:bg-brand-darker focus:bg-brand-darker'
+                  }`}
+                  disabled={
+                    !isDirty ||
+                    _.isEmpty(getValues()) ||
+                    getValues('name') === '' ||
+                    getValues('price') === '' ||
+                    getValues('categoryId') === '' ||
+                    getValues('brandId') === ''
+                  }
                 >
                   Create new
                 </button>
@@ -574,6 +613,7 @@ const CreateProduct = () => {
               </svg>{' '}
               COLOR AND SIZE
             </p>
+            {message && message === ERRORS.ERR_PRODUCT_COLORS_NOT_EMPTY && <p className='error-message'>{message}</p>}
             <div className='space-y-6 mt-3'>
               <div className='flex items-center'>
                 <p className='block text-base font-medium text-gray-700 mr-3'>Choose color:</p>

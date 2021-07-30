@@ -59,6 +59,9 @@ const TableAction = (props) => {
       deleteProduct(id).then(
         (res) => {
           showSuccessMessage(res, id, dispatch);
+          if (props.list && props.setList) {
+            props.setList(props.list.filter((item) => item.id !== id));
+          }
         },
         (error) => {
           showErrorMessage(error, id, dispatch);

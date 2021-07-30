@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -7,17 +7,20 @@ import Calendar from 'react-calendar';
 import Tippy from '@tippyjs/react';
 import dayjs from 'dayjs';
 import Select from 'react-select';
+import _ from 'lodash';
 
 import ERRORS from '../../../constants/Errors';
 
 import { hideLoader, showLoader } from '../../../actions/LoaderAction';
 
-import { showError, showErrorMessage, showSuccessMessage } from '../../../helpers/showToast';
+import { showError, showSuccessMessage } from '../../../helpers/showToast';
 import { format } from '../../../helpers/formatString';
 
 import { getProductDetail, updateProduct } from '../../../services/product.service';
 import { getALlColors } from '../../../services/color.service';
 import { getALlSizes } from '../../../services/size.service';
+import { clearMessage, setMessage } from '../../../actions/MessageAction';
+import { showStoreErrorMessage } from '../../../helpers/setErrorMessage';
 
 const ProductDetail = (props) => {
   const { id } = props.match.params;
@@ -35,6 +38,8 @@ const ProductDetail = (props) => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [allowChangeColor, setAllowChangeColor] = useState(true);
   const [quantity, setQuantity] = useState(0);
+
+  const { message } = useSelector((state) => state.messageReducer);
 
   const dispatch = useDispatch();
 
@@ -62,9 +67,11 @@ const ProductDetail = (props) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
+    getValues,
   } = useForm({
+    mode: 'all',
     resolver: yupResolver(validationSchema),
   });
 
@@ -169,7 +176,6 @@ const ProductDetail = (props) => {
     handling,
     sale,
     priceSale,
-    deleted,
     categoryId,
     brandId,
   }) => {
@@ -184,15 +190,15 @@ const ProductDetail = (props) => {
       toDate = new Date(toDate.getTime() - toDate.getTimezoneOffset() * 60000).toJSON();
 
       if (!priceSale || priceSale === '') {
-        showError(ERRORS.ERR_PRODUCT_PRICE_SALE_NOT_NULL);
+        dispatch(setMessage(ERRORS.ERR_PRODUCT_PRICE_SALE_NOT_NULL));
         return;
       }
       if (isNaN(parseFloat(priceSale))) {
-        showError(ERRORS.ERR_PRODUCT_PRICE_SALE_NUMBER);
+        dispatch(setMessage(ERRORS.ERR_PRODUCT_PRICE_SALE_NUMBER));
         return;
       }
       if (parseFloat(priceSale) < 1000) {
-        showError(ERRORS.ERR_PRODUCT_PRICE_SALE_MIN);
+        dispatch(setMessage(ERRORS.ERR_PRODUCT_PRICE_SALE_MIN));
         return;
       }
     } else {
@@ -214,6 +220,11 @@ const ProductDetail = (props) => {
       });
     }
 
+    if (productColorSizes.length === 0) {
+      dispatch(setMessage(ERRORS.ERR_PRODUCT_COLORS_NOT_EMPTY));
+      return;
+    }
+
     dispatch(showLoader());
 
     updateProduct(
@@ -228,7 +239,6 @@ const ProductDetail = (props) => {
       priceSale,
       fromDate,
       toDate,
-      deleted,
       productColorSizes,
       categoryId,
       brandId
@@ -238,18 +248,21 @@ const ProductDetail = (props) => {
         showSuccessMessage(res, id, dispatch);
         reset();
         dispatch(hideLoader());
+        dispatch(clearMessage());
       })
       .catch((error) => {
         const code =
           (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+
         var showId = null;
+
         if (code.includes('CATEGORY')) {
           showId = categoryId;
         } else {
           showId = id;
         }
-        showErrorMessage(error, showId, dispatch);
-        dispatch(hideLoader());
+
+        showStoreErrorMessage(error, showId, dispatch);
       });
   };
 
@@ -333,6 +346,9 @@ const ProductDetail = (props) => {
                 className='mb-0 grid-cols-3 inline-grid gap-0 space-y-6 lg:mr-16'
                 onSubmit={handleSubmit(handleSaveChange)}
               >
+                {message && message !== ERRORS.ERR_PRODUCT_COLORS_NOT_EMPTY && (
+                  <p className='error-message col-span-3'>{message}</p>
+                )}
                 <div className='flex items-center'>
                   <label htmlFor='id' className='block text-base font-medium text-gray-700'>
                     ID
@@ -582,22 +598,6 @@ const ProductDetail = (props) => {
                     </div>
                   </>
                 )}
-
-                <div className='flex items-center'>
-                  <label htmlFor='deleted' className='block text-base font-medium text-gray-700'>
-                    Is deleted?
-                  </label>
-                </div>
-                <div className='flex items-center col-span-2'>
-                  <input
-                    type='checkbox'
-                    id='deleted'
-                    name='deleted'
-                    className={`form-checkbox `}
-                    {...register('deleted')}
-                    defaultChecked={details.deleted}
-                  />
-                </div>
                 <div className='flex items-center'>
                   <label htmlFor='categoryId' className='block text-base font-medium text-gray-700'>
                     Category Id <span className='text-red-500'>*</span>
@@ -638,7 +638,24 @@ const ProductDetail = (props) => {
                 <div className='flex flex-row col-span-3'>
                   <button
                     type='submit'
-                    className='block bg-brand-dark hover:bg-brand-darker focus:bg-brand-darker text-white font-semibold rounded-lg px-4 py-3 mt-6'
+                    className={`block text-white font-semibold rounded-lg px-4 py-3 mt-6 ${
+                      !isDirty ||
+                      _.isEmpty(getValues()) ||
+                      getValues('price') === '' ||
+                      getValues('categoryId') === '' ||
+                      getValues('name') === '' ||
+                      getValues('brandId') === ''
+                        ? 'bg-gray-500 cursor-default'
+                        : 'bg-brand-dark hover:bg-brand-darker focus:bg-brand-darker'
+                    }`}
+                    disabled={
+                      !isDirty ||
+                      _.isEmpty(getValues()) ||
+                      getValues('name') === '' ||
+                      getValues('price') === '' ||
+                      getValues('categoryId') === '' ||
+                      getValues('brandId') === ''
+                    }
                   >
                     Save change
                   </button>
@@ -670,6 +687,7 @@ const ProductDetail = (props) => {
                 </svg>{' '}
                 COLOR AND SIZE
               </p>
+              {message && message === ERRORS.ERR_PRODUCT_COLORS_NOT_EMPTY && <p className='error-message'>{message}</p>}
               <div className='space-y-6 mt-3'>
                 <div className='flex items-center'>
                   <p className='block text-base font-medium text-gray-700 mr-3'>Choose color:</p>

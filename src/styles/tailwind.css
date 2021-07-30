@@ -50,11 +50,11 @@
   }
 
   .table-header {
-    @apply py-2 px-3 sticky top-0 border-b border-gray-200 bg-brand-light z-20;
+    @apply py-2 px-3 sticky border-b border-gray-200 bg-brand-light z-20;
   }
 
   .table-header-label {
-    @apply text-white inline-flex justify-between items-center;
+    @apply text-white;
   }
 
   .table-row-custom {
@@ -62,7 +62,7 @@
   }
 
   .table-row-content {
-    @apply text-gray-700 p-3 flex items-center;
+    @apply text-gray-700 py-3 flex items-center;
   }
 
   .btn-dash-main {

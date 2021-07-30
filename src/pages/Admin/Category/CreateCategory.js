@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import _ from 'lodash';
 
-import { showLoader } from '../../../actions/LoaderAction';
+import { hideLoader, showLoader } from '../../../actions/LoaderAction';
 
 import ERRORS from '../../../constants/Errors';
 
-import { showError, showErrorMessage, showSuccessMessage } from '../../../helpers/showToast';
+import { showSuccessMessage } from '../../../helpers/showToast';
 import { createCategory, createCategoryParent } from '../../../services/category.service';
+import { showStoreErrorMessage } from '../../../helpers/setErrorMessage';
+import { clearMessage, setMessage } from '../../../actions/MessageAction';
 
 const CreateCategory = () => {
   const [isParent, setIsParent] = useState(false);
 
+  const { message } = useSelector((state) => state.messageReducer);
   const dispatch = useDispatch();
 
   const validationSchema = Yup.object().shape({
@@ -23,10 +27,12 @@ const CreateCategory = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     setValue,
     reset,
+    getValues,
   } = useForm({
+    mode: 'all',
     resolver: yupResolver(validationSchema),
   });
 
@@ -37,31 +43,38 @@ const CreateCategory = () => {
       createCategoryParent(name)
         .then((res) => {
           showSuccessMessage(res, name, dispatch);
+          dispatch(clearMessage());
           reset();
         })
         .catch((error) => {
-          showErrorMessage(error, name, dispatch);
+          showStoreErrorMessage(error, name, dispatch);
         });
     } else {
       if (!parentId) {
-        showError(ERRORS.ERR_PARENT_ID_NOT_NULL);
+        dispatch(setMessage(ERRORS.ERR_PARENT_ID_NOT_NULL));
+        dispatch(hideLoader());
         return;
       }
 
       createCategory(name, parentId)
         .then((res) => {
           showSuccessMessage(res, name, dispatch);
+          dispatch(clearMessage());
+
           reset();
         })
         .catch((error) => {
           const code =
             (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
 
+          var showId = '';
           if (code.includes('PARENT')) {
-            showErrorMessage(error, parentId, dispatch);
+            showId = parentId;
           } else {
-            showErrorMessage(error, name, dispatch);
+            showId = name;
           }
+
+          showStoreErrorMessage(error, showId, dispatch);
         });
     }
   };
@@ -85,6 +98,7 @@ const CreateCategory = () => {
             className='mb-0 grid-cols-2 inline-grid gap-0 space-y-6 lg:mr-16'
             onSubmit={handleSubmit(handleCreateNew)}
           >
+            {message && <p className='error-message col-span-2'>{message}</p>}
             <div className='flex items-center'>
               <label htmlFor='name' className='block text-sm font-medium text-gray-700 '>
                 Category name <span className='text-red-500'>*</span>
@@ -138,7 +152,12 @@ const CreateCategory = () => {
             <div className='flex flex-row'>
               <button
                 type='submit'
-                className='block bg-brand-dark hover:bg-brand-darker focus:bg-brand-darker text-white font-semibold rounded-lg px-4 py-3 mt-6'
+                className={`block text-white font-semibold rounded-lg px-4 py-3 mt-6 ${
+                  !isDirty || _.isEmpty(getValues()) || getValues('name') === ''
+                    ? 'bg-gray-500 cursor-default'
+                    : 'bg-brand-dark hover:bg-brand-darker focus:bg-brand-darker'
+                }`}
+                disabled={!isDirty || _.isEmpty(getValues()) || getValues('name') === ''}
               >
                 Create new
               </button>

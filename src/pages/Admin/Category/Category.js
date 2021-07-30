@@ -9,15 +9,22 @@ import TableWrapper from '../../../components/Table/TableWrapper';
 import { pageSizes, sortByName } from '../../../data/categoryData';
 
 import {
+  countByName,
+  countByParentAndName,
   countParents,
-  countParentsByName,
+  getAllParentCategories,
+  getCategoryParent,
   getParentCategories,
   searchByName,
+  searchByParentAndName,
 } from '../../../services/category.service';
 
 const headers = (
   <>
     <th className='table-header'>
+      <label className='table-header-label'>Label</label>
+    </th>
+    <th className='table-header col-span-2'>
       <label className='table-header-label'>ID</label>
     </th>
     <th className='table-header'>
@@ -45,44 +52,117 @@ const Category = () => {
   const [searchedCategories, setSearchedCategories] = useState(null);
   const [searchedName, setSearchedName] = useState('');
 
+  const [subCategories, setSubCategories] = useState(null);
+
+  const [filters, setFilters] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState(null);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (!searchedName || searchedName === '') {
-      getParentCategories(pageNum, pageSize, sortBy).then(
-        (res) => {
-          setParentCategories(res.data.data);
-        },
-        (error) => {
-          const message =
-            (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+      if (!selectedFilter || selectedFilter?.name === 'ALL') {
+        getParentCategories(pageNum, pageSize, sortBy).then(
+          (res) => {
+            setParentCategories(res.data.data);
+          },
+          (error) => {
+            const message =
+              (error.response && error.response.data && error.response.data.message) ||
+              error.message ||
+              error.toString();
 
-          console.log(message);
-        }
-      );
+            console.log(message);
+          }
+        );
+      } else if (selectedFilter) {
+        getCategoryParent(selectedFilter.id).then(
+          (res) => {
+            setParentCategories([res.data.data]);
+          },
+          (error) => {
+            const message =
+              (error.response && error.response.data && error.response.data.message) ||
+              error.message ||
+              error.toString();
+
+            console.log(message);
+          }
+        );
+      }
     } else {
-      searchByName(pageNum, pageSize, sortBy, searchedName).then((res) => {
-        setParentCategories(null);
-        setSearchedCategories(res.data.data);
-      });
+      if (!selectedFilter || selectedFilter?.name === 'ALL') {
+        searchByName(pageNum, pageSize, sortBy, searchedName).then((res) => {
+          setParentCategories(null);
+          setSearchedCategories(res.data.data);
+        });
+      } else if (selectedFilter) {
+        searchByParentAndName(selectedFilter.id, pageNum, pageSize, sortBy, searchedName).then((res) => {
+          setParentCategories(null);
+          setSearchedCategories(res.data.data);
+        });
+      }
     }
-  }, [dispatch, pageNum, pageSize, searchedName, sortBy]);
+  }, [dispatch, pageNum, pageSize, searchedName, selectedFilter, sortBy]);
 
   useEffect(() => {
     if (pageSize) {
       if (!searchedCategories && parentCategories) {
-        countParents().then((res) => {
-          const pages = _.ceil(res.data.data / pageSize);
-          setTotalPage(pages >= 1 ? pages : 1);
-        });
+        if (!selectedFilter || selectedFilter?.name === 'ALL') {
+          countParents().then((res) => {
+            const pages = _.ceil(res.data.data / pageSize);
+            setTotalPage(pages >= 1 ? pages : 1);
+          });
+        } else if (selectedFilter) {
+          setTotalPage(1);
+        }
       } else if (searchedCategories) {
-        countParentsByName(searchedName).then((res) => {
-          const pages = _.ceil(res.data.data / pageSize);
-          setTotalPage(pages >= 1 ? pages : 1);
-        });
+        if (!selectedFilter || selectedFilter?.name === 'ALL') {
+          countByName(searchedName).then((res) => {
+            const pages = _.ceil(res.data.data / pageSize);
+            setTotalPage(pages >= 1 ? pages : 1);
+          });
+        } else if (selectedFilter) {
+          countByParentAndName(selectedFilter.id, searchedName).then((res) => {
+            const pages = _.ceil(res.data.data / pageSize);
+            setTotalPage(pages >= 1 ? pages : 1);
+          });
+        }
       }
     }
-  }, [pageSize, parentCategories, searchedCategories, searchedName]);
+  }, [pageSize, parentCategories, searchedCategories, searchedName, selectedFilter]);
+
+  useEffect(() => {
+    if (selectedParent) {
+      setSubCategories(selectedParent.subCategories.filter((sub) => !sub.deleted));
+    }
+  }, [selectedParent]);
+
+  useEffect(() => {
+    getAllParentCategories()
+      .then((res) => {
+        var parentCategories = [
+          {
+            value: 'ALL',
+            label: 'ALL',
+          },
+        ];
+        parentCategories = parentCategories.concat(
+          res.data.data.map((cate) => {
+            return {
+              value: cate.id,
+              label: cate.name,
+            };
+          })
+        );
+        console.log(parentCategories);
+
+        setFilters(parentCategories);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  }, []);
 
   return (
     <div className='min-h-screen w-full px-4 pt-4'>
@@ -101,21 +181,39 @@ const Category = () => {
           headers={headers}
           rows={
             parentCategories
-              ? parentCategories.map((item, i) => (
+              ? parentCategories?.map((item, i) => (
                   <React.Fragment key={i}>
                     <tr
                       className={`text-left z-1 hover:bg-gray-100 cursor-pointer ${
-                        selectedParent === item.id ? 'bg-gray-100' : ''
-                      } ${item.deleted ? 'strikeout' : ''}`}
+                        selectedParent?.id === item.id ? 'bg-indigo-50 rounded-t-lg' : ''
+                      }`}
                       key={item.id + '_parent'}
                       onClick={() => {
-                        setSelectedParent(item.id);
+                        setSelectedParent(item);
                       }}
                     >
                       <td className='table-row-custom'>
+                        <span className='table-row-content'>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            className='h-4 w-4'
+                            fill='none'
+                            viewBox='0 0 24 24'
+                            stroke='currentColor'
+                          >
+                            <path
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                              strokeWidth={2}
+                              d='M7 20l4-16m2 16l4-16M6 9h14M4 15h14'
+                            />
+                          </svg>
+                        </span>
+                      </td>
+                      <td className='table-row-custom col-span-2'>
                         <span
                           className={`table-row-content ${
-                            selectedParent === item.id && 'text-brand-dark font-semibold'
+                            selectedParent?.id === item.id && 'text-brand-dark font-semibold'
                           }`}
                         >
                           {item.id}
@@ -124,7 +222,7 @@ const Category = () => {
                       <td className='table-row-custom'>
                         <span
                           className={`table-row-content ${
-                            selectedParent === item.id && 'text-brand-dark font-semibold'
+                            selectedParent?.id === item.id && 'text-brand-dark font-semibold'
                           }`}
                         >
                           {item.name}
@@ -133,7 +231,7 @@ const Category = () => {
                       <td className='table-row-custom'>
                         <span
                           className={`table-row-content ${
-                            selectedParent === item.id && 'text-brand-dark font-semibold'
+                            selectedParent?.id === item.id && 'text-brand-dark font-semibold'
                           }`}
                         >
                           N/A
@@ -151,15 +249,15 @@ const Category = () => {
                       </td>
                     </tr>
 
-                    {item.subCategories &&
-                      item.subCategories.map((sub) => (
+                    {subCategories &&
+                      subCategories.map((sub, index) => (
                         <Transition
                           as='tr'
                           className={`text-left hover:bg-gray-100 ${
-                            selectedParent === item.id ? 'shadow-lg  rounded-lg mt-0' : 'mb-48'
-                          } ${sub.deleted ? 'strikeout' : ''}`}
+                            subCategories.length - 1 === index ? 'shadow-lg rounded-lg mt-0' : 'mb-48'
+                          }`}
                           key={sub.id + '_sub'}
-                          show={selectedParent === item.id}
+                          show={selectedParent?.id === item.id}
                           enter='transition-all duration-300'
                           enterFrom='mb-48'
                           enterTo='mt-0'
@@ -168,8 +266,9 @@ const Category = () => {
                           leaveTo='mb-48'
                         >
                           <td className='table-row-custom'>
-                            <span className='table-row-content'>{sub.id}</span>
+                            <span className='table-row-content'></span>
                           </td>
+                          <td className='table-row-custom col-span-2'>{sub.id}</td>
                           <td className='table-row-custom'>
                             <span className='table-row-content'>{sub.name}</span>
                           </td>
@@ -191,7 +290,7 @@ const Category = () => {
                   </React.Fragment>
                 ))
               : searchedCategories &&
-                searchedCategories.map((item) => (
+                searchedCategories?.map((item) => (
                   <tr className='text-left hover:bg-gray-100 cursor-pointer' key={item.id + '_searched'}>
                     <td className='table-row-custom'>
                       <span className='table-row-content'>{item.id}</span>
@@ -216,17 +315,11 @@ const Category = () => {
                   </tr>
                 ))
           }
-          sorts={
-            sortByName &&
-            sortByName.map((item, index) => (
-              <option value={item.value} key={item.label}>
-                {item.label}
-              </option>
-            ))
-          }
+          sorts={sortByName}
+          filters={filters}
           sizes={
             pageSizes &&
-            pageSizes.map((item, index) => (
+            pageSizes?.map((item, index) => (
               <option value={item.value} key={item.label}>
                 {item.label}
               </option>
@@ -234,6 +327,7 @@ const Category = () => {
           }
           setPageSize={setPageSize}
           setSortBy={setSortBy}
+          setSelectedFilter={setSelectedFilter}
           pageNum={pageNum}
           setPageNum={setPageNum}
           totalPage={totalPage}

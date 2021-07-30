@@ -18,6 +18,8 @@ const ERRORS = {
   ERR_CATEGORY_DELETED_FAIL: 'Fail to delete category {}. Please try again.',
   ERR_CATEGORY_STILL_IN_PARENT:
     'There are some categories still owned by {}. Please delete all of them before delete {}.',
+  ERR_PRODUCT_STILL_IN_CATEGORY:
+    'There are some products still owned by {}. Please delete all of them before delete {}.',
   ERR_CATEGORY_PARENT_DELETED_FAIL: 'Fail to delete category parent {}. Please try again.',
   ERR_CATEGORY_PARENT_ALREADY_TAKEN: 'Category parent {} is already taken.',
   ERR_CATEGORY_ALREADY_TAKEN: 'Category {} is already taken.',
@@ -63,6 +65,7 @@ const ERRORS = {
   ERR_PRODUCT_PRICE_SALE_MIN: 'Price sale must be qual or greater than 1000.',
   ERR_PRODUCT_PRICE_SALE_NUMBER: 'Price sale must be number',
   ERR_PRODUCT_COLORS_NOT_EMPTY: 'Please provide color and its sizes for this product',
+  ERR_PRODUCT_ADDED_TO_PARENT: 'Fail to add product to category parent, please try again with category child.',
   ERR_PRODUCT_NOT_FOUND: 'Product {} is not found.',
   ERR_PRODUCT_ALREADY_TAKEN: 'Product {} is already taken.',
   ERR_NOT_EXIST_TWO_SAME_COLORS: 'Cannot exist two same colors in the images list.',

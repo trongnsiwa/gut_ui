@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { Link, Redirect } from 'react-router-dom';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import _ from 'lodash';
 
 import { hideLoader, showLoader } from '../actions/LoaderAction';
 import * as Actions from '../actions/AuthAction';
@@ -44,11 +45,15 @@ const Signup = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
+    getValues,
   } = useForm({
+    mode: 'all',
     resolver: yupResolver(validationSchema),
   });
+
+  console.log(getValues());
 
   const handleRegister = ({ email, password, confirm, firstname, lastname }) => {
     dispatch(showLoader());
@@ -103,6 +108,7 @@ const Signup = () => {
                         id='email'
                         placeholder='xxx@gmail.com'
                         {...register('email')}
+                        defaultValue={''}
                       />
                       <p className='error-message'>{errors.email?.message}</p>
                     </div>
@@ -118,6 +124,7 @@ const Signup = () => {
                         name='password'
                         id='password'
                         {...register('password')}
+                        defaultValue={''}
                       />
                       <p className='error-message'>{errors.password?.message}</p>
                     </div>
@@ -133,6 +140,7 @@ const Signup = () => {
                         name='confirm'
                         id='confirm'
                         {...register('confirm')}
+                        defaultValue={''}
                       />
                       <p className='error-message'>{errors.confirm?.message}</p>
                     </div>
@@ -149,6 +157,7 @@ const Signup = () => {
                           name='firstname'
                           id='firstname'
                           {...register('firstname')}
+                          defaultValue={''}
                         />
                         <p className='error-message'>{errors.firstname?.message}</p>
                       </div>
@@ -164,6 +173,7 @@ const Signup = () => {
                           name='lastname'
                           id='lastname'
                           {...register('lastname')}
+                          defaultValue={''}
                         />
                         <p className='error-message'>{errors.lastname?.message}</p>
                       </div>
@@ -191,7 +201,18 @@ const Signup = () => {
 
                   <button
                     type='submit'
-                    className='w-full block bg-brand hover:bg-brand-light focus:bg-brand-light text-white font-semibold rounded-lg px-4 py-3 mt-6'
+                    className={`w-full block  text-white font-semibold rounded-lg px-4 py-3 mt-6 ${
+                      !isDirty ||
+                      _.isEmpty(getValues()) ||
+                      Object.values(getValues()).findIndex((value) => value === '') > -1
+                        ? 'bg-gray-500 cursor-default'
+                        : 'bg-brand hover:bg-brand-light focus:bg-brand-light'
+                    }`}
+                    disabled={
+                      !isDirty ||
+                      _.isEmpty(getValues()) ||
+                      Object.values(getValues()).findIndex((value) => value === '') > -1
+                    }
                   >
                     Create new account
                   </button>
