@@ -50,3 +50,41 @@ export const pageSizes = [
     label: 'Show 100',
   },
 ];
+
+export const priceTypes = [
+  {
+    label: '~49K',
+    from: 1000,
+    to: 49000,
+  },
+  {
+    label: '50K~99K',
+    from: 50000,
+    to: 99000,
+  },
+  {
+    label: '100K-199K',
+    from: 100000,
+    to: 199000,
+  },
+  {
+    label: '200K-299K',
+    from: 200000,
+    to: 299000,
+  },
+  {
+    label: '300K~399K',
+    from: 300000,
+    to: 399000,
+  },
+  {
+    label: '400K-499K',
+    from: 400000,
+    to: 499000,
+  },
+  {
+    label: '500K~',
+    from: 500000,
+    to: null,
+  },
+];

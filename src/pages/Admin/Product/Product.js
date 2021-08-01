@@ -63,7 +63,7 @@ const Product = () => {
   useEffect(() => {
     if (!searchedName || searchedName === '') {
       if (!selectedFilter || selectedFilter?.name === 'ALL') {
-        getProducts(pageNum, pageSize, sortBy).then(
+        getProducts(pageNum, pageSize, sortBy, null, null, null, null, null).then(
           (res) => {
             setProducts(res.data.data);
           },
@@ -77,7 +77,7 @@ const Product = () => {
           }
         );
       } else if (selectedFilter) {
-        getProductsByCategory(selectedFilter.id, pageNum, pageSize, sortBy).then(
+        getProductsByCategory(selectedFilter.id, pageNum, pageSize, sortBy, null, null, null, null, null).then(
           (res) => {
             setProducts(res.data.data);
           },
@@ -93,11 +93,22 @@ const Product = () => {
       }
     } else {
       if (!selectedFilter || selectedFilter?.name === 'ALL') {
-        searchProductsByName(pageNum, pageSize, sortBy, searchedName).then((res) => {
+        searchProductsByName(pageNum, pageSize, sortBy, searchedName, null, null, null, null, null).then((res) => {
           setProducts(res.data.data);
         });
       } else if (selectedFilter) {
-        searchProductsByCategoryAndName(selectedFilter.id, pageNum, pageSize, sortBy, searchedName).then((res) => {
+        searchProductsByCategoryAndName(
+          selectedFilter.id,
+          pageNum,
+          pageSize,
+          sortBy,
+          searchedName,
+          null,
+          null,
+          null,
+          null,
+          null
+        ).then((res) => {
           setProducts(res.data.data);
         });
       }
@@ -108,24 +119,24 @@ const Product = () => {
     if (pageSize) {
       if (!searchedName || searchedName === '') {
         if (!selectedFilter || selectedFilter?.name === 'ALL') {
-          countProducts().then((res) => {
+          countProducts(null, null, null, null, null).then((res) => {
             const pages = _.ceil(res.data.data / pageSize);
             setTotalPage(pages >= 1 ? pages : 1);
           });
         } else if (selectedFilter) {
-          countProductsByCategory(selectedFilter.id).then((res) => {
+          countProductsByCategory(selectedFilter.id, null, null, null, null, null).then((res) => {
             const pages = _.ceil(res.data.data / pageSize);
             setTotalPage(pages >= 1 ? pages : 1);
           });
         }
       } else {
         if (!selectedFilter || selectedFilter?.name === 'ALL') {
-          countProductsByName(searchedName).then((res) => {
+          countProductsByName(searchedName, null, null, null, null, null).then((res) => {
             const pages = _.ceil(res.data.data / pageSize);
             setTotalPage(pages >= 1 ? pages : 1);
           });
         } else if (selectedFilter) {
-          countProductsByCategoryAndName(selectedFilter.id, searchedName).then((res) => {
+          countProductsByCategoryAndName(selectedFilter.id, searchedName, null, null, null, null, null).then((res) => {
             const pages = _.ceil(res.data.data / pageSize);
             setTotalPage(pages >= 1 ? pages : 1);
           });

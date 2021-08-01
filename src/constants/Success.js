@@ -14,6 +14,7 @@ const SUCCESS = {
   PRODUCT_UPDATED_SUCCESS: 'Update product {} successful.',
   PRODUCT_IMAGES_DELETED_SUCCESS: 'Remove images from product {} successful.',
   PRODUCT_IMAGES_UPDATED_SUCCESS: 'Update images to product {} successful.',
+  PRODUCT_REVIEW_ADDED_SUCCESS: 'Post review to product successful.',
   SIZE_ADD_TO_COLOR_SUCCESS: 'Add size {} to color {} successful.',
 };
 

@@ -14,15 +14,16 @@ import { hideLoader, showLoader } from '../../actions/LoaderAction';
 import ERRORS from '../../constants/Errors';
 import { Role } from '../../constants/Role';
 
-import { showError } from '../../helpers/showToast';
+import { showError, showSuccessMessage } from '../../helpers/showToast';
 import { format } from '../../helpers/formatString';
 import { formatCash } from '../../helpers/formatCash';
 
-import { getProductDetail } from '../../services/product.service';
+import { addUserReviewToProduct, getProductDetail } from '../../services/product.service';
 
 import RatingStar from '../../components/ReviewForm/RatingStar';
 import ReviewForm from '../../components/ReviewForm/ReviewForm';
-import { setMessage } from '../../actions/MessageAction';
+import { clearMessage, setMessage } from '../../actions/MessageAction';
+import { showStoreErrorMessage } from '../../helpers/setErrorMessage';
 
 SwiperCore.use([Navigation, Pagination, Thumbs]);
 
@@ -53,8 +54,8 @@ const ItemDetail = (props) => {
     window.location.reload();
   }
   const validationSchema = Yup.object().shape({
-    title: Yup.string().required('Title is required.'),
-    comment: Yup.string().required('Please write your comment here to post.'),
+    title: Yup.string().required(ERRORS.ERR_REVIEW_TITLE_NOT_BLANK),
+    comment: Yup.string().required(ERRORS.ERR_REVIEW_COMMENT_NOT_BLANK),
   });
 
   const {
@@ -86,6 +87,12 @@ const ItemDetail = (props) => {
         props.history.push('/');
       });
   }, [dispatch, id, props.history]);
+
+  useEffect(() => {
+    if (details) {
+      setReviews(details.reviews);
+    }
+  }, [details]);
 
   useEffect(() => {
     const productImages = [];
@@ -187,29 +194,39 @@ const ItemDetail = (props) => {
 
   const handlePostComment = ({ title, comment }) => {
     if (!currentUser) {
-      dispatch(setMessage('Please login to post review!'));
+      dispatch(setMessage(ERRORS.ERR_LOGIN_REQUIRED));
       return;
     }
 
     if (!rating) {
-      dispatch(setMessage('Please rating before review this product!'));
+      dispatch(setMessage(ERRORS.ERR_REVIEW_RATING_NOT_NULL));
       return;
     }
 
-    setReviews([
-      ...reviews,
-      {
-        productId: id,
-        userId: currentUser?.id,
-        userName: currentUser?.fullname,
-        title,
-        comment,
-        rating,
-        datetime: new Date(),
-      },
-    ]);
-    setRating(null);
-    reset();
+    dispatch(showLoader());
+
+    addUserReviewToProduct(parseInt(id), currentUser?.id, title, comment, parseInt(rating))
+      .then((res) => {
+        setReviews(res.data.data.reviews);
+        setRating(null);
+        reset();
+        dispatch(clearMessage());
+        dispatch(hideLoader());
+      })
+      .catch((error) => {
+        var code =
+          (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+        var showId = null;
+
+        if (code.includes('USER')) {
+          showId = currentUser?.fullname;
+        } else {
+          showId = id;
+        }
+
+        showStoreErrorMessage(error, showId, dispatch);
+        dispatch(clearMessage());
+      });
   };
 
   return (

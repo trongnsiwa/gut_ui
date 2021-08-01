@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -12,7 +12,7 @@ import {
 } from '@heroicons/react/outline';
 import _ from 'lodash';
 
-import { sortsForUser } from '../../data/productData';
+import { priceTypes, sortsForUser } from '../../data/productData';
 
 import { capitalizeFirstLetter, lowerCaseString } from '../../helpers/formatString';
 
@@ -34,6 +34,14 @@ import { Role } from '../../constants/Role';
 const UserCategory = (props) => {
   const { slug, parent } = props.match.params;
   const { id, parentId } = props.location.state;
+
+  const location = useLocation();
+  let query = new URLSearchParams(location.search);
+  const saleTypes = query.get('saleTypes');
+  const colorIds = query.get('colorIds');
+  const sizeIds = query.get('sizeIds');
+  const fromPrice = query.get('fromPrice');
+  const toPrice = query.get('toPrice');
 
   const [parentCategories, setParentCategories] = useState(null);
   const [selectedParent, setSelectedParent] = useState(null);
@@ -103,7 +111,17 @@ const UserCategory = (props) => {
 
   useEffect(() => {
     if (!searchedName || searchedName === '') {
-      getProductsByCategory(id ? id : parentId, pageNum, pageSize, sortBy).then(
+      getProductsByCategory(
+        id ? id : parentId,
+        pageNum,
+        pageSize,
+        sortBy,
+        saleTypes,
+        colorIds,
+        sizeIds,
+        fromPrice,
+        toPrice
+      ).then(
         (res) => {
           setProducts(res.data.data);
         },
@@ -115,39 +133,66 @@ const UserCategory = (props) => {
         }
       );
     } else {
-      searchProductsByCategoryAndName(id ? id : parentId, pageNum, pageSize, sortBy, searchedName).then((res) => {
+      searchProductsByCategoryAndName(
+        id ? id : parentId,
+        pageNum,
+        pageSize,
+        sortBy,
+        searchedName,
+        saleTypes,
+        colorIds,
+        sizeIds,
+        fromPrice,
+        toPrice
+      ).then((res) => {
         setProducts(res.data.data);
       });
     }
-  }, [id, pageNum, pageSize, parentId, searchedName, sortBy]);
+  }, [colorIds, fromPrice, id, pageNum, pageSize, parentId, saleTypes, searchedName, sizeIds, sortBy, toPrice]);
 
   useEffect(() => {
     if (pageSize) {
       if (!searchedName || searchedName === '') {
-        countProductsByCategory(id ? id : parentId).then((res) => {
+        countProductsByCategory(id ? id : parentId, saleTypes, colorIds, sizeIds, fromPrice, toPrice).then((res) => {
           const pages = _.ceil(res.data.data / pageSize);
           setTotalPages(pages >= 1 ? pages : 1);
         });
       } else {
-        countProductsByCategoryAndName(id ? id : parentId, searchedName).then((res) => {
+        countProductsByCategoryAndName(
+          id ? id : parentId,
+          searchedName,
+          saleTypes,
+          colorIds,
+          sizeIds,
+          fromPrice,
+          toPrice
+        ).then((res) => {
           const pages = _.ceil(res.data.data / pageSize);
           setTotalPages(pages >= 1 ? pages : 1);
         });
       }
     }
-  }, [id, pageSize, parentId, searchedName]);
+  }, [colorIds, fromPrice, id, pageSize, parentId, saleTypes, searchedName, sizeIds, toPrice]);
 
   useEffect(() => {
     if (!searchedName || searchedName === '') {
-      countProductsByCategory(id ? id : parentId).then((res) => {
+      countProductsByCategory(id ? id : parentId, saleTypes, colorIds, sizeIds, fromPrice, toPrice).then((res) => {
         setTotalResults(res.data.data);
       });
     } else {
-      countProductsByCategoryAndName(id ? id : parentId, searchedName).then((res) => {
+      countProductsByCategoryAndName(
+        id ? id : parentId,
+        searchedName,
+        saleTypes,
+        colorIds,
+        sizeIds,
+        fromPrice,
+        toPrice
+      ).then((res) => {
         setTotalResults(res.data.data);
       });
     }
-  }, [id, parentId, searchedName]);
+  }, [colorIds, fromPrice, id, parentId, saleTypes, searchedName, sizeIds, toPrice]);
 
   useEffect(() => {
     if (totalPages) {
@@ -165,6 +210,126 @@ const UserCategory = (props) => {
     }
   }, [pageNum, pageNumbers]);
 
+  const removeFromQueryParam = (param, name, value) => {
+    const lastIndexOfName = param.lastIndexOf(name);
+    const indexOfValue = param.indexOf(value);
+
+    if (indexOfValue - 1 === lastIndexOfName) {
+      return param.replace(param.slice(indexOfValue, indexOfValue + value.length + 1), '');
+    }
+
+    return param.replace(param.slice(indexOfValue - 1, indexOfValue + value.length), '');
+  };
+
+  const filterSaleTypes = (e, isClear) => {
+    let search = '';
+    if (!isClear) {
+      if (!saleTypes) {
+        search = `${query.toString().length === 0 ? '?' : query.toString() + '&'}saleTypes=${lowerCaseString(
+          e.target.value
+        )}`;
+      } else {
+        query.set('saleTypes', saleTypes + ',' + lowerCaseString(e.target.value));
+        search = query.toString();
+      }
+    } else {
+      if (saleTypes.replace(lowerCaseString(e.target.value), '').length === 0) {
+        query.delete('saleTypes');
+        search = query.toString();
+      } else {
+        query.set('saleTypes', removeFromQueryParam(saleTypes, 'saleTypes', lowerCaseString(e.target.value)));
+        search = query.toString();
+      }
+    }
+
+    history.push({
+      pathname: location.pathname,
+      search: search,
+      state: location.state,
+    });
+  };
+
+  const filterColor = (e, isClear) => {
+    let search = '';
+    if (!isClear) {
+      if (!colorIds) {
+        search = `${query.toString().length === 0 ? '?' : query.toString() + '&'}colorIds=${e.target.value}`;
+      } else {
+        query.set('colorIds', colorIds + ',' + e.target.value);
+        search = query.toString();
+      }
+    } else {
+      if (colorIds.replace(e.target.value, '').length === 0) {
+        query.delete('colorIds');
+        search = query.toString();
+      } else {
+        query.set('colorIds', removeFromQueryParam(colorIds, 'colorIds', e.target.value));
+        search = query.toString();
+      }
+    }
+
+    history.push({
+      pathname: location.pathname,
+      search: search,
+      state: location.state,
+    });
+  };
+
+  const filterSize = (e, isClear) => {
+    let search = '';
+    if (!isClear) {
+      if (!sizeIds) {
+        search = `${query.toString().length === 0 ? '?' : query.toString() + '&'}sizeIds=${e.target.value}`;
+      } else {
+        query.set('sizeIds', sizeIds + ',' + e.target.value);
+        search = query.toString();
+      }
+    } else {
+      if (sizeIds.replace(e.target.value, '').length === 0) {
+        query.delete('sizeIds');
+        search = query.toString();
+      } else {
+        query.set('sizeIds', removeFromQueryParam(sizeIds, 'sizeIds', e.target.value));
+        search = query.toString();
+      }
+    }
+
+    history.push({
+      pathname: location.pathname,
+      search: search,
+      state: location.state,
+    });
+  };
+
+  const filterPrice = (from, to, isClear) => {
+    let search = '';
+    if (!isClear) {
+      if (!fromPrice) {
+        search = `${query.toString().length === 0 ? '?' : query.toString() + '&'}fromPrice=${from}${
+          to ? '&toPrice=' + to : ''
+        }`;
+      } else {
+        query.set('fromPrice', from);
+        query.delete('toPrice');
+        if (to) {
+          query.set('toPrice', to);
+        }
+
+        search = query.toString();
+      }
+    } else {
+      query.delete('fromPrice');
+      query.delete('toPrice');
+      search = query.toString();
+    }
+
+    history.push({
+      pathname: location.pathname,
+      search: search,
+      state: location.state,
+    });
+  };
+
   return (
     <div className='my-10 h-full w-full px-6 lg:px-14 lg:mx-auto lg:container'>
       <nav className='text-gray-600 my-8' aria-label='Breadcrumb'>
@@ -179,6 +344,7 @@ const UserCategory = (props) => {
             <Link
               to={{
                 pathname: `/category/${parent}`,
+                search: location.search,
                 state: {
                   parentId,
                 },
@@ -197,6 +363,7 @@ const UserCategory = (props) => {
               <Link
                 to={{
                   pathname: `/category/${parent}/${slug}`,
+                  search: location.search,
                   state: {
                     id,
                     parentId,
@@ -232,6 +399,7 @@ const UserCategory = (props) => {
                           <Link
                             to={{
                               pathname: `/category/${parent.name.toString().toLowerCase()}`,
+                              search: location.search,
                               state: {
                                 parentId: parent.id,
                               },
@@ -274,6 +442,7 @@ const UserCategory = (props) => {
                                     pathname: `/category/${lowerCaseString(parent.name)}/${sub.name
                                       .toString()
                                       .toLowerCase()}`,
+                                    search: location.search,
                                     state: {
                                       id: sub.id,
                                       parentId: parent.id,
@@ -300,7 +469,20 @@ const UserCategory = (props) => {
               {[...Array.from(['New', 'Sale'])].map((type, index) => (
                 <div className='relative py-2' key={`type_${type}`}>
                   <label className='inline-flex flex-row items-center'>
-                    <input type='checkbox' value={type} className='w-4 h-4 md:w-5 md:h-5 cursor-pointer' />
+                    <input
+                      type='checkbox'
+                      value={type}
+                      className='w-4 h-4 md:w-5 md:h-5 cursor-pointer'
+                      defaultChecked={saleTypes && saleTypes.includes(lowerCaseString(type))}
+                      onChange={(e) => {
+                        if (saleTypes && saleTypes.includes(lowerCaseString(type))) {
+                          filterSaleTypes(e, true);
+                        } else {
+                          filterSaleTypes(e, false);
+                        }
+                        setPageNum(1);
+                      }}
+                    />
                     <span className='pl-3 text-sm md:text-base'>{type}</span>
                   </label>
                 </div>
@@ -318,14 +500,56 @@ const UserCategory = (props) => {
                   colors?.map(
                     (color, index) =>
                       index <= 11 && (
-                        <span
-                          className={`cursor-pointer text-sm box-border inline-flex justify-center items-center align-middle w-6 h-6 md:w-8 md:h-8 rounded-full hover:border-3 hover:border-black hover:shadow-lg hover:p-3
-                        }`}
+                        <label
+                          className='cursor-pointer w-6 h-6 md:w-8 md:h-8 rounded-full relative hover:border-3 hover:border-black hover:shadow-lg hover:p-3'
                           style={{
                             backgroundColor: `${color?.source}`,
                           }}
                           key={`color_${color.id}`}
-                        ></span>
+                        >
+                          <input
+                            type='checkbox'
+                            className='absolute opacity-0 w-0 h-0 cursor-pointer'
+                            value={color.id}
+                            onChange={(e) => {
+                              if (
+                                colorIds &&
+                                colorIds
+                                  .toString()
+                                  .split(',')
+                                  .map((x) => +x)
+                                  .indexOf(parseInt(color.id, 10)) >= 0
+                              ) {
+                                filterColor(e, true);
+                              } else {
+                                filterColor(e, false);
+                              }
+                              setPageNum(1);
+                            }}
+                          />
+                          <span
+                            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${
+                              colorIds
+                                ?.toString()
+                                .split(',')
+                                .map((x) => +x)
+                                .indexOf(parseInt(color.id, 10)) >= 0
+                                ? 'block'
+                                : 'hidden'
+                            }
+                          }`}
+                          >
+                            <svg
+                              xmlns='http://www.w3.org/2000/svg'
+                              className='h-6 w-6 text-gray-600'
+                              fill='none'
+                              viewBox='0 0 24 24'
+                              stroke='currentColor'
+                            >
+                              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M5 13l4 4L19 7' />
+                            </svg>
+                          </span>
+                        </label>
                       )
                   )}
               </div>
@@ -342,12 +566,42 @@ const UserCategory = (props) => {
                   sizes?.map(
                     (size, index) =>
                       index < 7 && (
-                        <span
-                          className={`mr-3 mb-1 cursor-pointer text-base box-border inline-flex justify-center items-center align-middle relative border border-solid border-gray-600 py-2 px-5 hover:bg-brand-dark hover:text-white`}
+                        <label
+                          className={`mr-3 mb-1 cursor-pointer text-base box-border inline-flex justify-center items-center align-middle relative border border-solid border-gray-600 p-5 hover:bg-brand-dark hover:text-white 
+                          ${
+                            sizeIds
+                              ?.toString()
+                              .split(',')
+                              .map((x) => +x)
+                              .indexOf(parseInt(size.id, 10)) >= 0
+                              ? 'bg-brand-dark text-white'
+                              : ''
+                          }
+                          `}
                           key={`size_${size.id}`}
                         >
-                          {size.name}
-                        </span>
+                          <input
+                            type='checkbox'
+                            className='absolute opacity-0 w-0 h-0 cursor-pointer'
+                            value={size.id}
+                            onChange={(e) => {
+                              if (
+                                sizeIds &&
+                                sizeIds
+                                  .toString()
+                                  .split(',')
+                                  .map((x) => +x)
+                                  .indexOf(parseInt(size.id, 10)) >= 0
+                              ) {
+                                filterSize(e, true);
+                              } else {
+                                filterSize(e, false);
+                              }
+                              setPageNum(1);
+                            }}
+                          />
+                          <span className='absolute '>{size.name}</span>
+                        </label>
                       )
                   )}
               </div>
@@ -359,16 +613,26 @@ const UserCategory = (props) => {
               <span className='font-semibold flex-grow pl-2 text-sm md:text-base'>price</span>
             </div>
             <div className='flex flex-col mt-3'>
-              {[...Array.from(['~49K', '50K~99K', '100K-199K', '200K-299K', '300K~399K', '400K~499K', '500K~'])].map(
-                (type, index) => (
-                  <div className='relative py-2' key={type}>
-                    <label className='inline-flex flex-row items-center'>
-                      <input type='checkbox' value={type} className='w-4 h-4 md:w-5 md:h-5 cursor-pointer' />
-                      <span className='pl-3 text-sm md:text-base'>{type}</span>
-                    </label>
-                  </div>
-                )
-              )}
+              {priceTypes.map((type, index) => (
+                <div className='relative py-2' key={`price${index}`}>
+                  <label className='inline-flex flex-row items-center'>
+                    <input
+                      type='checkbox'
+                      className='w-4 h-4 md:w-5 md:h-5 cursor-pointer'
+                      onChange={() => {
+                        if (parseInt(fromPrice) === type.from) {
+                          filterPrice(type.from, type.to, true);
+                        } else {
+                          filterPrice(type.from, type.to, false);
+                        }
+                        setPageNum(1);
+                      }}
+                      disabled={fromPrice && parseInt(fromPrice, 10) !== type.from ? true : false}
+                    />
+                    <span className='pl-3 text-sm md:text-base'>{type.label}</span>
+                  </label>
+                </div>
+              ))}
             </div>
           </div>
         </section>

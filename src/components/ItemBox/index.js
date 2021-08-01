@@ -68,13 +68,20 @@ const ItemBox = ({ item, parent, category }) => {
           <div className='text-sm text-center mb-3 text-gray-600 leading-5 h-6 font-normal overflow-hidden'>
             {item.name}
           </div>
-          <div>
+          <div className='mb-3'>
             <p
-              className='text-center mb-3 text-sm md:text-xl font-bold tracking-wide'
+              className='text-center text-sm md:text-xl font-bold tracking-wide'
               style={{ color: `${item.salePrice ? '#fe0000' : ''}` }}
             >
               {item.salePrice ? formatCash(item.salePrice) : formatCash(item.price)}
             </p>
+            <span
+              className={`text-sm text-gray-500 ${
+                item?.salePrice ? 'block' : 'hidden'
+              } whitespace-nowrap align-baseline line-through`}
+            >
+              {item && formatCash(item ? item?.price : '')}
+            </span>
           </div>
         </Link>
       </div>
