@@ -14,7 +14,7 @@ import { hideLoader, showLoader } from '../../actions/LoaderAction';
 import ERRORS from '../../constants/Errors';
 import { Role } from '../../constants/Role';
 
-import { showError, showSuccessMessage } from '../../helpers/showToast';
+import { showError, showErrorMessage, showSuccessMessage } from '../../helpers/showToast';
 import { format } from '../../helpers/formatString';
 import { formatCash } from '../../helpers/formatCash';
 
@@ -24,6 +24,7 @@ import RatingStar from '../../components/ReviewForm/RatingStar';
 import ReviewForm from '../../components/ReviewForm/ReviewForm';
 import { clearMessage, setMessage } from '../../actions/MessageAction';
 import { showStoreErrorMessage } from '../../helpers/setErrorMessage';
+import { addToCart } from '../../services/cart.service';
 
 SwiperCore.use([Navigation, Pagination, Thumbs]);
 
@@ -37,7 +38,7 @@ const ItemDetail = (props) => {
   const [colorSizes, setColorSizes] = useState(null);
   const [activeColor, setActiveColor] = useState(null);
   const [activeSize, setActiveSize] = useState(null);
-  const [selectedQuantity, setSelectedQuantity] = useState(null);
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(null);
   const [hover, setHover] = useState(null);
@@ -77,6 +78,7 @@ const ItemDetail = (props) => {
     getProductDetail(id)
       .then((res) => {
         setDetails(res.data.data);
+        console.log(res.data.data);
 
         dispatch(hideLoader());
       })
@@ -226,6 +228,51 @@ const ItemDetail = (props) => {
 
         showStoreErrorMessage(error, showId, dispatch);
         dispatch(clearMessage());
+      });
+  };
+
+  const handleAddToCart = () => {
+    var isValid = true;
+
+    if (!currentUser) {
+      showError(ERRORS.ERR_LOGIN_REQUIRED);
+      return;
+    }
+
+    if (!activeColor) {
+      showError(ERRORS.ERR_CART_COLOR_ID_NOT_NULL);
+      isValid = false;
+    } else if (activeColor && activeColor.colorId < 0) {
+      showError(ERRORS.ERR_CART_COLOR_ID_MIN);
+      isValid = false;
+    }
+
+    if (!activeSize) {
+      showError(ERRORS.ERR_CART_SIZE_ID_NOT_NULL);
+      isValid = false;
+    } else if (activeSize && activeSize.sizeId < 0) {
+      showError(ERRORS.ERR_CART_SIZE_ID_MIN);
+      isValid = false;
+    }
+
+    if (!selectedQuantity || (selectedQuantity && selectedQuantity < 1)) {
+      showError(ERRORS.ERR_CART_AMOUNT_MIN);
+      isValid = false;
+    }
+
+    if (!isValid) {
+      return;
+    }
+
+    dispatch(showLoader());
+
+    addToCart(currentUser?.id, id, activeColor.colorId, activeSize.sizeId, selectedQuantity)
+      .then((res) => {
+        showSuccessMessage(res, id, dispatch);
+        localStorage.setItem('cart', JSON.stringify(res.data.data));
+      })
+      .catch((err) => {
+        showErrorMessage(err, id, dispatch);
       });
   };
 
@@ -404,10 +451,9 @@ const ItemDetail = (props) => {
                     {activeColor &&
                       activeColor?.sizes?.map((size) => (
                         <span
-                          className={`mr-3 mb-2 cursor-pointer text-base box-border inline-flex justify-center items-center align-middle border border-solid border-gray-600 w-16 h-10 ${
+                          className={`mr-3 mb-2 cursor-pointer relative text-base box-border inline-flex justify-center items-center align-middle border border-solid border-gray-600 w-16 h-10 ${
                             activeSize?.sizeId === size.sizeId ? 'bg-brand-dark text-white' : ''
-                          }
-                          ${size.quantity === 0 ? 'line-through pointer-events-none' : ''}
+                          } ${size.quantity === 0 ? 'line-through pointer-events-none' : ''}
                           `}
                           onClick={() => setActiveSize(size)}
                           key={`size_${size.sizeId}`}
@@ -437,8 +483,12 @@ const ItemDetail = (props) => {
               </div>
               <div className='w-full mt-6'>
                 <button
+                  type='submit'
                   className='bg-brand text-lg text-white
                font-semibold w-full max-w-md p-5 rounded-2xl shadow-xl hover:bg-brand-dark'
+                  onClick={() => {
+                    handleAddToCart();
+                  }}
                 >
                   Add to Cart
                 </button>

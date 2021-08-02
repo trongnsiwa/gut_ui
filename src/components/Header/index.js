@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { Menu, Popover, Transition } from '@headlessui/react';
 import { ChevronDownIcon, ChevronRightIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
 
@@ -15,14 +15,18 @@ import { getAllParentCategories } from '../../services/category.service';
 import { Role } from '../../constants/Role';
 
 import { lowerCaseString } from '../../helpers/formatString';
+import { showError } from '../../helpers/showToast';
+import ERRORS from '../../constants/Errors';
 
 const Header = () => {
   const { user: currentUser } = useSelector((state) => state.authReducer);
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
 
   const [parentCategories, setParentCategories] = useState(null);
   const [selectedParent, setSelectedParent] = useState(null);
+  const cart = JSON.parse(localStorage.getItem('cart'));
 
   const buttonRef = useRef();
   const buttonSmallRef = useRef();
@@ -43,9 +47,17 @@ const Header = () => {
 
   const logOut = () => {
     dispatch(showLoader());
-
+    localStorage.removeItem('cart');
     dispatch(logout());
     history.push('/');
+  };
+
+  const handleRedirectCart = () => {
+    if (currentUser) {
+      history.push({ pathname: '/cart', state: { from: location } });
+    } else {
+      showError(ERRORS.ERR_LOGIN_REQUIRED);
+    }
   };
 
   return (
@@ -246,21 +258,26 @@ const Header = () => {
                     </Link>
                   </>
                 )}
-                <div className='text-gray-600 ml-3'>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    className='h-8 w-8 cursor-pointer'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    stroke='currentColor'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'
-                    />
-                  </svg>
+                <div className='text-gray-600 ml-3 relative'>
+                  <button onClick={handleRedirectCart}>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      className='h-8 w-8 cursor-pointer relative'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      stroke='currentColor'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        strokeWidth={1.2}
+                        d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'
+                      />
+                    </svg>
+                    <span className='rounded-full bg-brand text-white px-2 py-1 text-xs font-bold flex items-center absolute -top-2 -right-1'>
+                      {cart ? cart?.cartItems.reduce((acc, item) => acc + item.amount, 0) : 0}
+                    </span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -388,21 +405,26 @@ const Header = () => {
                               </p>
                             </div>
                           </Link>
-                          <div className='text-gray-700'>
-                            <svg
-                              xmlns='http://www.w3.org/2000/svg'
-                              className='h-8 w-8 cursor-pointer'
-                              fill='none'
-                              viewBox='0 0 24 24'
-                              stroke='currentColor'
-                            >
-                              <path
-                                strokeLinecap='round'
-                                strokeLinejoin='round'
-                                strokeWidth={2}
-                                d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'
-                              />
-                            </svg>
+                          <div className='text-gray-700 relative'>
+                            <button onClick={handleRedirectCart}>
+                              <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                className='h-8 w-8 cursor-pointer relative'
+                                fill='none'
+                                viewBox='0 0 24 24'
+                                stroke='currentColor'
+                              >
+                                <path
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  strokeWidth={1.2}
+                                  d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'
+                                />
+                              </svg>
+                              <span className='rounded-full bg-brand text-white px-2 py-1 text-xs font-bold flex items-center absolute -top-2 -right-1'>
+                                {cart ? cart?.cartItems.reduce((acc, item) => acc + item.amount, 0) : 0}
+                              </span>
+                            </button>
                           </div>
                         </div>
 

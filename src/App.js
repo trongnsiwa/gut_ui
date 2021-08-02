@@ -36,6 +36,7 @@ import ImageUpload from './pages/Admin/Product/ImageUpload';
 
 import UserCategory from './pages/NormalUser/UserCategory';
 import ItemDetail from './pages/NormalUser/ItemDetail';
+import Cart from './pages/NormalUser/Cart';
 
 function App() {
   const { user: currentUser } = useSelector((state) => state.authReducer);
@@ -132,6 +133,8 @@ function App() {
           <LayoutRoute exact path='/category/:parent/:slug' component={UserCategory} />
           <LayoutRoute exact path='/category/:parent' component={UserCategory} />
           <LayoutRoute exact path='/product/:id' component={ItemDetail} />
+
+          <PrivateLayoutRoute exact path='/cart' currentUser={currentUser} roles={[Role.USER]} component={Cart} />
 
           <LoginLayoutRoute component={NotFound} />
         </Switch>

@@ -9,10 +9,19 @@ import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 
 const UserLayout = ({ children }) => (
-  <div>
+  <div className='font-montse h-screen'>
     <Header />
-    <main>{children}</main>
-    <Footer />
+    <main
+      style={{
+        paddingTop: '80px',
+        backgroundImage: `url('https://ik.imagekit.io/tnyyngwxvx9/antoine-transon-3CIN7OxIABo-unsplash_o7KpvJvpn.jpg?updatedAt=1627830801050')`,
+        backgroundSize: 'cover',
+        backgroundPosition: '50% 50%',
+      }}
+    >
+      {children}
+      <Footer />
+    </main>
   </div>
 );
 

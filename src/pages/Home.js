@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 
-import { hideLoader, showLoader } from '../actions/LoaderAction';
+import { hideLoader } from '../actions/LoaderAction';
 import { getNewProducts, getSaleProducts } from '../services/home.service';
 
 import { Role } from '../constants/Role';
@@ -11,6 +11,7 @@ import { Role } from '../constants/Role';
 import ItemBox from '../components/ItemBox';
 
 import { formatCash } from '../helpers/formatCash';
+import { getUserCart } from '../services/cart.service';
 
 const Home = () => {
   const [saleProducts, setSaleProducts] = useState(null);
@@ -20,12 +21,22 @@ const Home = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
+  const cart = JSON.parse(localStorage.getItem('cart'));
+
   dispatch(hideLoader());
 
   if (currentUser && currentUser.roles?.includes(Role.ADMIN)) {
     history.push('/admin');
     window.location.reload();
   }
+
+  useEffect(() => {
+    if (!cart && currentUser && !currentUser.roles?.includes(Role.ADMIN)) {
+      getUserCart(currentUser?.id).then((res) => {
+        localStorage.setItem('cart', JSON.stringify(res.data.data));
+      });
+    }
+  }, [cart, currentUser]);
 
   useEffect(() => {
     if (!saleProducts) {
