@@ -92,7 +92,7 @@ const Header = () => {
                           } group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none`}
                           ref={buttonRef}
                         >
-                          <span className='text-lg font-semibold text-gray-700'>CATEGORY</span>
+                          <span className='text-lg font-semibold text-gray-700'>DANH MỤC</span>
                           <ChevronDownIcon
                             className={`${
                               open ? 'text-gray-600' : 'text-gray-400'
@@ -232,7 +232,7 @@ const Header = () => {
                                     />
                                   </svg>
                                   <div className='ml-2'>
-                                    <p className='text-sm font-medium'>Log out</p>
+                                    <p className='text-sm font-medium'>Đăng xuất</p>
                                   </div>
                                 </a>
                               )}
@@ -248,13 +248,13 @@ const Header = () => {
                       to='/signin'
                       className='whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900'
                     >
-                      Sign in
+                      Đăng nhập
                     </Link>
                     <Link
                       to='/signup'
                       className='ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-brand hover:bg-brand-dark'
                     >
-                      Sign up
+                      Đăng ký
                     </Link>
                   </>
                 )}
@@ -447,7 +447,7 @@ const Header = () => {
                               d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'
                             />
                           </svg>
-                          Log out
+                          Đăng xuất
                         </a>
                       </>
                     ) : (
@@ -456,12 +456,12 @@ const Header = () => {
                           to='/signup'
                           className='w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-brand hover:bg-brand-dark'
                         >
-                          Sign up
+                          Đăng ký
                         </Link>
                         <p className='mt-6 text-center text-base font-medium text-gray-500'>
                           Already have account?{' '}
                           <Link to='/signin' className='text-brand hover:text-brand-light'>
-                            Sign in
+                            Đăng nhập
                           </Link>
                         </p>
                       </>

@@ -281,7 +281,7 @@ const ItemDetail = (props) => {
       <nav className='text-gray-600 mt-8 text-sm px-6' aria-label='Breadcrumb'>
         <ol className='list-none p-0 inline-flex'>
           <li className='flex items-center'>
-            <Link to='/'>Home</Link>
+            <Link to='/'>Trang chủ</Link>
             <svg className='fill-current w-3 h-3 mx-3' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'>
               <path d='M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z' />
             </svg>
@@ -378,12 +378,12 @@ const ItemDetail = (props) => {
                 <div className='flex w-full items-start flex-wrap gap-3 list-none'>
                   {details?.brandNew && (
                     <div className='flex items-center p-2 border border-green-500 border-solid'>
-                      <span className='text-green-500 tracking-normal text-xs'>New</span>
+                      <span className='text-green-500 tracking-normal text-xs'>Mới</span>
                     </div>
                   )}
                   {details?.sale && (
                     <div className='flex items-center p-2 border border-brand-sale border-solid'>
-                      <span className='text-brand-sale tracking-normal text-xs'>Sale</span>
+                      <span className='text-brand-sale tracking-normal text-xs'>Giảm giá</span>
                     </div>
                   )}
                 </div>
@@ -418,7 +418,7 @@ const ItemDetail = (props) => {
                 <div className='relative mb-3'>
                   <div className='flex w-full items-end list-none'>
                     <div className='relative mr-2'>
-                      <span className='text-sm font-bold'>colors:</span>
+                      <span className='text-sm font-bold'>Màu sắc:</span>
                     </div>
                     <span className='font-sm'>{activeColor?.colorName}</span>
                   </div>
@@ -443,7 +443,7 @@ const ItemDetail = (props) => {
                 <div className='mb-3'>
                   <div className='flex w-full list-none'>
                     <div className='relative'>
-                      <span className='text-sm font-bold mr-2'>sizes:</span>
+                      <span className='text-sm font-bold mr-2'>Kích cỡ:</span>
                       <span className='font-sm'>{activeSize?.sizeName}</span>
                     </div>
                   </div>
@@ -465,7 +465,7 @@ const ItemDetail = (props) => {
                 </div>
               </section>
               <div className='flex items-center w-full mb-6'>
-                <span className='text-sm font-bold mr-2'>quantity:</span>
+                <span className='text-sm font-bold mr-2'>Số lượng:</span>
                 <div>
                   <select
                     className='form-select text-gray-600 font-medium bg-white focus:outline-none focus:shadow-outline flex'
@@ -490,7 +490,7 @@ const ItemDetail = (props) => {
                     handleAddToCart();
                   }}
                 >
-                  Add to Cart
+                  Thêm vào giỏ hàng
                 </button>
               </div>
             </div>
@@ -500,22 +500,22 @@ const ItemDetail = (props) => {
         <div className='mt-10 mx-6 w-2/3 h-full'>
           <section>
             <div className='mb-5 mt-10'>
-              <span className='text-xl font-bold'>Product description</span>
+              <span className='text-xl font-bold'>Mô tả sản phẩm</span>
             </div>
             <div className='mb-5'>
               <span className='text-base'>{details?.longDesc}</span>
             </div>
             <div className='pb-2 mt-10 mb-6 border-b-2 border-solid border-gray-500'>
-              <span className='font-bold text-xl'>Materials and handling</span>
+              <span className='font-bold text-xl'>Chất liệu và xử lý</span>
             </div>
             <div className='flex w-full justify-between'>
-              <span className='font-bold'>Material</span>
+              <span className='font-bold'>Chất liệu</span>
               <div className='w-2/3 flex flex-col mb-6'>
                 <span>{details?.material}</span>
               </div>
             </div>
             <div className='flex w-full justify-between'>
-              <span className='font-bold'>Handling</span>
+              <span className='font-bold'>Xử lý</span>
               <div className='w-2/3 flex flex-col mb-6'>
                 <span>{details?.handling}</span>
               </div>
@@ -523,11 +523,11 @@ const ItemDetail = (props) => {
           </section>
           <section>
             <div className='mb-3 mt-10'>
-              <span className='text-xl font-bold'>User reviews</span>
+              <span className='text-xl font-bold'>Đánh giá từ người mua</span>
             </div>
             <div className='mb-5'>
               <div className='w-full flex items-center'>
-                <span className='mr-3'>Average rating</span>
+                <span className='mr-3'>Đánh giá trung bình</span>
                 <div className='mr-2'>
                   <RatingStar rating={averageRating} />
                 </div>
@@ -552,14 +552,14 @@ const ItemDetail = (props) => {
                     </div>
                   </button>
                 )}
-                {!reviews || (reviews?.length === 0 && <span key='no_review'>No reviews for this product yet</span>)}
+                {!reviews || (reviews?.length === 0 && <span key='no_review'>Chưa có đánh giá cho sản phẩm này</span>)}
               </div>
             </div>
             <div className='flex items-center justify-center mb-4 max-w-lg h-full'>
               <form className='w-full max-w-xl bg-white rounded-lg pt-2' onSubmit={handleSubmit(handlePostComment)}>
                 <div className='flex flex-wrap -mx-3 mb-6'>
                   <div className='flex justify-between items-center'>
-                    <h2 className='px-4 pt-3 pb-2 text-gray-800 text-lg'>Add a new review</h2>
+                    <h2 className='px-4 pt-3 pb-2 text-gray-800 text-lg'>Thêm đánh giá mới</h2>
 
                     <div className='flex items-center'>
                       {[...Array(5)].map((star, i) => {
@@ -593,7 +593,7 @@ const ItemDetail = (props) => {
                       className={`border border-gray-400 resize-none w-full py-2 px-3 font-medium focus:outline-none focus:bg-white ${
                         errors.title ? 'error-input mb-0' : 'mb-6'
                       }`}
-                      placeholder='Add title'
+                      placeholder='Tựa đề'
                       {...register('title')}
                     />
                     <p className={`error-message ${errors.title ? 'mb-6' : ''}`}>{errors.title?.message}</p>
@@ -602,7 +602,7 @@ const ItemDetail = (props) => {
                         errors.comment?.message ? 'error-input' : ''
                       }`}
                       name='comment'
-                      placeholder='Type Your Comment'
+                      placeholder='Bình luận từ bạn'
                       {...register('comment')}
                     ></textarea>
                     <p className='error-message  mb-6'>{errors.comment?.message}</p>
@@ -612,7 +612,7 @@ const ItemDetail = (props) => {
                       <input
                         type='submit'
                         className='bg-white text-gray-700 font-medium py-1 px-4 border border-gray-400 rounded-lg tracking-wide mr-1 hover:bg-gray-100'
-                        value='Post Comment'
+                        value='Đăng đánh giá'
                       />
                     </div>
                   </div>

@@ -20,11 +20,11 @@ export const sorts = [
 export const sortsForUser = [
   {
     value: 'CHEAPEST',
-    label: 'Order of cheapest price',
+    label: 'Sắp xếp theo giá nhỏ nhất',
   },
   {
     value: 'HIGHEST',
-    label: 'Order of highest price',
+    label: 'Sắp xếp theo giá cao nhất',
   },
 ];
 

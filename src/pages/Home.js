@@ -72,16 +72,18 @@ const Home = () => {
           }}
         >
           <div className='flex flex-col w-full justify-center items-start p-4 md:p-8'>
-            <h1 className='text-4xl md:text-7xl py-2 text-white font-bold'>WELCOME TO GUT</h1>
+            <h1 className='text-4xl md:text-7xl py-2 text-white font-bold'>CHÀO MỪNG ĐẾN VỚI GUT</h1>
             <h2 className='text-3xl md:text-5xl leading-relaxed md:leading-snug mb-2 text-white p-2 bg-gradient-to-r from-brand-light to-brand'>
               GOOD CHOICE GOOD FASHION
             </h2>
-            <p className='text-lg md:text-xl my-4 text-white font-medium'>Explore your favourite fashion for men.</p>
+            <p className='text-lg md:text-xl my-4 text-white font-medium'>
+              Khám phá thời trang yêu thích của bạn cho nam giới.
+            </p>
             <a
               href='#sale_section'
               className='text-white rounded shadow hover:shadow-lg py-4 px-10 mt-10 border border-white hover:border-transparent bg-gradient-to-r from-transparent  hover:from-brand-dark hover:to-brand'
             >
-              Explore Now
+              Khám phá ngay
             </a>
           </div>
         </div>
@@ -90,7 +92,7 @@ const Home = () => {
         <input
           type='text'
           name='keywords'
-          placeholder='Search products'
+          placeholder='Tìm sản phẩm'
           className='h-15 m-0 pb-4 text-base border-0'
           style={{ borderBottom: '1px solid #5a5a5a', borderRadius: '0%' }}
         />
@@ -148,19 +150,19 @@ const Home = () => {
                           />
                         </div>
                         <div className='text-gray-700 block align-middle px-4 pb-4 md:text-center'>
-                          <span className='inline-block border-red-600 border text-sm font-normal align-middle p-2 my-5 text-brand-sale'>{`Until ${dayjs(
+                          <span className='inline-block border-red-600 border text-sm font-normal align-middle p-2 my-5 text-brand-sale'>{`Từ đây cho đến ${dayjs(
                             saleProducts[0].saleToDate
-                          ).format('M/DD (ddd)')}`}</span>
+                          ).format('DD/MM (ddd)')}`}</span>
                           <h3 className='text-xl mb-5 font-bold'>{saleProducts[0].name}</h3>
                           <p className='mb-5 text-base'>{saleProducts[0].shortDesc}</p>
                           <div>
                             <p className='mb-1 text-sm leading-3'>
-                              <span className='text-xs pr-2'>Regular price</span>
+                              <span className='text-xs pr-2'>Giá thông thường</span>
                               <span className='text-base'>{formatCash(saleProducts[0].price)}</span>
                             </p>
                             <p className='text-sm leading-3'>
                               <span className='border border-solid border-brand-sale text-brand-sale inline-block mr-2 px-2 py-1 text-xs align-middle -mt-1'>
-                                Sale price
+                                Giảm giá còn
                               </span>
                               <span className='text-brand-sale font-bold text-lg'>
                                 {formatCash(saleProducts[0].salePrice)}
@@ -195,7 +197,7 @@ const Home = () => {
             >
               <div className='my-20'>
                 <h2 className='text-center text-xl md:text-3xl tracking-wide font-bold text-brand-darker'>
-                  NEW PRODUCTS
+                  SẢN PHẨM MỚI
                 </h2>
               </div>
               <div className='pb-10 px-10 table w-full'>

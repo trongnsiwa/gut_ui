@@ -335,7 +335,7 @@ const UserCategory = (props) => {
       <nav className='text-gray-600 my-8' aria-label='Breadcrumb'>
         <ol className='list-none p-0 inline-flex'>
           <li className='flex items-center'>
-            <Link to='/'>Home</Link>
+            <Link to='/'>Trang chủ</Link>
             <svg className='fill-current w-3 h-3 mx-3' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'>
               <path d='M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z' />
             </svg>
@@ -386,7 +386,7 @@ const UserCategory = (props) => {
       <div className='flex justify-between w-full my-6 mt-20'>
         <section className='relative flex flex-col p-0'>
           <div className='flex w-full h-10 items-center justify-start border-b border-gray-200 border-solid'>
-            <span className='text-sm md:text-base font-semibold'>CATEGORY</span>
+            <span className='text-sm md:text-base font-semibold'>DANH MỤC</span>
           </div>
           <div className='py-3 text-sm md:text-base'>
             {parentCategories &&
@@ -463,10 +463,10 @@ const UserCategory = (props) => {
           <div className='py-6 border-t mt-6 border-gray-200 border-solid'>
             <div className='flex w-full items-center'>
               <FlagIcon className='h-6 w-6 text-gray-700' />
-              <span className='font-semibold flex-grow pl-2 text-sm md:text-base'>Sales type</span>
+              <span className='font-semibold flex-grow pl-2 text-sm md:text-base'>Loại sản phẩm</span>
             </div>
             <div className='flex flex-col mt-3'>
-              {[...Array.from(['New', 'Sale'])].map((type, index) => (
+              {[...Array.from(['Mới', 'Giảm giá'])].map((type, index) => (
                 <div className='relative py-2' key={`type_${type}`}>
                   <label className='inline-flex flex-row items-center'>
                     <input
@@ -492,7 +492,7 @@ const UserCategory = (props) => {
           <div className='py-6 border-t border-gray-200 border-solid'>
             <div className='flex w-full items-center'>
               <SparklesIcon className='h-6 w-6 text-gray-700' />
-              <span className='font-semibold flex-grow pl-2 text-sm md:text-base'>Colors</span>
+              <span className='font-semibold flex-grow pl-2 text-sm md:text-base'>Màu sắc</span>
             </div>
             <div className='flex flex-col mt-6'>
               <div className='grid gap-2' style={{ gridTemplateColumns: 'repeat(auto-fill, 36px)' }}>
@@ -558,7 +558,7 @@ const UserCategory = (props) => {
           <div className='py-6 border-t border-gray-200 border-solid mt-3'>
             <div className='flex w-full items-center'>
               <ScaleIcon className='h-6 w-6 text-gray-700' />
-              <span className='font-semibold flex-grow pl-2 text-sm md:text-base'>Sizes</span>
+              <span className='font-semibold flex-grow pl-2 text-sm md:text-base'>Kích cỡ</span>
             </div>
             <div className='flex flex-col mt-6'>
               <div className='grid gap-4' style={{ gridTemplateColumns: 'repeat(auto-fill, 36px)' }}>
@@ -610,7 +610,7 @@ const UserCategory = (props) => {
           <div className='py-6 border-t mt-6 border-gray-200 border-solid'>
             <div className='flex w-full items-center'>
               <CurrencyDollarIcon className='h-6 w-6 text-gray-700' />
-              <span className='font-semibold flex-grow pl-2 text-sm md:text-base'>price</span>
+              <span className='font-semibold flex-grow pl-2 text-sm md:text-base'>Giá cả</span>
             </div>
             <div className='flex flex-col mt-3'>
               {priceTypes.map((type, index) => (
@@ -643,7 +643,7 @@ const UserCategory = (props) => {
                 <input
                   type='text'
                   className='w-full pl-10 pr-4 py-2 rounded-lg shadow focus:outline-none focus:shadow-outline text-gray-600 font-medium'
-                  placeholder='Search by name...'
+                  placeholder='Tìm sản phẩm theo tên...'
                   value={searchedName}
                   onChange={(e) => {
                     setSearchedName(e.target.value);
@@ -719,8 +719,10 @@ const UserCategory = (props) => {
                         alt='Not Found'
                         className='h-16 w-16 mx-auto mb-4 text-gray-900'
                       />
-                      <p className='text-base leading-5 font-medium text-gray-900 mb-3'>No Result Found</p>
-                      <p className='text-sm'>We did not find any items name "{searchedName}" for your search.</p>
+                      <p className='text-base leading-5 font-medium text-gray-900 mb-3'>Không tìm thấy kết quả</p>
+                      <p className='text-sm'>
+                        Không tìm thấy bất kì sản phẩm nào có tên "{searchedName}" theo tìm kiếm của bạn.
+                      </p>
                     </div>
                   </div>
                 )}
@@ -732,7 +734,7 @@ const UserCategory = (props) => {
                         alt='Not Found'
                         className='h-16 w-16 mx-auto mb-4 text-gray-900'
                       />
-                      <p className='text-base leading-5 font-medium text-gray-900 mb-3'>No Result Found</p>
+                      <p className='text-base leading-5 font-medium text-gray-900 mb-3'>Không tìm thấy kết quả</p>
                     </div>
                   </div>
                 )}
@@ -742,9 +744,9 @@ const UserCategory = (props) => {
           <div className='flex items-center justify-between'>
             <div>
               <p className='text-sm text-gray-700'>
-                Showing <span className='font-medium'>{pageNumbers && pageNumbers[0]}</span> to{' '}
-                <span className='font-medium'>{pageNumbers && pageNumbers[pageNumbers.length - 1]}</span> of{' '}
-                <span className='font-medium'>{totalResults}</span> total results
+                Hiển thị <span className='font-medium'>{pageNumbers && pageNumbers[0]}</span> đến{' '}
+                <span className='font-medium'>{pageNumbers && pageNumbers[pageNumbers.length - 1]}</span> trong{' '}
+                <span className='font-medium'>{totalResults}</span> tổng kết quả
               </p>
             </div>
             <div>
