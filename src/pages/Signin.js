@@ -60,7 +60,6 @@ const Signin = (props) => {
         className='mx-auto w-full bg-cover bg-center'
         style={{
           backgroundImage: `url('https://ik.imagekit.io/tnyyngwxvx9/patrick-tomasso-QMDap1TAu0g-unsplash_XafnH-_YX.jpg?updatedAt=1626750231215')`,
-          height: 'calc(100vh - 80px)',
         }}
       >
         <div className='container mx-auto'>
@@ -74,21 +73,21 @@ const Signin = (props) => {
               ></div>
               <div className='bg-white w-full rounded-r-lg rounded-l-lg md:rounded-l-none md:max-w-md lg:max-w-full lg:w-1/2 h-full px-6 lg:px-16 xl:px-12 flex flex-col'>
                 <div className='text-left mt-12 mb-3 px-6 sm:px-10 lg:px-0 xl:mb-6 xl:px-10'>
-                  <h1 className='font-bold leading-6 text-brand-dark text-3xl xl:text-4xl '>Welcome to GUT</h1>
+                  <h1 className='font-bold leading-6 text-brand-dark text-3xl xl:text-4xl '>Chào mừng đến với GUT</h1>
                   <h2 className='italic text-xl xl:text-2xl font-medium'>Good Choice Good Fashion</h2>
                 </div>
 
                 <div className='bg-white py-8 px-6 sm:px-10 lg:px-0 xl:px-10'>
                   <div className='flex items-center justify-between mb-8'>
-                    <p className='text-xl font-bold text-gray-700'>LOGIN</p>
-                    <p className='text-xs font-thin text-gray-400'>Required fields *</p>
+                    <p className='text-xl font-bold text-gray-700'>ĐĂNG NHẬP</p>
+                    <p className='text-xs font-thin text-gray-400'>Bắt buộc *</p>
                   </div>
 
                   <form className='space-y-6' onSubmit={handleSubmit(handleLogin)}>
                     {message && <p className='error-message text-sm'>{message}</p>}
                     <div>
                       <label htmlFor='email' className='block text-sm font-medium text-gray-700'>
-                        Email Address <span className='text-red-500'>*</span>
+                        Địa chỉ Email <span className='text-red-500'>*</span>
                       </label>
                       <div className='mt-1'>
                         <input
@@ -103,7 +102,7 @@ const Signin = (props) => {
                     </div>
                     <div>
                       <label htmlFor='password' className='block text-sm font-medium text-gray-700'>
-                        Password <span className='text-red-500'>*</span>
+                        Mật khẩu <span className='text-red-500'>*</span>
                       </label>
                       <div className='mt-1'>
                         <input
@@ -121,23 +120,23 @@ const Signin = (props) => {
                         href='#'
                         className='text-sm font-semibold text-gray-700 hover:text-brand-dark focus:text-brand-dark'
                       >
-                        Forgot password?
+                        Quên mật khẩu?
                       </a>
                     </div>
                     <button
                       type='submit'
                       className='w-full block bg-brand hover:bg-brand-light focus:bg-brand-light text-white font-semibold rounded-lg px-4 py-3 mt-6'
                     >
-                      Log In
+                      Đăng nhập
                     </button>
                   </form>
 
                   <hr className='my-6 border-gray-300 w-full' />
 
                   <p className='mt-8 text-sm text-center font-semibold text-gray-700'>
-                    Need an account?{' '}
+                    Bạn chưa có tài khoản?{' '}
                     <Link to='/signup' className='text-brand hover:text-brand-dark font-semibold'>
-                      Create an account
+                      Đăng ký
                     </Link>
                   </p>
                 </div>

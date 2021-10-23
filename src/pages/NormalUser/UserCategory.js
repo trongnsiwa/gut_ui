@@ -806,6 +806,21 @@ const UserCategory = (props) => {
           </div>
         </section>
       </div>
+
+      <section className='mx-auto w-full max-w-5xl text-center my-20 relative cursor-pointer hover:opacity-80'>
+        <a href='https://bitis.com.vn/' title='Giày nam năng động cá tính'>
+          <img
+            src='https://file.hstatic.net/1000230642/file/banner_3_c8a0b37270e2405181528933bcbc64d5_master.jpg'
+            alt=''
+            className='w-full'
+          />
+        </a>
+      </section>
+      <section className='mx-auto w-full max-w-5xl text-center my-20 relative cursor-pointer hover:opacity-80'>
+        <a href='https://smartpayvn.com/' title='Cỗng thanh toán trực tuyến tiện ích'>
+          <img src='https://static.paysmart.com.vn/promotion/1615007924301_feature_img.png' alt='' className='w-full' />
+        </a>
+      </section>
     </div>
   );
 };

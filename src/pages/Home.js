@@ -12,6 +12,10 @@ import ItemBox from '../components/ItemBox';
 
 import { formatCash } from '../helpers/formatCash';
 import { getUserCart } from '../services/cart.service';
+import SwiperCore, { Navigation, Autoplay } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+SwiperCore.use([Navigation, Autoplay]);
 
 const Home = () => {
   const [saleProducts, setSaleProducts] = useState(null);
@@ -65,29 +69,100 @@ const Home = () => {
   return (
     <>
       <div className='w-full'>
-        <div
-          className='flex flex-col md:flex-row items-center object-cover h-screen bg-cover bg-center 2xl:px-40'
-          style={{
-            backgroundImage: `url('https://ik.imagekit.io/tnyyngwxvx9/ant-rozetsky-PH8dIIP0ljY-unsplash_MApZWo1fs.jpg?updatedAt=1627316554139')`,
+        <Swiper
+          id='gallery'
+          wrapperTag='ul'
+          tag='section'
+          navigation
+          spaceBetween={0}
+          slidesPerView={1}
+          centeredSlides={true}
+          className='h-screen'
+          loop={true}
+          autoplay={{
+            delay: 5000,
+            disableOnInteraction: false,
           }}
         >
-          <div className='flex flex-col w-full justify-center items-start p-4 md:p-8'>
-            <h1 className='text-4xl md:text-7xl py-2 text-white font-bold'>CHÀO MỪNG ĐẾN VỚI GUT</h1>
-            <h2 className='text-3xl md:text-5xl leading-relaxed md:leading-snug mb-2 text-white p-2 bg-gradient-to-r from-brand-light to-brand'>
-              GOOD CHOICE GOOD FASHION
-            </h2>
-            <p className='text-lg md:text-xl my-4 text-white font-medium'>
-              Khám phá thời trang yêu thích của bạn cho nam giới.
-            </p>
-            <a
-              href='#sale_section'
-              className='text-white rounded shadow hover:shadow-lg py-4 px-10 mt-10 border border-white hover:border-transparent bg-gradient-to-r from-transparent  hover:from-brand-dark hover:to-brand'
-            >
-              Khám phá ngay
-            </a>
-          </div>
-        </div>
+          <SwiperSlide
+            tag='div'
+            style={{
+              listStyle: 'none',
+              backgroundImage: `url('https://ik.imagekit.io/tnyyngwxvx9/ant-rozetsky-PH8dIIP0ljY-unsplash_MApZWo1fs.jpg?updatedAt=1627316554139')`,
+            }}
+            className='flex flex-col md:flex-row items-center object-cover bg-cover bg-center 2xl:px-40'
+          >
+            <div className='flex flex-col w-full justify-center items-start p-4 md:p-8'>
+              <h1 className='text-4xl md:text-7xl py-2 text-white font-bold'>CHÀO MỪNG ĐẾN VỚI GUT</h1>
+              <h2 className='text-3xl md:text-5xl leading-relaxed md:leading-snug mb-2 text-white p-2 bg-gradient-to-r from-brand-light to-brand'>
+                GOOD CHOICE GOOD FASHION
+              </h2>
+              <p className='text-lg md:text-xl my-4 text-white font-medium'>
+                Khám phá thời trang yêu thích của bạn cho nam giới.
+              </p>
+              <a
+                href='#sale_section'
+                className='text-white rounded shadow hover:shadow-lg py-4 px-10 mt-10 border border-white hover:border-transparent bg-gradient-to-r from-transparent  hover:from-brand-dark hover:to-brand'
+              >
+                Khám phá ngay
+              </a>
+            </div>
+          </SwiperSlide>
+          <SwiperSlide
+            tag='div'
+            style={{
+              listStyle: 'none',
+              backgroundImage: `url('https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80')`,
+            }}
+            className='flex flex-col md:flex-row items-center object-cover bg-cover bg-center 2xl:px-40'
+          >
+            <div className='flex flex-col w-full justify-center items-start p-4 md:p-8'>
+              <h1 className='text-4xl md:text-7xl py-2 text-brand font-bold'>ĐA DẠNG SẢN PHẨM</h1>
+              <h2 className='text-3xl md:text-5xl leading-relaxed md:leading-snug mb-2 text-white p-2 bg-gradient-to-r from-brand-light to-brand'>
+                THA HỒ ĐỂ BẠN MUA SẮM VÀ LỰA CHỌN
+              </h2>
+              <p className='text-lg md:text-xl my-4 text-white font-medium'>
+                Chúng tôi cung cấp đủ mọi loại mặt hàng mà bạn cần.
+              </p>
+              <a
+                href='#sale_section'
+                className='text-white rounded shadow hover:shadow-lg py-4 px-10 mt-10 border border-white hover:border-transparent bg-gradient-to-r from-transparent  hover:from-brand-dark hover:to-brand'
+              >
+                Khám phá ngay
+              </a>
+            </div>
+          </SwiperSlide>
+          <SwiperSlide
+            tag='div'
+            style={{
+              listStyle: 'none',
+              backgroundImage: `url('https://images.unsplash.com/photo-1484712401471-05c7215830eb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80')`,
+            }}
+            className='flex flex-col md:flex-row items-center object-cover bg-cover bg-center 2xl:px-40'
+          >
+            <div className='flex flex-col w-full justify-center items-start p-4 md:p-8'>
+              <h1 className='text-4xl md:text-7xl py-2 text-brand font-bold'>TỰ DO VÀ THOÁI MÁI</h1>
+              <h2 className='text-3xl md:text-5xl leading-relaxed md:leading-snug mb-2 text-white p-2 bg-gradient-to-r from-brand-light to-brand'>
+                THỎA SỨC SÁNG TẠO
+              </h2>
+              <p className='text-lg md:text-xl my-4 text-brand font-medium'>
+                Hãy để sản phẩm của chúng tôi giúp bạn điều này.
+              </p>
+              <a
+                href='#sale_section'
+                className='text-brand hover:text-white rounded shadow hover:shadow-lg py-4 px-10 mt-10 border border-brand hover:border-transparent bg-gradient-to-r from-transparent  hover:from-brand-dark hover:to-brand'
+              >
+                Khám phá ngay
+              </a>
+            </div>
+          </SwiperSlide>
+        </Swiper>
       </div>
+      <section className='mx-auto w-full max-w-5xl text-center my-20 relative cursor-pointer hover:opacity-80'>
+        <a href='https://yami.vn' title='Thời trang nữ tính dành cho bạn gái'>
+          <img src='https://yami.vn/assets/upload/gallery/banner06-jpg.jpg' alt='' className='w-full' />
+        </a>
+      </section>
       <section className='mx-auto w-full max-w-md text-center my-20 relative'>
         <input
           type='text'
@@ -244,6 +319,16 @@ const Home = () => {
           </>
         )}
       </div>
+
+      <section className='mx-auto w-full max-w-5xl text-center my-20 relative cursor-pointer hover:opacity-80'>
+        <a href='https://yami.vn' title='Thời trang thanh lịch dành cho bạn gái'>
+          <img
+            src='https://pkmacbook.com/wp-content/uploads/2021/07/anh-lookbook-thoi-trang_113854100.jpg'
+            alt=''
+            className='w-full'
+          />
+        </a>
+      </section>
     </>
   );
 };

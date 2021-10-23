@@ -38,9 +38,14 @@ import UserCategory from './pages/NormalUser/UserCategory';
 import ItemDetail from './pages/NormalUser/ItemDetail';
 import Cart from './pages/NormalUser/Cart';
 
+import tawkTo from 'tawkto-react';
+
 function App() {
   const { user: currentUser } = useSelector((state) => state.authReducer);
   const dispatch = useDispatch();
+
+  const tawkToPropertyId = '61702a50f7c0440a591f2d30';
+  const tawkToKey = '2c5d95d4334ed876b6d8c0dc19bc6ab4ee501167';
 
   toast.configure();
 
@@ -49,6 +54,21 @@ function App() {
       dispatch(clearMessage());
     });
   }, [dispatch]);
+
+  useEffect(() => {
+    tawkTo(tawkToPropertyId, tawkToKey);
+    var Tawk_API = Tawk_API || {},
+      Tawk_LoadStart = new Date();
+    (function () {
+      var s1 = document.createElement('script'),
+        s0 = document.getElementsByTagName('script')[0];
+      s1.async = true;
+      s1.src = 'https://embed.tawk.to/61702a50f7c0440a591f2d30/1fif2aisp';
+      s1.charset = 'UTF-8';
+      s1.setAttribute('crossorigin', '*');
+      s0.parentNode.insertBefore(s1, s0);
+    })();
+  }, []);
 
   return (
     <>

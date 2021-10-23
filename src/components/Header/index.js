@@ -3,7 +3,7 @@ import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { Menu, Popover, Transition } from '@headlessui/react';
-import { ChevronDownIcon, ChevronRightIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
+import { ChevronDownIcon, ChevronRightIcon, InformationCircleIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
 
 import logo from '../../assets/logo.png';
 
@@ -116,7 +116,7 @@ const Header = () => {
                               <div style={{ boxShadow: 'rgb(0 0 0 / 10%) 5px 0px 4px -3px' }}>
                                 <div className='flex w-full items-center h-10 mb-3 p-5' key={'ALL'}>
                                   <span className='text-base text-gray-600 font-semibold cursor-default flex items-center'>
-                                    Category
+                                    Danh mục
                                   </span>
                                 </div>
                                 {parentCategories &&
@@ -279,6 +279,11 @@ const Header = () => {
                     </span>
                   </button>
                 </div>
+                <div className='text-gray-700 ml-3'>
+                  <button onClick={() => {}}>
+                    <InformationCircleIcon className='h-8 w-8 cursor-pointer text-gray-700' />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -405,32 +410,39 @@ const Header = () => {
                               </p>
                             </div>
                           </Link>
-                          <div className='text-gray-700 relative'>
-                            <button onClick={handleRedirectCart}>
-                              <svg
-                                xmlns='http://www.w3.org/2000/svg'
-                                className='h-8 w-8 cursor-pointer relative'
-                                fill='none'
-                                viewBox='0 0 24 24'
-                                stroke='currentColor'
-                              >
-                                <path
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth={1.2}
-                                  d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'
-                                />
-                              </svg>
-                              <span className='rounded-full bg-brand text-white px-2 py-1 text-xs font-bold flex items-center absolute -top-2 -right-1'>
-                                {cart ? cart?.cartItems.reduce((acc, item) => acc + item.amount, 0) : 0}
-                              </span>
-                            </button>
+                          <div className='flex items-center'>
+                            <div className='text-gray-700 relative'>
+                              <button onClick={handleRedirectCart}>
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  className='h-8 w-8 cursor-pointer relative'
+                                  fill='none'
+                                  viewBox='0 0 24 24'
+                                  stroke='currentColor'
+                                >
+                                  <path
+                                    strokeLinecap='round'
+                                    strokeLinejoin='round'
+                                    strokeWidth={1.2}
+                                    d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'
+                                  />
+                                </svg>
+                                <span className='rounded-full bg-brand text-white px-2 py-1 text-xs font-bold flex items-center absolute -top-2 -right-1'>
+                                  {cart ? cart?.cartItems.reduce((acc, item) => acc + item.amount, 0) : 0}
+                                </span>
+                              </button>
+                            </div>
+                            <div className='text-gray-700 ml-3'>
+                              <button onClick={() => {}}>
+                                <InformationCircleIcon className='h-8 w-8 cursor-pointer' />
+                              </button>
+                            </div>
                           </div>
                         </div>
 
                         <a
                           href='/'
-                          className='w-full flex items-center justify-center px-4 py-2 mt-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700'
+                          className='w-full flex items-center justify-center px-4 py-2 mt-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-700'
                           onClick={logOut}
                         >
                           <svg
@@ -459,11 +471,16 @@ const Header = () => {
                           Đăng ký
                         </Link>
                         <p className='mt-6 text-center text-base font-medium text-gray-500'>
-                          Already have account?{' '}
+                          Bạn đã có tài khoản?{' '}
                           <Link to='/signin' className='text-brand hover:text-brand-light'>
                             Đăng nhập
                           </Link>
                         </p>
+                        <div className='text-gray-700'>
+                          <button onClick={() => {}}>
+                            <InformationCircleIcon className='h-8 w-8 cursor-pointer' />
+                          </button>
+                        </div>
                       </>
                     )}
                   </div>

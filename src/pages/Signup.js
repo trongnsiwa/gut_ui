@@ -91,14 +91,14 @@ const Signup = () => {
             <div className='flex w-full justify-between'>
               <div className='w-full lg:w-2/3'>
                 <div className='flex items-center justify-between mb-8'>
-                  <p className='text-2xl font-bold text-gray-700'>Register new members</p>
-                  <p className='text-sm font-thin text-gray-400 lg:mr-16'>Required fields *</p>
+                  <p className='text-2xl font-bold text-gray-700'>Đăng ký thành viên mới</p>
+                  <p className='text-sm font-thin text-gray-400 lg:mr-16'>Bắt buộc *</p>
                 </div>
                 <form className='mb-0 space-y-6 lg:mr-16' onSubmit={handleSubmit(handleRegister)}>
                   {message && !success && <p className='error-message text-sm'>{message}</p>}
                   <div>
                     <label htmlFor='email' className='block text-sm font-medium text-gray-700'>
-                      Email Address <span className='text-red-500'>*</span>
+                      Địa chỉ Email <span className='text-red-500'>*</span>
                     </label>
                     <div className='mt-1'>
                       <input
@@ -115,7 +115,7 @@ const Signup = () => {
                   </div>
                   <div>
                     <label htmlFor='password' className='block text-sm font-medium text-gray-700'>
-                      Password <span className='text-red-500'>*</span>
+                      Mật khẩu <span className='text-red-500'>*</span>
                     </label>
                     <div className='mt-1'>
                       <input
@@ -131,7 +131,7 @@ const Signup = () => {
                   </div>
                   <div>
                     <label htmlFor='confirm' className='block text-sm font-medium text-gray-700'>
-                      Confirm Password <span className='text-red-500'>*</span>
+                      Nhập lại mật khẩu <span className='text-red-500'>*</span>
                     </label>
                     <div className='mt-1'>
                       <input
@@ -147,24 +147,8 @@ const Signup = () => {
                   </div>
                   <div className='space-y-6'>
                     <div>
-                      <label htmlFor='firstname' className='block text-sm font-medium text-gray-700'>
-                        First name <span className='text-red-500'>*</span>
-                      </label>
-                      <div className='mt-1'>
-                        <input
-                          className={errors.firstname && 'error-input'}
-                          type='text'
-                          name='firstname'
-                          id='firstname'
-                          {...register('firstname')}
-                          defaultValue={''}
-                        />
-                        <p className='error-message'>{errors.firstname?.message}</p>
-                      </div>
-                    </div>
-                    <div>
                       <label htmlFor='lastname' className='block text-sm font-medium text-gray-700'>
-                        Last name <span className='text-red-500'>*</span>
+                        Họ va tên đệm<span className='text-red-500'>*</span>
                       </label>
                       <div className='mt-1'>
                         <input
@@ -177,6 +161,22 @@ const Signup = () => {
                         />
                         <p className='error-message'>{errors.lastname?.message}</p>
                       </div>
+                      <div>
+                        <label htmlFor='firstname' className='block text-sm font-medium text-gray-700'>
+                          Tên <span className='text-red-500'>*</span>
+                        </label>
+                        <div className='mt-1'>
+                          <input
+                            className={errors.firstname && 'error-input'}
+                            type='text'
+                            name='firstname'
+                            id='firstname'
+                            {...register('firstname')}
+                            defaultValue={''}
+                          />
+                          <p className='error-message'>{errors.firstname?.message}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -186,13 +186,13 @@ const Signup = () => {
                     <div className='flex items center'>
                       <input id='terms' name='terms' type='checkbox' {...register('terms')} />
                       <label htmlFor='terms' className='ml-2 block text-sm text-gray-900'>
-                        I agree to the{' '}
+                        Tôi đồng ý với{' '}
                         <a href='#' className='text-brand hover:text-brand-light'>
-                          Terms
+                          Điều khoản
                         </a>{' '}
-                        and{' '}
+                        và{' '}
                         <a href='#' className='text-brand hover:text-brand-light'>
-                          Conditions
+                          Điều kiện
                         </a>
                       </label>
                     </div>
@@ -214,14 +214,14 @@ const Signup = () => {
                       Object.values(getValues()).findIndex((value) => value === '') > -1
                     }
                   >
-                    Create new account
+                    Tạo tài khoản
                   </button>
                 </form>
 
                 <p className='mt-8 text-sm font-semibold text-gray-700'>
-                  Already registed?{' '}
+                  Bạn đã có tài khoản?{' '}
                   <Link to='/signin' className='text-brand hover:text-brand-dark font-semibold'>
-                    Sign In
+                    Đăng nhập
                   </Link>
                 </p>
               </div>
