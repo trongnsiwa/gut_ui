@@ -605,7 +605,7 @@ const ItemDetail = (props) => {
                       placeholder='Bình luận từ bạn'
                       {...register('comment')}
                     ></textarea>
-                    <p className='error-message  mb-6'>{errors.comment?.message}</p>
+                    <p className='error-message mb-6'>{errors.comment?.message}</p>
                   </div>
                   <div className='w-full md:w-full flex items-start px-3'>
                     <div className='-mr-1'>

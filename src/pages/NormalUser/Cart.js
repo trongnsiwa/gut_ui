@@ -206,7 +206,12 @@ const Cart = (props) => {
                 {formatCash(shipping ? (totalPrice ? totalPrice : 0) + shipping : totalPrice ? totalPrice : 0)}
               </span>
             </div>
-            <button className='bg-brand-dark hover:bg-brand-darker py-3 text-white w-full'>THANH TOÁN</button>
+
+            <Link to='/payment'>
+              <button type='button' className='bg-brand-dark hover:bg-brand-darker py-3 text-white w-full'>
+                THANH TOÁN
+              </button>
+            </Link>
           </div>
         </div>
       </div>
