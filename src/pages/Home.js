@@ -15,6 +15,8 @@ import { getUserCart } from '../services/cart.service';
 import SwiperCore, { Navigation, Autoplay } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
+import 'dayjs/locale/vi';
+
 SwiperCore.use([Navigation, Autoplay]);
 
 const Home = () => {
@@ -225,9 +227,11 @@ const Home = () => {
                           />
                         </div>
                         <div className='text-gray-700 block align-middle px-4 pb-4 md:text-center'>
-                          <span className='inline-block border-red-600 border text-sm font-normal align-middle p-2 my-5 text-brand-sale'>{`Từ đây cho đến ${dayjs(
+                          <span className='inline-block border-red-600 border text-sm font-normal align-middle p-2 my-5 text-brand-sale'>{`Tới ${dayjs(
                             saleProducts[0].saleToDate
-                          ).format('DD/MM (ddd)')}`}</span>
+                          )
+                            .locale('vi')
+                            .format('DD/MM (dddd)')}`}</span>
                           <h3 className='text-xl mb-5 font-bold'>{saleProducts[0].name}</h3>
                           <p className='mb-5 text-base'>{saleProducts[0].shortDesc}</p>
                           <div>

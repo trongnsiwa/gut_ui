@@ -1,5 +1,5 @@
 const ERRORS = {
-  ERR_LOGIN_FAIL: 'Your registed email address and password do not match. Please check and enter again.',
+  ERR_LOGIN_FAIL: 'Địa chỉ email và mật khẩu của bạn không khớp. Vui lòng kiểm tra và nhập lại.',
   ERR_USER_CREATED_FAIL: "We're sorry, but something went wrong. Please try again.",
   ERR_EMAIL_NOT_BLANK: 'Please enter your email address.',
   ERR_EMAIL_INVALID: 'Please enter your email address correctly.',

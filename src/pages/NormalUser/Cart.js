@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation, Redirect, useHistory } from 'react-router-dom';
-import { Role } from '../../constants/Role';
 import { formatCash } from '../../helpers/formatCash';
 import { getUserCart, updateItem } from '../../services/cart.service';
 

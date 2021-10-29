@@ -11,5 +11,5 @@ export const getListDistrictsByProvCode = (code) => {
 };
 
 export const getListWardsByDistCode = (code) => {
-  return axios.get(`${API_URL}/province/ward${code}`);
+  return axios.get(`${API_URL}/province/ward/${code}`);
 };
