@@ -3,7 +3,15 @@ import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { Menu, Popover, Transition } from '@headlessui/react';
-import { ChevronDownIcon, ChevronRightIcon, InformationCircleIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  InboxInIcon,
+  InformationCircleIcon,
+  MenuIcon,
+  UserCircleIcon,
+  XIcon,
+} from '@heroicons/react/outline';
 
 import logo from '../../assets/logo.png';
 
@@ -208,6 +216,36 @@ const Header = () => {
                       >
                         <Menu.Items className='absolute right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
                           <div className='px-1 py-1'>
+                            <Menu.Item>
+                              {({ active }) => (
+                                <Link
+                                  to='/profile'
+                                  className={`${
+                                    active ? 'bg-brand-light text-white' : 'text-gray-900'
+                                  } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                                >
+                                  <UserCircleIcon className='h-6 w-6' />
+                                  <div className='ml-2'>
+                                    <p className='text-sm font-medium'>Tài khoản của tôi</p>
+                                  </div>
+                                </Link>
+                              )}
+                            </Menu.Item>
+                            <Menu.Item>
+                              {({ active }) => (
+                                <Link
+                                  to='/user/purchase'
+                                  className={`${
+                                    active ? 'bg-brand-light text-white' : 'text-gray-900'
+                                  } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                                >
+                                  <InboxInIcon className='h-6 w-6' />
+                                  <div className='ml-2'>
+                                    <p className='text-sm font-medium'>Đơn mua</p>
+                                  </div>
+                                </Link>
+                              )}
+                            </Menu.Item>
                             <Menu.Item>
                               {({ active }) => (
                                 <a

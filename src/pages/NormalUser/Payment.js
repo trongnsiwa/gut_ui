@@ -101,12 +101,6 @@ const Payment = (props) => {
     }
   }, [cart]);
 
-  useEffect(() => {
-    if (cart && cart.cartItems) {
-      setTotalPrice(cart?.cartItems.reduce((acc, item) => acc + (item.price * item.amount || 0), 0));
-    }
-  }, [cart]);
-
   if (!currentUser || currentUser?.role === 'ADMIN') {
     return <Redirect to='/' />;
   }
@@ -130,6 +124,7 @@ const Payment = (props) => {
                   errors.name ? 'error-input mb-0' : 'mb-6'
                 }`}
                 name='name'
+                defaultValue={currentUser.fullname}
                 placeholder='Tên người nhận'
                 {...register('name')}
               />
@@ -143,6 +138,7 @@ const Payment = (props) => {
                   errors.phone ? 'error-input' : ''
                 }`}
                 name='phone'
+                defaultValue={currentUser.phone}
                 placeholder='Số điện thoại'
                 {...register('phone')}
               />
@@ -270,13 +266,13 @@ const Payment = (props) => {
             <div>
               <div>
                 <label className='inline-flex items-center'>
-                  <input type='radio' className='form-radio' name='method' value='' checked />
+                  <input type='radio' className='form-radio' name='method' value='' defaultChecked={true} />
                   <span className='ml-2'>Nhận hàng tại nhà/công ty/bưu điện</span>
                 </label>
               </div>
               <div className='mt-3'>
                 <label className='inline-flex items-center'>
-                  <input type='radio' className='form-radio' name='method' value='' checked />
+                  <input type='radio' className='form-radio' name='method' value='' />
                   <span className='ml-2'>Nhận hàng tại cửa hàng gần nhất</span>
                 </label>
               </div>
@@ -351,7 +347,7 @@ const Payment = (props) => {
           <div>
             {cart &&
               cart?.cartItems.map((item) => (
-                <div className='grid grid-cols-12 mb-5'>
+                <div className='grid grid-cols-12 mb-5' key={item.id}>
                   <div className='flex items-center col-span-7'>
                     <img className='w-10' src={item.image?.imageUrl} alt={item.image ? item?.image.title : ''} />
                     <div className='flex flex-col justify-between ml-4 flex-grow'>
