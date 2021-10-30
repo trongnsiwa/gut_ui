@@ -41,6 +41,9 @@ import Cart from './pages/NormalUser/Cart';
 import tawkTo from 'tawkto-react';
 import Payment from './pages/NormalUser/Payment';
 import FinishOrder from './pages/NormalUser/FinishOrder';
+import Profile from './pages/NormalUser/Profile';
+import Purchase from './pages/NormalUser/Purchase';
+import PurchaseDetail from './pages/NormalUser/PurchaseDetail';
 
 function App() {
   const { user: currentUser } = useSelector((state) => state.authReducer);
@@ -164,6 +167,30 @@ function App() {
             currentUser={currentUser}
             roles={[Role.USER]}
             component={FinishOrder}
+          />
+          <PrivateLayoutRoute
+            exact
+            path='/user/account/profile'
+            noBackground={true}
+            currentUser={currentUser}
+            roles={[Role.USER]}
+            component={Profile}
+          />
+          <PrivateLayoutRoute
+            exact
+            path='/user/purchase'
+            noBackground={true}
+            currentUser={currentUser}
+            roles={[Role.USER]}
+            component={Purchase}
+          />
+          <PrivateLayoutRoute
+            exact
+            path='/user/purchase/:id'
+            noBackground={true}
+            currentUser={currentUser}
+            roles={[Role.USER]}
+            component={PurchaseDetail}
           />
 
           <LoginLayoutRoute component={NotFound} />

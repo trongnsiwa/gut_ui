@@ -25,6 +25,21 @@ const UserLayout = ({ children }) => (
   </div>
 );
 
+const UserNoLayout = ({ children }) => (
+  <div className='font-montse h-screen'>
+    <Header />
+    <main
+      style={{
+        paddingTop: '80px',
+      }}
+      className='bg-gradient-to-tr from-brand to-brand-light'
+    >
+      {children}
+      <Footer />
+    </main>
+  </div>
+);
+
 const AdminLayout = ({ children }) => {
   const [openSidebar, setOpenSidebar] = useState(true);
 
@@ -39,7 +54,7 @@ const AdminLayout = ({ children }) => {
   );
 };
 
-const PrivateLayoutRoute = ({ component: Component, currentUser, roles, ...rest }) => (
+const PrivateLayoutRoute = ({ component: Component, currentUser, roles, noBackground, ...rest }) => (
   <Route
     {...rest}
     render={(props) => {
@@ -60,6 +75,14 @@ const PrivateLayoutRoute = ({ component: Component, currentUser, roles, ...rest 
           <AdminLayout>
             <Component {...props} />
           </AdminLayout>
+        );
+      }
+
+      if (noBackground) {
+        return (
+          <UserNoLayout>
+            <Component {...props} />
+          </UserNoLayout>
         );
       }
 

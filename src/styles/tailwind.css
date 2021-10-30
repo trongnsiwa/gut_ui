@@ -19,7 +19,7 @@
   select[multiple],
   input[type='textarea'],
   textarea {
-    @apply text-gray-700 rounded-lg border-gray-300 w-full shadow-sm  focus:border-brand focus:ring-brand;
+    @apply text-gray-700 rounded-sm border-gray-300 w-full shadow-sm  focus:border-brand focus:ring-brand;
   }
 
   input[type='checkbox'],
@@ -30,7 +30,7 @@
 
 @layer components {
   .btn-menu {
-    @apply bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:ring-2 focus:ring-inset focus:ring-brand;
+    @apply bg-white rounded-sm p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:ring-2 focus:ring-inset focus:ring-brand;
   }
 
   .error-message {

@@ -219,7 +219,7 @@ const Header = () => {
                             <Menu.Item>
                               {({ active }) => (
                                 <Link
-                                  to='/profile'
+                                  to='/user/account/profile'
                                   className={`${
                                     active ? 'bg-brand-light text-white' : 'text-gray-900'
                                   } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
