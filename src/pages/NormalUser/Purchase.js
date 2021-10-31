@@ -12,11 +12,12 @@ const Purchase = () => {
       method: 'Nhận hàng tại nhà/công ty/bưu điện',
       note: '',
       shipping: 10000,
-      coupon: {
+      voucher: {
         name: 'SALE101',
-        sale: 10000,
+        sale: 5,
       },
       orderDate: '30/10/2021',
+      status: 'Đã giao tận nơi',
       products: [
         {
           image: 'http://res.cloudinary.com/trongnsiwa/image/upload/v1627353780/w6hilzj0csmisyqbnsd5.webp',
@@ -44,11 +45,12 @@ const Purchase = () => {
       method: 'Nhận hàng tại nhà/công ty/bưu điện',
       note: '',
       shipping: 10000,
-      coupon: {
+      voucher: {
         name: 'SALE101',
-        sale: 10000,
+        sale: 5,
       },
       orderDate: '28/10/2021',
+      status: 'Đã mua tại cửa hàng',
       products: [
         {
           image: 'http://res.cloudinary.com/trongnsiwa/image/upload/v1627290620/mo6yq9ehrjsomkjwnbli.webp',
@@ -97,6 +99,20 @@ const Purchase = () => {
                         </div>
                       </div>
                     ))}
+                  </div>
+                  <div className='text-right'>
+                    <p className='text-sm'>
+                      Tổng hóa đơn: {item.products.reduce((acc, item) => acc + (item.price * item.amount || 0), 0)}đ /
+                      Thành tiền:{' '}
+                      {item.products.reduce((acc, item) => acc + (item.price * item.amount || 0), 0) -
+                        (item.products.reduce((acc, item) => acc + (item.price * item.amount || 0), 0) *
+                          item.voucher.sale) /
+                          100}
+                      đ (-{item.voucher.sale}%)
+                    </p>
+                    <p className='text-sm mt-1'>
+                      Tình trạng đơn hàng: <span className='bg-blue-100 p-1'>{item.status}</span>
+                    </p>
                   </div>
                 </div>
               </Link>

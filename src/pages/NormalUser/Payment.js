@@ -19,7 +19,6 @@ const Payment = (props) => {
 
   const [totalPrice, setTotalPrice] = useState(null);
   const [shipping, setShipping] = useState(10000);
-  const [promo, setPromo] = useState(null);
 
   const [provinces, setProvinces] = useState();
   const [selectedProv, setSelectedProv] = useState('');
@@ -27,6 +26,8 @@ const Payment = (props) => {
   const [selectedDist, setSelectedDist] = useState('');
   const [wards, setWards] = useState();
   const [selectedWard, setSelectedWard] = useState('');
+
+  const [selectedMethod, setSelectedMethod] = useState('Nhận hàng tại nhà/công ty/bưu điện');
 
   const [errorMessage, setErrorMessage] = useState({
     selected: null,
@@ -266,13 +267,26 @@ const Payment = (props) => {
             <div>
               <div>
                 <label className='inline-flex items-center'>
-                  <input type='radio' className='form-radio' name='method' value='' defaultChecked={true} />
+                  <input
+                    type='radio'
+                    className='form-radio'
+                    name='method'
+                    value='HOME'
+                    defaultChecked={true}
+                    onChange={(e) => setSelectedMethod(e.target.value)}
+                  />
                   <span className='ml-2'>Nhận hàng tại nhà/công ty/bưu điện</span>
                 </label>
               </div>
               <div className='mt-3'>
                 <label className='inline-flex items-center'>
-                  <input type='radio' className='form-radio' name='method' value='' />
+                  <input
+                    type='radio'
+                    className='form-radio'
+                    name='method'
+                    value='STORE'
+                    onChange={(e) => setSelectedMethod(e.target.value)}
+                  />
                   <span className='ml-2'>Nhận hàng tại cửa hàng gần nhất</span>
                 </label>
               </div>
@@ -374,15 +388,17 @@ const Payment = (props) => {
           </div>
           <div className='flex justify-between items-center mb-5'>
             <span className='font-semibold flex items-center'>Phí vận chuyển: </span>
-            <span>{'10.000đ'}</span>
+            <span>{selectedMethod === 'STORE' ? '0đ' : `${formatCash(shipping)}`}</span>
           </div>
           <div className='flex justify-between items-center'>
-            <span className='font-semibold flex items-center'>Áp dụng Coupon: </span>
-            <span className='text-red-500 font-semibold'>SALE101 [-10.000đ]</span>
+            <span className='font-semibold flex items-center'>Áp dụng Voucher: </span>
+            <span className='text-red-500 font-semibold'>SALE101 (-5%)</span>
           </div>
           <div className='flex justify-between items-center mt-10 pt-10 mb-5 border-t'>
             <span className='font-semibold flex items-center'>Tổng thanh toán: </span>
-            <span className='text-brand text-2xl font-bold'>{formatCash(totalPrice ? totalPrice : 0)}</span>
+            <span className='text-brand text-2xl font-bold'>
+              {formatCash(totalPrice ? totalPrice - (totalPrice * 5) / 100 : 0)}
+            </span>
           </div>
         </div>
       </div>

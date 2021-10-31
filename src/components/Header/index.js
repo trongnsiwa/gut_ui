@@ -7,7 +7,6 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
   InboxInIcon,
-  InformationCircleIcon,
   MenuIcon,
   UserCircleIcon,
   XIcon,
@@ -317,11 +316,6 @@ const Header = () => {
                     </span>
                   </button>
                 </div>
-                <div className='text-gray-700 ml-3'>
-                  <button onClick={() => {}}>
-                    <InformationCircleIcon className='h-8 w-8 cursor-pointer text-gray-700' />
-                  </button>
-                </div>
               </div>
             </div>
           </div>
@@ -470,11 +464,6 @@ const Header = () => {
                                 </span>
                               </button>
                             </div>
-                            <div className='text-gray-700 ml-3'>
-                              <button onClick={() => {}}>
-                                <InformationCircleIcon className='h-8 w-8 cursor-pointer' />
-                              </button>
-                            </div>
                           </div>
                         </div>
 
@@ -514,11 +503,6 @@ const Header = () => {
                             Đăng nhập
                           </Link>
                         </p>
-                        <div className='text-gray-700'>
-                          <button onClick={() => {}}>
-                            <InformationCircleIcon className='h-8 w-8 cursor-pointer' />
-                          </button>
-                        </div>
                       </>
                     )}
                   </div>

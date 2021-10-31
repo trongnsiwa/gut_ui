@@ -15,7 +15,10 @@ const PurchaseDetail = () => {
 
   useEffect(() => {
     if (item && item.products) {
-      setTotalPrice(item.products.reduce((acc, item) => acc + (item.price * item.amount || 0), 0));
+      setTotalPrice(
+        (item.products.reduce((acc, item) => acc + (item.price * item.amount || 0), 0) * item.voucher.sale) / 100 -
+          item.shipping
+      );
     }
   }, [item]);
 
@@ -82,9 +85,9 @@ const PurchaseDetail = () => {
             <td className='text-sm'>{formatCash(item.shipping)}</td>
           </tr>
           <tr className='divide-x divide-gray-100'>
-            <td className='text-sm text-right p-3'>Áp dụng Coupon: </td>
+            <td className='text-sm text-right p-3'>Áp dụng Voucher: </td>
             <td className='text-sm'>
-              {item.coupon.name} [-{formatCash(item.coupon.sale)}]
+              {item.voucher.name} (-{item.voucher.sale}%)
             </td>
           </tr>
           <tr className='divide-x divide-gray-100'>

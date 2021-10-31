@@ -14,9 +14,9 @@ const FinishOrder = () => {
 
   const [totalPrice, setTotalPrice] = useState(null);
   const [shipping, setShipping] = useState(10000);
-  const [promo, setPromo] = useState({
+  const [voucher, setVoucher] = useState({
     name: 'SALE101',
-    sale: 10000,
+    sale: 5,
   });
 
   const [order, setOrder] = useState({
@@ -97,12 +97,14 @@ const FinishOrder = () => {
           <div className='flex justify-between items-center mb-3'>
             <span className='font-semibold flex items-center'>Áp dụng Coupon: </span>
             <span>
-              {promo.name} [-{formatCash(promo.sale)}]
+              {voucher.name} (-{voucher.sale}%)
             </span>
           </div>
           <div className='flex justify-between items-center'>
             <span className='font-semibold flex items-center'>Tổng thanh toán: </span>
-            <span className='text-brand font-bold'>{formatCash(totalPrice ? totalPrice : 0)}</span>
+            <span className='text-brand font-bold'>
+              {formatCash(totalPrice ? totalPrice - (totalPrice * voucher.sale) / 100 - shipping : 0)}
+            </span>
           </div>
         </div>
         <div className='mt-5'>
