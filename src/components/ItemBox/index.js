@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { formatCash } from '../../helpers/formatCash';
 import useViewport from '../../helpers/useViewport';
 
-const ItemBox = ({ item, parent, category }) => {
+const ItemBox = ({ item, parent, category, ranking }) => {
   const [currentImage, setCurrentImage] = useState(item?.images[0]);
 
   const { width } = useViewport();
@@ -29,6 +29,21 @@ const ItemBox = ({ item, parent, category }) => {
             },
           }}
         >
+          {ranking && (
+            <>
+              <span
+                className='block w-0 h-0 absolute top-0 left-0 z-10 text-white text-center'
+                style={{
+                  borderColor: 'transparent transparent transparent #44A5CA',
+                  borderStyle: 'solid',
+                  borderWidth: '0px 40px 40px 40px',
+                }}
+              ></span>
+              <span className='block w-0 h-0 absolute top-0 left-0 z-10 text-white text-center pl-2 text-sm'>
+                {ranking}
+              </span>
+            </>
+          )}
           <div className='mb-3 w-full'>
             <img className='w-full h-auto align-top' src={currentImage?.imageUrl} alt={currentImage?.title} />
           </div>

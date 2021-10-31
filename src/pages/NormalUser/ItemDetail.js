@@ -45,6 +45,12 @@ const ItemDetail = (props) => {
   const [averageRating, setAverageRating] = useState(0);
   const [seeMore, setSeeMore] = useState(2);
 
+  const [fitSize, setFitSize] = useState({
+    height: null,
+    weight: null,
+    size: null,
+  });
+
   const { user: currentUser } = useSelector((state) => state.authReducer);
   const history = useHistory();
   const { message } = useSelector((state) => state.messageReducer);
@@ -177,6 +183,58 @@ const ItemDetail = (props) => {
       }
     }
   }, [reviews]);
+
+  useEffect(() => {
+    if (fitSize.height != null && fitSize.weight != null) {
+      setFitSize({
+        ...fitSize,
+        size:
+          parentName.toLowerCase() === 'thân trên'
+            ? chooseSizeForTop(fitSize.height, fitSize.weight)
+            : chooseSizeForBottom(fitSize.height, fitSize.weight),
+      });
+    }
+  }, [fitSize.height, fitSize.weight]);
+
+  const chooseSizeForTop = (height, size) => {
+    if (height >= 130 && height <= 160 && size >= 42 && size <= 49) {
+      return 'S';
+    }
+    if (height >= 160 && height <= 167 && size >= 50 && size <= 55) {
+      return 'M';
+    }
+    if (height >= 163 && height <= 170 && size >= 56 && size <= 65) {
+      return 'L';
+    }
+    if (height >= 165 && height <= 175 && size >= 66 && size <= 71) {
+      return 'XL';
+    }
+    if (height >= 167 && height <= 190 && size >= 72 && size <= 76) {
+      return 'XXL';
+    }
+
+    return null;
+  };
+
+  const chooseSizeForBottom = (height, size) => {
+    if (height >= 130 && height <= 160 && size >= 42 && size <= 50) {
+      return 'S';
+    }
+    if (height >= 160 && height <= 175 && size >= 52 && size <= 58) {
+      return 'M';
+    }
+    if (height >= 160 && height <= 175 && size >= 57 && size <= 63) {
+      return 'L';
+    }
+    if (height >= 165 && height <= 175 && size >= 57 && size <= 70) {
+      return 'XL';
+    }
+    if (height >= 165 && height <= 190 && size >= 70 && size <= 75) {
+      return 'XXL';
+    }
+
+    return null;
+  };
 
   const renderQuantity = () => {
     var listQuantity = [];
@@ -463,6 +521,48 @@ const ItemDetail = (props) => {
                       ))}
                   </div>
                 </div>
+                {['thân dưới', 'thân trên'].indexOf(parentName.toLowerCase()) > -1 && (
+                  <div>
+                    <label className='pr-3 font-semibold text-sm'>Chọn size phù hợp với bạn</label>
+                    <div className='flex gap-3 md:w-2/3'>
+                      <div className='relative w-auto'>
+                        <input
+                          type='c'
+                          className={`border border-gray-400 resize-none py-2 px-3 font-medium focus:outline-none focus:bg-white mt-3 w-full`}
+                          placeholder='Chiều cao'
+                          onChange={(e) =>
+                            setFitSize({
+                              ...fitSize,
+                              height: e.target.value,
+                            })
+                          }
+                        />
+                        <span className='absolute right-0 top-0 pr-3 pt-5 text-gray-500'>cm</span>
+                      </div>
+                      <div className='relative w-auto'>
+                        <input
+                          type='number'
+                          className={`border border-gray-400 resize-none py-2 px-3 font-medium focus:outline-none focus:bg-white mt-3 w-full`}
+                          placeholder='Cân nặng'
+                          onChange={(e) =>
+                            setFitSize({
+                              ...fitSize,
+                              weight: e.target.value,
+                            })
+                          }
+                        />
+                        <span className='absolute right-0 top-0 pr-3 pt-5 text-gray-500'>kg</span>
+                      </div>
+                    </div>
+                    {fitSize.height && fitSize.weight && (
+                      <p className='mt-3'>
+                        {fitSize.size != null
+                          ? `Bạn cao ${fitSize.height}cm và nặng ${fitSize.weight}kg. Size phù hợp với bạn là: ${fitSize.size}`
+                          : 'Rất tiếc! Không có size phù hợp với bạn :('}
+                      </p>
+                    )}
+                  </div>
+                )}
               </section>
               <div className='flex items-center w-full mb-6'>
                 <span className='text-sm font-bold mr-2'>Số lượng:</span>

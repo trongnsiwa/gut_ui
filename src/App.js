@@ -44,6 +44,7 @@ import FinishOrder from './pages/NormalUser/FinishOrder';
 import Profile from './pages/NormalUser/Profile';
 import Purchase from './pages/NormalUser/Purchase';
 import PurchaseDetail from './pages/NormalUser/PurchaseDetail';
+import Ranking from './pages/Ranking';
 
 function App() {
   const { user: currentUser } = useSelector((state) => state.authReducer);
@@ -158,6 +159,7 @@ function App() {
           <LayoutRoute exact path='/category/:parent/:slug' component={UserCategory} />
           <LayoutRoute exact path='/category/:parent' component={UserCategory} />
           <LayoutRoute exact path='/product/:id' component={ItemDetail} />
+          <LayoutRoute exact path='/ranking' component={Ranking} />
 
           <PrivateLayoutRoute exact path='/cart' currentUser={currentUser} roles={[Role.USER]} component={Cart} />
           <PrivateLayoutRoute exact path='/payment' currentUser={currentUser} roles={[Role.USER]} component={Payment} />

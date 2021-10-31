@@ -15,10 +15,7 @@ const PurchaseDetail = () => {
 
   useEffect(() => {
     if (item && item.products) {
-      setTotalPrice(
-        (item.products.reduce((acc, item) => acc + (item.price * item.amount || 0), 0) * item.voucher.sale) / 100 -
-          item.shipping
-      );
+      setTotalPrice(item.products.reduce((acc, item) => acc + (item.price * item.amount || 0), 0));
     }
   }, [item]);
 
@@ -92,7 +89,9 @@ const PurchaseDetail = () => {
           </tr>
           <tr className='divide-x divide-gray-100'>
             <td className='text-sm text-right p-3'>Tổng thanh toán: </td>
-            <td className='text-brand font-bold text-xl'>{formatCash(totalPrice ? totalPrice : 0)}</td>
+            <td className='text-brand font-bold text-xl'>
+              {formatCash(totalPrice ? totalPrice - (totalPrice * item.voucher.sale) / 100 - item.shipping : 0)}
+            </td>
           </tr>
           <tr className='divide-x divide-gray-100'>
             <td className='text-sm text-right p-3'>Phương thức thanh toán: </td>

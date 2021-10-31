@@ -89,99 +89,104 @@ const Header = () => {
                 </Popover.Button>
               </div>
               {!currentUser?.roles?.includes(Role.ADMIN) && (
-                <Popover.Group as='nav' className='hidden md:flex space-x-10'>
-                  <Popover className='relative'>
-                    {({ open }) => (
-                      <>
-                        <Popover.Button
-                          className={`${
-                            open ? 'text gray-900' : 'text-gray-500'
-                          } group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none`}
-                          ref={buttonRef}
-                        >
-                          <span className='text-lg font-semibold text-gray-700'>DANH MỤC</span>
-                          <ChevronDownIcon
+                <>
+                  <Popover.Group as='nav' className='hidden md:flex space-x-10'>
+                    <Popover className='relative'>
+                      {({ open }) => (
+                        <>
+                          <Popover.Button
                             className={`${
-                              open ? 'text-gray-600' : 'text-gray-400'
-                            } ml-2 h-5 w-5 group-hover:text-gray-500`}
-                            aria-hidden='true'
-                          />
-                        </Popover.Button>
+                              open ? 'text gray-900' : 'text-gray-500'
+                            } group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none`}
+                            ref={buttonRef}
+                          >
+                            <span className='text-lg font-semibold text-gray-700'>DANH MỤC</span>
+                            <ChevronDownIcon
+                              className={`${
+                                open ? 'text-gray-600' : 'text-gray-400'
+                              } ml-2 h-5 w-5 group-hover:text-gray-500`}
+                              aria-hidden='true'
+                            />
+                          </Popover.Button>
 
-                        <Transition
-                          show={open}
-                          as={Fragment}
-                          enter='transition ease-out duration-150'
-                          enterFrom='opacity-0 translate-y-1'
-                          enterTo='opacity-100 translate-y-0'
-                          leave='transition ease-in duration-150'
-                          leaveFrom='opacity-100 translate-y-0'
-                          leaveTo='opacity-0 translate-y-1'
-                        >
-                          <Popover.Panel className='bg-white absolute mt-7 p-5 w-screen max-w-md shadow-lg z-50 '>
-                            <div className='grid grid-cols-2'>
-                              <div style={{ boxShadow: 'rgb(0 0 0 / 10%) 5px 0px 4px -3px' }}>
-                                <div className='flex w-full items-center h-10 mb-3 p-5' key={'ALL'}>
-                                  <span className='text-base text-gray-600 font-semibold cursor-default flex items-center'>
-                                    Danh mục
-                                  </span>
-                                </div>
-                                {parentCategories &&
-                                  parentCategories.map(
-                                    (parent) =>
-                                      !parent.deleted && (
-                                        <div
-                                          className={`flex w-full items-center h-12 hover:bg-gray-100 p-5 ${
-                                            selectedParent && parent.id === selectedParent.id ? 'bg-gray-100' : ''
-                                          }`}
-                                          key={parent.id}
-                                          onClick={() => setSelectedParent(parent)}
-                                        >
-                                          <span className='text-sm text-gray-600  cursor-default'>{parent.name}</span>
-                                        </div>
-                                      )
-                                  )}
-                              </div>
-                              <div className='pl-5'>
-                                {selectedParent && (
-                                  <div className='flex w-full items-center h-10 p-5 mb-3' key={'parent'}>
-                                    <span className='text-lg text-gray-600 font-semibold cursor-default'>
-                                      {selectedParent.name}
+                          <Transition
+                            show={open}
+                            as={Fragment}
+                            enter='transition ease-out duration-150'
+                            enterFrom='opacity-0 translate-y-1'
+                            enterTo='opacity-100 translate-y-0'
+                            leave='transition ease-in duration-150'
+                            leaveFrom='opacity-100 translate-y-0'
+                            leaveTo='opacity-0 translate-y-1'
+                          >
+                            <Popover.Panel className='bg-white absolute mt-7 p-5 w-screen max-w-md shadow-lg z-50 '>
+                              <div className='grid grid-cols-2'>
+                                <div style={{ boxShadow: 'rgb(0 0 0 / 10%) 5px 0px 4px -3px' }}>
+                                  <div className='flex w-full items-center h-10 mb-3 p-5' key={'ALL'}>
+                                    <span className='text-base text-gray-600 font-semibold cursor-default flex items-center'>
+                                      Danh mục
                                     </span>
                                   </div>
-                                )}
-
-                                {selectedParent &&
-                                  selectedParent.subCategories?.map(
-                                    (sub) =>
-                                      !sub.deleted && (
-                                        <div className='flex w-full items-center p-5 h-12' key={sub.id}>
-                                          <Link
-                                            to={{
-                                              pathname: `/category/${lowerCaseString(
-                                                selectedParent.name
-                                              )}/${lowerCaseString(sub.name)}`,
-                                              state: {
-                                                id: sub.id,
-                                                parentId: selectedParent.id,
-                                              },
-                                            }}
-                                            className='text-sm text-gray-600  cursor-pointer hover:underline'
-                                            onClick={() => buttonRef.current?.click()}
+                                  {parentCategories &&
+                                    parentCategories.map(
+                                      (parent) =>
+                                        !parent.deleted && (
+                                          <div
+                                            className={`flex w-full items-center h-12 hover:bg-gray-100 p-5 ${
+                                              selectedParent && parent.id === selectedParent.id ? 'bg-gray-100' : ''
+                                            }`}
+                                            key={parent.id}
+                                            onClick={() => setSelectedParent(parent)}
                                           >
-                                            {sub.name}
-                                          </Link>
-                                        </div>
-                                      )
+                                            <span className='text-sm text-gray-600  cursor-default'>{parent.name}</span>
+                                          </div>
+                                        )
+                                    )}
+                                </div>
+                                <div className='pl-5'>
+                                  {selectedParent && (
+                                    <div className='flex w-full items-center h-10 p-5 mb-3' key={'parent'}>
+                                      <span className='text-lg text-gray-600 font-semibold cursor-default'>
+                                        {selectedParent.name}
+                                      </span>
+                                    </div>
                                   )}
+
+                                  {selectedParent &&
+                                    selectedParent.subCategories?.map(
+                                      (sub) =>
+                                        !sub.deleted && (
+                                          <div className='flex w-full items-center p-5 h-12' key={sub.id}>
+                                            <Link
+                                              to={{
+                                                pathname: `/category/${lowerCaseString(
+                                                  selectedParent.name
+                                                )}/${lowerCaseString(sub.name)}`,
+                                                state: {
+                                                  id: sub.id,
+                                                  parentId: selectedParent.id,
+                                                },
+                                              }}
+                                              className='text-sm text-gray-600  cursor-pointer hover:underline'
+                                              onClick={() => buttonRef.current?.click()}
+                                            >
+                                              {sub.name}
+                                            </Link>
+                                          </div>
+                                        )
+                                    )}
+                                </div>
                               </div>
-                            </div>
-                          </Popover.Panel>
-                        </Transition>
-                      </>
-                    )}
-                  </Popover>
-                </Popover.Group>
+                            </Popover.Panel>
+                          </Transition>
+                        </>
+                      )}
+                    </Popover>
+                  </Popover.Group>
+                  <Link to='/ranking' className='text-lg font-semibold text-gray-700'>
+                    XẾP HẠNG
+                  </Link>
+                </>
               )}
 
               <div className='hidden md:flex items-center justify-end md:flex-1 lg:w-0'>
