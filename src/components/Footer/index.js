@@ -5,7 +5,7 @@ import logo from '../../assets/logo.png';
 const Footer = ({ page }) => {
   return (
     <>
-      <footer className={`footer ${page === 'CART' ? 'bg-gray-100' : ''} relative bottom-0 left-0 mt-40`}>
+      <footer className={`footer ${page === 'CART' ? 'bg-gray-100' : ''} font-robo relative bottom-0 left-0 mt-40`}>
         <div className='w-full flex flex-col justify-center bg-gradient-to-t from-brand to-white items-center py-3'>
           <Link to='/'>
             <img src={logo} alt='' className='w-28' />
@@ -46,11 +46,11 @@ const Footer = ({ page }) => {
             </div>
           </div>
           <div className='mt-10 pt-5 border-t border-brand w-full px-5 pb-5'>
-            <div className='flex justify-between w-full px-36'>
+            <div className='flex justify-between w-full lg:px-36'>
               <div>
                 <p>© 2021 - CÔNG TY TNHH GUT VN</p>
                 <p style={{ fontSize: '9px' }}>
-                  Giấy CNĐKDN: 0310874914 – Ngày cấp: 25/11/2011 - Cơ quan cấp: Phòng Đăng Ký Kinh Doanh – Sở Kế Hoạch
+                  Giấy CNĐKDN: 0310874914 – Ngày cấp: 05/11/2021 - Cơ quan cấp: Phòng Đăng Ký Kinh Doanh – Sở Kế Hoạch
                   và Đầu Tư TP.HCM
                   <br />
                   Địa chỉ đăng ký kinh doanh: 766/3B-3C Sư Vạn Hạnh (Nối dài), Phường 12, Quận 10, TP.HCM - Điện thoại:

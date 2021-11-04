@@ -68,6 +68,10 @@ const UserCategory = (props) => {
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     getAllParentCategories().then(
       (res) => {
         setParentCategories(res.data.data);
@@ -124,6 +128,7 @@ const UserCategory = (props) => {
       ).then(
         (res) => {
           setProducts(res.data.data);
+          console.log(res.data.data);
         },
         (error) => {
           const message =
@@ -146,6 +151,7 @@ const UserCategory = (props) => {
         toPrice
       ).then((res) => {
         setProducts(res.data.data);
+        console.log(res.data.data);
       });
     }
   }, [colorIds, fromPrice, id, pageNum, pageSize, parentId, saleTypes, searchedName, sizeIds, sortBy, toPrice]);
@@ -390,75 +396,83 @@ const UserCategory = (props) => {
           </div>
           <div className='py-3 text-sm md:text-base'>
             {parentCategories &&
-              parentCategories?.map(
-                (parent) =>
-                  !parent.deleted && (
-                    <div className='mr-3 md:mr-0' key={parent.id}>
-                      <div className='flex w-full items-center'>
-                        <div className='space-y-5'>
-                          <Link
-                            to={{
-                              pathname: `/category/${parent.name.toString().toLowerCase()}`,
-                              search: location.search,
-                              state: {
-                                parentId: parent.id,
-                              },
-                            }}
-                            onClick={() => setPageNum(1)}
-                          >
-                            {parent.name}
-                          </Link>
-                          <div className='inline-flex pl-3'>
-                            <button
-                              type='button'
-                              onClick={() => {
-                                if (selectedParent?.id === parent.id) {
-                                  setSelectedParent(null);
-                                  return;
-                                }
-                                setSelectedParent(parent);
+              parentCategories
+                ?.sort(function (a, b) {
+                  return ('' + a.name).localeCompare(b.name);
+                })
+                .map(
+                  (parent) =>
+                    !parent.deleted && (
+                      <div className='mr-3 md:mr-0' key={parent.id}>
+                        <div className='flex w-full items-center'>
+                          <div className='space-y-5'>
+                            <Link
+                              to={{
+                                pathname: `/category/${parent.name.toString().toLowerCase()}`,
+                                search: location.search,
+                                state: {
+                                  parentId: parent.id,
+                                },
                               }}
+                              onClick={() => setPageNum(1)}
                             >
-                              {selectedParent?.id === parent.id ? (
-                                <ChevronDownIcon className='h-4 w-4' />
-                              ) : (
-                                <ChevronRightIcon className='h-4 w-4' />
-                              )}
-                            </button>
+                              {parent.name}
+                            </Link>
+                            <div className='inline-flex pl-3'>
+                              <button
+                                type='button'
+                                onClick={() => {
+                                  if (selectedParent?.id === parent.id) {
+                                    setSelectedParent(null);
+                                    return;
+                                  }
+                                  setSelectedParent(parent);
+                                }}
+                              >
+                                {selectedParent?.id === parent.id ? (
+                                  <ChevronDownIcon className='h-4 w-4' />
+                                ) : (
+                                  <ChevronRightIcon className='h-4 w-4' />
+                                )}
+                              </button>
+                            </div>
                           </div>
                         </div>
+                        <div
+                          className={`flex flex-col space-y-5 my-5 ml-6 ${
+                            selectedParent?.id === parent.id ? '' : 'hidden'
+                          }`}
+                        >
+                          {parent.subCategories &&
+                            parent?.subCategories
+                              ?.sort(function (a, b) {
+                                return ('' + a.name).localeCompare(b.name);
+                              })
+                              .map(
+                                (sub) =>
+                                  !sub.deleted && (
+                                    <Link
+                                      to={{
+                                        pathname: `/category/${lowerCaseString(parent.name)}/${sub.name
+                                          .toString()
+                                          .toLowerCase()}`,
+                                        search: location.search,
+                                        state: {
+                                          id: sub.id,
+                                          parentId: parent.id,
+                                        },
+                                      }}
+                                      onClick={() => setPageNum(1)}
+                                      key={sub.id}
+                                    >
+                                      {sub.name}
+                                    </Link>
+                                  )
+                              )}
+                        </div>
                       </div>
-                      <div
-                        className={`flex flex-col space-y-5 my-5 ml-6 ${
-                          selectedParent?.id === parent.id ? '' : 'hidden'
-                        }`}
-                      >
-                        {parent.subCategories &&
-                          parent?.subCategories?.map(
-                            (sub) =>
-                              !sub.deleted && (
-                                <Link
-                                  to={{
-                                    pathname: `/category/${lowerCaseString(parent.name)}/${sub.name
-                                      .toString()
-                                      .toLowerCase()}`,
-                                    search: location.search,
-                                    state: {
-                                      id: sub.id,
-                                      parentId: parent.id,
-                                    },
-                                  }}
-                                  onClick={() => setPageNum(1)}
-                                  key={sub.id}
-                                >
-                                  {sub.name}
-                                </Link>
-                              )
-                          )}
-                      </div>
-                    </div>
-                  )
-              )}
+                    )
+                )}
           </div>
           <div className='py-6 border-t mt-6 border-gray-200 border-solid'>
             <div className='flex w-full items-center'>

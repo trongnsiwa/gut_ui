@@ -196,6 +196,10 @@ const ItemDetail = (props) => {
     }
   }, [fitSize.height, fitSize.weight]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const chooseSizeForTop = (height, size) => {
     if (height >= 130 && height <= 160 && size >= 42 && size <= 49) {
       return 'S';

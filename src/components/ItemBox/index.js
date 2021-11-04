@@ -1,3 +1,4 @@
+import { StarIcon } from '@heroicons/react/solid';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatCash } from '../../helpers/formatCash';
@@ -36,7 +37,7 @@ const ItemBox = ({ item, parent, category, ranking }) => {
                 style={{
                   borderColor: 'transparent transparent transparent #44A5CA',
                   borderStyle: 'solid',
-                  borderWidth: '0px 40px 40px 40px',
+                  borderWidth: '0px 45px 45px 45px',
                 }}
               ></span>
               <span className='block w-0 h-0 absolute top-0 left-0 z-10 text-white text-center pl-2 text-sm'>
@@ -98,6 +99,23 @@ const ItemBox = ({ item, parent, category, ranking }) => {
               {item && formatCash(item ? item?.price : '')}
             </span>
           </div>
+          {item.rate > 0 && (
+            <div className='flex items-center justify-center'>
+              {[...Array(5)].map((star, i) => {
+                const ratingValue = i + 1;
+
+                return (
+                  <label key={`star_${ratingValue}`}>
+                    <StarIcon
+                      className={`star h-6 w-6 cursor-pointer transition-colors delay-75 hover:text-yellow-500 ${
+                        ratingValue <= item.rate ? 'text-yellow-200' : 'text-gray-300'
+                      }`}
+                    />
+                  </label>
+                );
+              })}
+            </div>
+          )}
         </Link>
       </div>
     </li>

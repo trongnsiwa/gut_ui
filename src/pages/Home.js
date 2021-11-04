@@ -37,6 +37,10 @@ const Home = () => {
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     if (!cart && currentUser && !currentUser.roles?.includes(Role.ADMIN)) {
       getUserCart(currentUser?.id).then((res) => {
         localStorage.setItem('cart', JSON.stringify(res.data.data));

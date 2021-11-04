@@ -58,11 +58,7 @@ const Ranking = () => {
       <div className='mx-auto w-full text-black'>
         {products && products.length > 0 && (
           <>
-            <section
-              id='sale_section'
-              className='w-full'
-              style={{ paddingBottom: '50px', borderBottom: '1px solid #E3E3E3' }}
-            >
+            <section id='sale_section' className='w-full' style={{ paddingBottom: '50px' }}>
               <div className='my-20'>
                 <h2 className='text-center text-xl md:text-3xl tracking-wide font-bold text-brand-darker'>XẾP HẠNG</h2>
                 <p className='text-sm text-center'>xếp hạng</p>
@@ -101,7 +97,7 @@ const Ranking = () => {
                   )}
               </div>
               <div className='md:container pb-10 px-10 table w-full mt-10'>
-                <div className='mt-5 md:mt-0 md:table-cell'>
+                <div className='mt-5 md:mt-0 md:table-cell border-none'>
                   <div className='relative'>
                     <ul style={{ width: '680px!important' }} className='grid grid-cols-5'>
                       {products &&

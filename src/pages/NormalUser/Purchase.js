@@ -9,7 +9,6 @@ const Purchase = () => {
       name: 'Nguyen Trong',
       phone: '0977158941',
       address: 'Ấp 5, Xã An Phước, Huyện Long Thành, Tỉnh Đồng Nai',
-      method: 'Nhận hàng tại nhà/công ty/bưu điện',
       note: '',
       shipping: 10000,
       voucher: {
@@ -17,17 +16,19 @@ const Purchase = () => {
         sale: 5,
       },
       orderDate: '30/10/2021',
-      status: 'Đã giao tận nơi',
+      status: 'Đang giao',
       products: [
         {
+          id: 1955,
           image: 'http://res.cloudinary.com/trongnsiwa/image/upload/v1627353780/w6hilzj0csmisyqbnsd5.webp',
-          name: 'Áo mơ smi Oxford',
+          name: 'Áo sơ mi Oxford',
           color: 'Trắng Anti-flash',
           size: 'XL',
           amount: 2,
           price: 59000,
         },
         {
+          id: 869,
           image: 'http://res.cloudinary.com/trongnsiwa/image/upload/v1627182371/hjl4rgc02gt4zctkil3w.webp',
           name: 'Quần nửa co giãn chủ động GA',
           color: 'Xanh đen',
@@ -42,7 +43,6 @@ const Purchase = () => {
       name: 'Nguyen Trong',
       phone: '0977158941',
       address: 'Ấp 5, Xã An Phước, Huyện Long Thành, Tỉnh Đồng Nai',
-      method: 'Nhận hàng tại nhà/công ty/bưu điện',
       note: '',
       shipping: 10000,
       voucher: {
@@ -50,9 +50,10 @@ const Purchase = () => {
         sale: 5,
       },
       orderDate: '28/10/2021',
-      status: 'Đã mua tại cửa hàng',
+      status: 'Đã giao',
       products: [
         {
+          id: 1527,
           image: 'http://res.cloudinary.com/trongnsiwa/image/upload/v1627290620/mo6yq9ehrjsomkjwnbli.webp',
           name: 'Wide fit T Keina Suda 3',
           color: 'Đen',
