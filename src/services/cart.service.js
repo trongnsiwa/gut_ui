@@ -21,10 +21,7 @@ export const updateItem = (userId, productId, amount) => {
 };
 
 export const removeItem = (userId, productId) => {
-  return del(`${API_URL}/removeItem`, {
-    userId,
-    productId,
-  });
+  return del(`${API_URL}/${userId}/${productId}`, {});
 };
 
 export const clearCart = (userId) => {

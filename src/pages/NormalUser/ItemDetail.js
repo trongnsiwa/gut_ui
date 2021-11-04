@@ -327,7 +327,6 @@ const ItemDetail = (props) => {
     addToCart(currentUser?.id, id, activeColor.colorId, activeSize.sizeId, selectedQuantity)
       .then((res) => {
         showSuccessMessage(res, id, dispatch);
-        localStorage.setItem('cart', JSON.stringify(res.data.data));
       })
       .catch((err) => {
         showErrorMessage(err, id, dispatch);
@@ -511,7 +510,9 @@ const ItemDetail = (props) => {
                         <span
                           className={`mr-3 mb-2 cursor-pointer relative text-base box-border inline-flex justify-center items-center align-middle border border-solid border-gray-600 w-16 h-10 ${
                             activeSize?.sizeId === size.sizeId ? 'bg-brand-dark text-white' : ''
-                          } ${size.quantity === 0 ? 'line-through pointer-events-none' : ''}
+                          } ${size.quantity === 0 ? 'line-through pointer-events-none' : ''} ${
+                            size.sizeName === 'ONE SIZE' && 'p-2 h-12 w-24'
+                          }
                           `}
                           onClick={() => setActiveSize(size)}
                           key={`size_${size.sizeId}`}
@@ -521,7 +522,7 @@ const ItemDetail = (props) => {
                       ))}
                   </div>
                 </div>
-                {['thân dưới', 'thân trên'].indexOf(parentName.toLowerCase()) > -1 && (
+                {parentName && ['thân dưới', 'thân trên'].indexOf(parentName.toLowerCase()) > -1 && (
                   <div>
                     <label className='pr-3 font-semibold text-sm'>Chọn size phù hợp với bạn</label>
                     <div className='flex gap-3 md:w-2/3'>

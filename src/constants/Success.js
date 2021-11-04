@@ -16,7 +16,7 @@ const SUCCESS = {
   PRODUCT_IMAGES_UPDATED_SUCCESS: 'Update images to product {} successful.',
   PRODUCT_REVIEW_ADDED_SUCCESS: 'Post review to product successful.',
   SIZE_ADD_TO_COLOR_SUCCESS: 'Add size {} to color {} successful.',
-  ADD_TO_CART_SUCCESS: 'Add item to cart successful.',
+  ADD_TO_CART_SUCCESS: 'Thêm sản phẩm vào giỏ thành công.',
   REMOVE_ITEM_SUCCESS: 'Remove item from cart successful.',
   UPDATE_ITEM_QUANTITY_SUCCESS: 'Update item quantity successful.',
   CLEAR_CART_SUCCESS: 'Clear cart successful.',

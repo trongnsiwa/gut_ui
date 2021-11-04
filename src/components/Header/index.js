@@ -24,6 +24,7 @@ import { Role } from '../../constants/Role';
 import { lowerCaseString } from '../../helpers/formatString';
 import { showError } from '../../helpers/showToast';
 import ERRORS from '../../constants/Errors';
+import { getUserCart } from '../../services/cart.service';
 
 const Header = () => {
   const { user: currentUser } = useSelector((state) => state.authReducer);
@@ -33,10 +34,16 @@ const Header = () => {
 
   const [parentCategories, setParentCategories] = useState(null);
   const [selectedParent, setSelectedParent] = useState(null);
-  const cart = JSON.parse(localStorage.getItem('cart'));
+  const [cart, setCart] = useState();
 
   const buttonRef = useRef();
   const buttonSmallRef = useRef();
+
+  useEffect(() => {
+    getUserCart(currentUser?.id).then((res) => {
+      setCart(res.data.data);
+    });
+  }, [currentUser?.id]);
 
   useEffect(() => {
     getAllParentCategories().then(
@@ -317,7 +324,7 @@ const Header = () => {
                       />
                     </svg>
                     <span className='rounded-full bg-brand text-white px-2 py-1 text-xs font-bold flex items-center absolute -top-2 -right-1'>
-                      {cart ? cart?.cartItems.reduce((acc, item) => acc + item.amount, 0) : 0}
+                      {cart ? cart?.cartItems?.reduce((acc, item) => acc + item.amount, 0) : 0}
                     </span>
                   </button>
                 </div>
