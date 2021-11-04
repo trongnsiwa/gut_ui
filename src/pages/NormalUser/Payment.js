@@ -9,7 +9,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { getListProvinces, getListDistrictsByProvCode, getListWardsByDistCode } from '../../services/province.service';
 import { Link } from 'react-router-dom';
 import { formatCash } from '../../helpers/formatCash';
-import { addressList } from '../../data/addressData';
 
 const Payment = (props) => {
   const { user: currentUser } = useSelector((state) => state.authReducer);
@@ -27,10 +26,6 @@ const Payment = (props) => {
   const [selectedDist, setSelectedDist] = useState('');
   const [wards, setWards] = useState();
   const [selectedWard, setSelectedWard] = useState('');
-
-  const [selectedStore, setSelectedStore] = useState('');
-
-  const [selectedMethod, setSelectedMethod] = useState('Nhận hàng tại nhà/công ty/bưu điện');
 
   const [errorMessage, setErrorMessage] = useState({
     selected: null,
@@ -148,198 +143,126 @@ const Payment = (props) => {
               />
               {errors.phone && <p className='error-message mb-6'>{errors.phone?.message}</p>}
             </div>
-            <div className='mt-5'>
-              <div>
-                <label className='inline-flex items-center'>
-                  <input
-                    type='radio'
-                    className='form-radio'
-                    name='method'
-                    value='HOME'
-                    defaultChecked={true}
-                    onChange={(e) => setSelectedMethod(e.target.value)}
-                  />
-                  <span className='ml-2'>Nhận hàng tại nhà/công ty/bưu điện</span>
-                </label>
+            <div className='grid grid-cols-3 gap-6'>
+              <div className='mt-5'>
+                <label>Chọn tỉnh thành:</label>
+                <select
+                  className={`form-select block w-full mt-1 ${
+                    errorMessage.selected != null && errorMessage.selected === 1 ? 'error-input' : ''
+                  }`}
+                  onChange={(e) => {
+                    setSelectedProv(e.target.value);
+                  }}
+                  onBlur={(e) => {
+                    if (selectedProv == null || selectedProv === '') {
+                      setErrorMessage({
+                        selected: 1,
+                        message: 'Vui lòng chọn tỉnh/thành phố',
+                      });
+                    } else {
+                      setErrorMessage({
+                        selected: null,
+                        message: null,
+                      });
+                    }
+                  }}
+                  value={selectedProv}
+                >
+                  <option value='' disabled>
+                    Tỉnh..
+                  </option>
+                  {provinces &&
+                    provinces.map((province) => (
+                      <option value={province['province_id']} key={province['province_id']}>
+                        {province['province_name']}
+                      </option>
+                    ))}
+                </select>
               </div>
-              <div className='mt-3'>
-                <label className='inline-flex items-center'>
-                  <input
-                    type='radio'
-                    className='form-radio'
-                    name='method'
-                    value='STORE'
-                    onChange={(e) => setSelectedMethod(e.target.value)}
-                  />
-                  <span className='ml-2'>Nhận hàng tại cửa hàng gần nhất</span>
-                </label>
+              <div className='mt-5'>
+                <label>Chọn quận huyện:</label>
+                <select
+                  className={`form-select block w-full mt-1 ${
+                    errorMessage.selected != null && errorMessage.selected === 2 ? 'error-input' : ''
+                  }`}
+                  onChange={(e) => setSelectedDist(e.target.value)}
+                  value={selectedDist}
+                  onBlur={(e) => {
+                    if (selectedDist == null || selectedDist === '') {
+                      setErrorMessage({
+                        selected: 2,
+                        message: 'Vui lòng chọn quận/huyện',
+                      });
+                    } else {
+                      setErrorMessage({
+                        selected: null,
+                        message: null,
+                      });
+                    }
+                  }}
+                >
+                  <option value='' disabled>
+                    Huyện..
+                  </option>
+                  {districts &&
+                    districts.map((district) => (
+                      <option value={district['district_id']} key={district['district_id']}>
+                        {district['district_name']}
+                      </option>
+                    ))}
+                </select>
+              </div>
+
+              <div className='mt-5'>
+                <label>Chọn phường xã:</label>
+                <select
+                  className={`form-select block w-full mt-1 ${
+                    errorMessage.selected != null && errorMessage.selected === 3 ? 'error-input' : ''
+                  }`}
+                  onChange={(e) => setSelectedWard(e.target.value)}
+                  value={selectedWard}
+                  onBlur={(e) => {
+                    if (selectedWard == null || selectedWard === '') {
+                      setErrorMessage({
+                        selected: 3,
+                        message: 'Vui lòng chọn phường/xã',
+                      });
+                    } else {
+                      setErrorMessage({
+                        selected: null,
+                        message: null,
+                      });
+                    }
+                  }}
+                >
+                  <option value='' disabled>
+                    Xã..
+                  </option>
+                  {wards &&
+                    wards.map((ward) => (
+                      <option value={ward['ward_id']} key={ward['ward_id']}>
+                        {ward['ward_name']}
+                      </option>
+                    ))}
+                </select>
               </div>
             </div>
-            {selectedMethod === 'STORE' ? (
-              <>
-                <div className='mt-5'>
-                  <select
-                    className={`form-select block w-full mt-1 ${
-                      errorMessage.selected != null && errorMessage.selected === 1 ? 'error-input' : ''
-                    }`}
-                    onChange={(e) => {
-                      setSelectedStore(e.target.value);
-                    }}
-                    onBlur={(e) => {
-                      if (selectedStore == null || selectedStore === '') {
-                        setErrorMessage({
-                          selected: 1,
-                          message: 'Vui lòng chọn cửa hàng',
-                        });
-                      } else {
-                        setErrorMessage({
-                          selected: null,
-                          message: null,
-                        });
-                      }
-                    }}
-                    value={selectedStore}
-                  >
-                    <option value='' disabled className='text-sm'>
-                      Chọn cửa hàng nhận hàng
-                    </option>
-                    {addressList &&
-                      addressList.map((address) => (
-                        <optgroup label={address.region} className='text-sm'>
-                          {address.list.map((store) => (
-                            <option value={store} key={store} className='text-sm'>
-                              {store}
-                            </option>
-                          ))}
-                        </optgroup>
-                      ))}
-                  </select>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className='grid grid-cols-3 gap-6'>
-                  <div className='mt-5'>
-                    <label>Chọn tỉnh thành:</label>
-                    <select
-                      className={`form-select block w-full mt-1 ${
-                        errorMessage.selected != null && errorMessage.selected === 1 ? 'error-input' : ''
-                      }`}
-                      onChange={(e) => {
-                        setSelectedProv(e.target.value);
-                      }}
-                      onBlur={(e) => {
-                        if (selectedProv == null || selectedProv === '') {
-                          setErrorMessage({
-                            selected: 1,
-                            message: 'Vui lòng chọn tỉnh/thành phố',
-                          });
-                        } else {
-                          setErrorMessage({
-                            selected: null,
-                            message: null,
-                          });
-                        }
-                      }}
-                      value={selectedProv}
-                    >
-                      <option value='' disabled>
-                        Tỉnh..
-                      </option>
-                      {provinces &&
-                        provinces.map((province) => (
-                          <option value={province['province_id']} key={province['province_id']}>
-                            {province['province_name']}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                  <div className='mt-5'>
-                    <label>Chọn quận huyện:</label>
-                    <select
-                      className={`form-select block w-full mt-1 ${
-                        errorMessage.selected != null && errorMessage.selected === 2 ? 'error-input' : ''
-                      }`}
-                      onChange={(e) => setSelectedDist(e.target.value)}
-                      value={selectedDist}
-                      onBlur={(e) => {
-                        if (selectedDist == null || selectedDist === '') {
-                          setErrorMessage({
-                            selected: 2,
-                            message: 'Vui lòng chọn quận/huyện',
-                          });
-                        } else {
-                          setErrorMessage({
-                            selected: null,
-                            message: null,
-                          });
-                        }
-                      }}
-                    >
-                      <option value='' disabled>
-                        Huyện..
-                      </option>
-                      {districts &&
-                        districts.map((district) => (
-                          <option value={district['district_id']} key={district['district_id']}>
-                            {district['district_name']}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-
-                  <div className='mt-5'>
-                    <label>Chọn phường xã:</label>
-                    <select
-                      className={`form-select block w-full mt-1 ${
-                        errorMessage.selected != null && errorMessage.selected === 3 ? 'error-input' : ''
-                      }`}
-                      onChange={(e) => setSelectedWard(e.target.value)}
-                      value={selectedWard}
-                      onBlur={(e) => {
-                        if (selectedWard == null || selectedWard === '') {
-                          setErrorMessage({
-                            selected: 3,
-                            message: 'Vui lòng chọn phường/xã',
-                          });
-                        } else {
-                          setErrorMessage({
-                            selected: null,
-                            message: null,
-                          });
-                        }
-                      }}
-                    >
-                      <option value='' disabled>
-                        Xã..
-                      </option>
-                      {wards &&
-                        wards.map((ward) => (
-                          <option value={ward['ward_id']} key={ward['ward_id']}>
-                            {ward['ward_name']}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                </div>
-                {errorMessage.selected != null && <p className='error-message mb-6'>{errorMessage.message}</p>}
-                <div className='mt-5'>
-                  <label htmlFor='name'>Địa chỉ cụ thể</label>
-                  <span className='text-sm'> (Số nhà, tên đường, tên khu vực)</span>
-                  <input
-                    type='text'
-                    className={`border border-gray-400 resize-none w-full py-2 px-3 font-medium focus:outline-none focus:bg-white mt-3 ${
-                      errors.address ? 'error-input mb-0' : 'mb-6'
-                    }`}
-                    name='address'
-                    placeholder='Địa chỉ nhận hàng'
-                    defaultValue={currentUser?.address}
-                    {...register('address')}
-                  />
-                  {errors.address && <p className='error-message mb-6'>{errors.address?.message}</p>}
-                </div>
-              </>
-            )}
+            {errorMessage.selected != null && <p className='error-message mb-6'>{errorMessage.message}</p>}
+            <div className='mt-5'>
+              <label htmlFor='name'>Địa chỉ cụ thể</label>
+              <span className='text-sm'> (Số nhà, tên đường, tên khu vực)</span>
+              <input
+                type='text'
+                className={`border border-gray-400 resize-none w-full py-2 px-3 font-medium focus:outline-none focus:bg-white mt-3 ${
+                  errors.address ? 'error-input mb-0' : 'mb-6'
+                }`}
+                name='address'
+                placeholder='Địa chỉ nhận hàng'
+                defaultValue={currentUser?.address}
+                {...register('address')}
+              />
+              {errors.address && <p className='error-message mb-6'>{errors.address?.message}</p>}
+            </div>
 
             <div className='mt-5'>
               <label className='block text-left'>
@@ -438,7 +361,7 @@ const Payment = (props) => {
           </div>
           <div className='flex justify-between items-center mb-5'>
             <span className='font-semibold flex items-center'>Phí vận chuyển: </span>
-            <span>{selectedMethod === 'STORE' ? '0 đ' : `${formatCash(shipping)}`}</span>
+            <span>{formatCash(shipping)}</span>
           </div>
           <div className='flex justify-between items-center'>
             <span className='font-semibold flex items-center'>Áp dụng Voucher: </span>
