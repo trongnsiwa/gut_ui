@@ -14,6 +14,7 @@ import { formatCash } from '../helpers/formatCash';
 import { getUserCart } from '../services/cart.service';
 import SwiperCore, { Navigation, Autoplay } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import banner from '../assets/teacher_sale.png';
 
 import 'dayjs/locale/vi';
 
@@ -164,6 +165,11 @@ const Home = () => {
           </SwiperSlide>
         </Swiper>
       </div>
+      <section className='mx-auto w-full max-w-5xl text-center my-20 relative cursor-pointer hover:opacity-80'>
+        <a href='/' title='Mừng ngày nhà giáo - Giảm giá đến 50%'>
+          <img src={banner} alt='' className='w-full' />
+        </a>
+      </section>
       <section className='mx-auto w-full max-w-5xl text-center my-20 relative cursor-pointer hover:opacity-80'>
         <a href='https://yami.vn' title='Thời trang nữ tính dành cho bạn gái'>
           <img src='https://yami.vn/assets/upload/gallery/banner06-jpg.jpg' alt='' className='w-full' />
